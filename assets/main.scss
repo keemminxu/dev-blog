@@ -62,12 +62,12 @@ a {
   color: darken($text-color, 20%);
 }
 
-// Code blocks
+// Code blocks - force dark background over minima defaults
 pre,
 code {
-  background-color: #1D1F21;
-  color: #C5C8C6;
-  border: 1px solid #2C2E30;
+  background-color: #1D1F21 !important;
+  color: #C5C8C6 !important;
+  border: 1px solid #2C2E30 !important;
   border-radius: 4px;
 }
 
@@ -80,30 +80,61 @@ pre {
   overflow-x: auto;
 
   > code {
-    border: 0;
+    border: 0 !important;
     padding: 0;
   }
 }
 
 // Syntax highlighting (minima highlighter override)
+div.highlight,
+figure.highlight,
 .highlight {
-  background-color: #1D1F21;
+  background-color: #1D1F21 !important;
+  border: 1px solid #2C2E30 !important;
+  border-radius: 4px;
 
-  pre {
-    background-color: #1D1F21;
+  pre,
+  pre.highlight,
+  code,
+  pre code {
+    background-color: #1D1F21 !important;
+    color: #C5C8C6 !important;
   }
 
-  .c, .cm, .c1, .cs { color: #7C7C7C; }  // comments
-  .k, .kd, .kn, .kp, .kr { color: #B294BB; }  // keywords
-  .s, .s1, .s2, .sb, .sc, .sd, .sh, .sx { color: #B5BD68; }  // strings
-  .na { color: #F0C674; }  // attribute names
-  .nb, .nc, .no { color: #81A2BE; }  // builtins, classes
-  .nf, .nx { color: #81A2BE; }  // function names
-  .nn { color: #F0C674; }  // module names
-  .mi, .mf, .mh, .mo { color: #DE935F; }  // numbers
-  .o, .p { color: #C5C8C6; }  // operators, punctuation
-  .nt { color: #CC6666; }  // tag names
-  .err { color: #CC6666; }  // errors
+  .c, .cm, .c1, .cs { color: #7C7C7C !important; }
+  .k, .kd, .kn, .kp, .kr, .kc, .kt { color: #B294BB !important; }
+  .s, .s1, .s2, .sb, .sc, .sd, .sh, .sx, .sr { color: #B5BD68 !important; }
+  .na { color: #F0C674 !important; }
+  .nb, .nc, .no, .nd { color: #81A2BE !important; }
+  .nf, .nx { color: #81A2BE !important; }
+  .nn { color: #F0C674 !important; }
+  .ni, .ne { color: #CC6666 !important; }
+  .mi, .mf, .mh, .mo, .il { color: #DE935F !important; }
+  .o, .p { color: #C5C8C6 !important; }
+  .nt { color: #CC6666 !important; }
+  .nv, .vi, .vg, .vc { color: #CC6666 !important; }
+  .err { color: #CC6666 !important; background-color: transparent !important; }
+  .gd { color: #CC6666 !important; }
+  .gi { color: #B5BD68 !important; }
+  .w { color: #C5C8C6 !important; }
+}
+
+// Rouge line numbers
+.highlighter-rouge {
+  background-color: #1D1F21 !important;
+}
+
+// Inline code in text
+p code,
+li code,
+td code,
+h1 code, h2 code, h3 code, h4 code {
+  background-color: #1D1F21 !important;
+  color: #C5C8C6 !important;
+  padding: 2px 6px;
+  border: 1px solid #2C2E30 !important;
+  border-radius: 3px;
+  font-size: 0.9em;
 }
 
 // Headings
