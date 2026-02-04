@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "UE5 HTTP 서비스에서 Multipart/form-data 파일 업로드 구현하기"
-date: 2026-02-04 18:30:00 +0900
+date: 2026-02-04 00:00:00 +0900
 categories: [unreal-engine]
 tags: [ue5, http, multipart, file-upload, cpp, mobile]
 excerpt: "Unreal Engine 5의 IHttpRequest로 multipart/form-data 바이너리 파일 업로드를 구현하는 방법. Boundary 생성부터 바이너리 조립, 응답 처리, 실전 트러블슈팅까지 다룬다."
