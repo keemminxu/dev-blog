@@ -22,13 +22,13 @@ RetainerBox (라운드 처리 Material 적용)
 
 이 구조에서 **스크롤 뷰 안에 넣으면** 문제가 발생한다. RetainerBox는 자식 위젯을 RenderTarget에 그리는 방식인데, 스크롤로 visible 영역이 줄어들면 RenderTarget 크기도 같이 변한다. 그 결과 UV가 꼬이면서 텍스처가 검은색으로 말려 올라가는 현상이 생긴다.
 
-![InvalidationBox 사용 시 — 스크롤하면 텍스처가 검은색으로 말려 올라간다](/dev-blog/assets/images/ue5-umg-material-fill-rounded-corner/Before.gif)
+![InvalidationBox 사용 시 — 스크롤하면 텍스처가 검은색으로 말려 올라간다](/dev-blog/assets/images/ue5-umg-material-fill-rounded-corner/Before.webp)
 
 ## 해결 방법
 
 ScaleBox, RetainerBox, InvalidationBox를 전부 걷어내고, **Material 하나에서 Fill 스케일링과 Rounded Corner를 동시에 처리**한다. Image 위젯에 이 Material Instance를 직접 넣으면 래핑 없이 깔끔하게 동작하고, 스크롤 시 RenderTarget 크기 변동 문제도 원천 차단된다.
 
-![Material 방식 적용 후 — 스크롤해도 정상 렌더링된다](/dev-blog/assets/images/ue5-umg-material-fill-rounded-corner/After.gif)
+![Material 방식 적용 후 — 스크롤해도 정상 렌더링된다](/dev-blog/assets/images/ue5-umg-material-fill-rounded-corner/After.webp)
 
 ### 머티리얼 기본 설정
 
