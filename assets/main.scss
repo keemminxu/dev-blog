@@ -1,0 +1,146 @@
+---
+---
+
+$background-color: #393633;
+$text-color: #EBDBB2;
+$brand-color: #EBDBB2;
+$brand-color-light: lighten($brand-color, 15%);
+$brand-color-dark: darken($brand-color, 15%);
+$base-font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+$site-title-color: $text-color;
+
+@import "minima";
+
+// ── Dark theme overrides ──
+
+// Site header & footer
+.site-header {
+  background-color: $background-color;
+  border-top-color: lighten($background-color, 15%);
+  border-bottom-color: lighten($background-color, 10%);
+}
+
+.site-footer {
+  background-color: $background-color;
+  border-top-color: lighten($background-color, 10%);
+}
+
+.site-title, .site-title:visited {
+  color: $text-color;
+}
+
+.site-nav .page-link {
+  color: $text-color;
+}
+
+// Links
+a {
+  color: #83A598;
+
+  &:visited {
+    color: darken(#83A598, 10%);
+  }
+
+  &:hover {
+    color: lighten(#83A598, 15%);
+    text-decoration: none;
+  }
+}
+
+// Post titles
+.post-title,
+.post-link {
+  color: $text-color;
+}
+
+.post-link:hover {
+  color: #83A598;
+  text-decoration: none;
+}
+
+.post-meta {
+  color: darken($text-color, 20%);
+}
+
+// Code blocks
+pre,
+code {
+  background-color: #2D2A28;
+  color: #D5C4A1;
+  border: 1px solid lighten($background-color, 12%);
+  border-radius: 4px;
+}
+
+pre {
+  padding: 12px 16px;
+  overflow-x: auto;
+
+  > code {
+    border: 0;
+    padding: 0;
+  }
+}
+
+// Headings
+h1, h2, h3, h4, h5, h6 {
+  color: $text-color;
+}
+
+// Horizontal rules & separators
+hr {
+  border-color: lighten($background-color, 15%);
+}
+
+// Tables
+table {
+  color: $text-color;
+  border-color: lighten($background-color, 15%);
+
+  th {
+    background-color: lighten($background-color, 8%);
+    border-color: lighten($background-color, 15%);
+  }
+
+  td {
+    border-color: lighten($background-color, 15%);
+  }
+
+  tr:nth-child(even) {
+    background-color: lighten($background-color, 3%);
+  }
+}
+
+// Blockquotes
+blockquote {
+  color: darken($text-color, 10%);
+  border-left-color: lighten($background-color, 20%);
+}
+
+// Layout width & spacing
+.wrapper {
+  max-width: 800px;
+}
+
+// Post list cleanup
+.post-list {
+  > li {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid lighten($background-color, 10%);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+// Images
+img {
+  border-radius: 4px;
+}
+
+// Selection color
+::selection {
+  background-color: #504945;
+  color: $text-color;
+}
