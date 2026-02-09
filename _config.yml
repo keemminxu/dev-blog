@@ -4,6 +4,8 @@ url: "https://keemminxu.github.io"
 baseurl: "/dev-blog"
 theme: minima
 future: true
+plugins:
+  - jekyll-sitemap
 lang: ko
 timezone: Asia/Seoul
 permalink: /:year/:month/:day/:title/
