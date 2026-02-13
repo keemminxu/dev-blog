@@ -389,6 +389,12 @@ void UK2Node_ShowWidgetWithParams::GetNodeContextMenuActions(
     }
 }
 ```
+![변수명 변경](/dev-blog/assets/images/unreal-k2node-custom-widget-params/ChangeName.png)
+![변수명 커스텀](/dev-blog/assets/images/unreal-k2node-custom-widget-params/Rename.png)
+
+
+![파라미터값 변경](/dev-blog/assets/images/unreal-k2node-custom-widget-params/ChangeParam.png)
+
 
 ## 정리
 
