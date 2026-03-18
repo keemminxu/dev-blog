@@ -186,3 +186,9 @@ nm -gU SuperPlatM-IOS-Shipping | c++filt | grep 'operator delete'
 - UE 5.6 이상에서는 `StaticAllocator = StaticAllocatorType.Ansi` API가 추가되었다
 - 근본 해결은 `IOSToolChain.cs`의 strip 파라미터를 `-x`로 변경하고, `ModuleBoilerplate.h`에서 operator에 `__attribute__((used, visibility("default")))`를 적용하는 것이다
 - 이 문제는 AdMob뿐 아니라 C++ 코드를 포함하는 모든 iOS 정적 라이브러리(Firebase, whisper.cpp 등)에서 동일하게 발생할 수 있다
+
+## 참고 자료
+
+- [Cesium Unreal - iOS App Store crash issue](https://github.com/CesiumGS/cesium-unreal/issues/1609)
+- [Cesium Community - \[Solved\] iOS apps distributed to the App Store crash](https://community.cesium.com/t/solved-ios-apps-distributed-to-the-app-store-crash/29401/6?u=kevin_ring)
+- [Unreal 内存分配 operator new/delete 的史诗级灾难问题](https://zhuanlan.zhihu.com/p/1889829631009485501)
