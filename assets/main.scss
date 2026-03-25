@@ -118,8 +118,9 @@ img {
 
 .search-bar {
   flex: 1;
-  max-width: 400px;
+  max-width: 360px;
   margin-left: auto;
+  margin-right: 16px;
   position: relative;
 
   input {
@@ -236,7 +237,7 @@ img {
   margin: 0;
 }
 
-.sidebar-nav { flex: 1; margin-bottom: 16px; }
+.sidebar-nav { margin-bottom: 16px; }
 
 .nav-item {
   display: flex;
@@ -288,7 +289,9 @@ img {
 // ── Main Content ──
 
 .main-content {
-  padding: 32px 48px;
+  padding: 32px 0;
+  max-width: 760px;
+  margin: 0 auto;
   min-width: 0;
 }
 
@@ -374,26 +377,25 @@ img {
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s;
-  animation: fortune-glow 2s ease-in-out infinite;
+  animation: fortune-shimmer 2s ease-in-out infinite;
 
-  &:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba($accent, 0.4); }
+  &:hover { transform: scale(1.05); }
   &:active { transform: scale(0.97); }
 
   &.jackpot {
     background: linear-gradient(135deg, #ffd700, #ffaa00, #ffd700);
-    animation: jackpot-glow 0.5s ease-in-out infinite;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    animation: jackpot-shimmer 0.4s ease-in-out infinite;
   }
 }
 
-@keyframes fortune-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba($accent, 0.2); }
-  50% { box-shadow: 0 0 15px rgba($accent, 0.4); }
+@keyframes fortune-shimmer {
+  0%, 100% { background: linear-gradient(135deg, $accent, $accent-hover); }
+  50% { background: linear-gradient(135deg, lighten($accent, 10%), lighten($accent-hover, 10%)); }
 }
 
-@keyframes jackpot-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
-  50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+@keyframes jackpot-shimmer {
+  0%, 100% { background: linear-gradient(135deg, #ffd700, #ff8c00); }
+  50% { background: linear-gradient(135deg, #fff176, #ffcc02); }
 }
 
 .fortune-result {
