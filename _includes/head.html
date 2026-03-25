@@ -35,4 +35,10 @@
 
   <!-- Umami Analytics -->
   <script defer src="https://cloud.umami.is/script.js" data-website-id="69da4afd-2258-4121-84e7-b12c4e37ccac"></script>
+
+  <!-- Page Scripts -->
+  <script defer src="{{ '/assets/js/search.js' | relative_url }}"></script>
+  {% if page.layout == 'post' %}
+    <script defer src="{{ '/assets/js/toc.js' | relative_url }}"></script>
+  {% endif %}
 </head>
