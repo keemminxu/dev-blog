@@ -1,0 +1,27 @@
+{% comment %}
+  포스트 카드 컴포넌트. 사용 시 include에 post 변수를 전달한다.
+  예: {% include post-card.html post=post %}
+{% endcomment %}
+
+<article class="post-card">
+  <a href="{{ include.post.url | relative_url }}" class="post-card-thumbnail">
+    {% assign post_slug = include.post.url | split: '/' | last %}
+    <img src="{{ '/assets/og/' | append: post_slug | append: '.png' | relative_url }}"
+         alt="{{ include.post.title | escape }}"
+         loading="lazy">
+  </a>
+  <div class="post-card-content">
+    <h3 class="post-card-title">
+      <a href="{{ include.post.url | relative_url }}">{{ include.post.title | escape }}</a>
+    </h3>
+    <p class="post-card-meta">
+      {{ include.post.date | date: "%Y-%m-%d" }}
+      {% if include.post.categories.size > 0 %}
+        · <a href="{{ '/category/' | append: include.post.categories[0] | relative_url }}">{{ include.post.categories[0] }}</a>
+      {% endif %}
+    </p>
+    {% if include.post.excerpt %}
+      <p class="post-card-excerpt">{{ include.post.excerpt | strip_html | truncate: 120 }}</p>
+    {% endif %}
+  </div>
+</article>
