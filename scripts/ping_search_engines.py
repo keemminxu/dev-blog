@@ -18,7 +18,7 @@ from pathlib import Path
 BLOG_ROOT = Path(__file__).parent.parent
 POSTS_DIR = BLOG_ROOT / "_posts"
 
-SITE_URL = "https://keemminxu.github.io"
+SITE_URL = "https://keemminxu.com"
 BASE_URL = ""
 SITEMAP_URL = f"{SITE_URL}{BASE_URL}/sitemap.xml"
 INDEXNOW_KEY = "8ffe854fb9974c4ca5c63e1fd1e78bf1"
@@ -37,7 +37,7 @@ def submit_indexnow(urls):
         return
 
     payload = {
-        "host": "keemminxu.github.io",
+        "host": "keemminxu.com",
         "key": INDEXNOW_KEY,
         "keyLocation": f"{SITE_URL}{BASE_URL}/{INDEXNOW_KEY}.txt",
         "urlList": urls,
