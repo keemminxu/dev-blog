@@ -20,3 +20,9 @@ plugins:
 
 header_pages:
   - tags.html
+
+exclude:
+  - docs/
+  - scripts/
+  - Gemfile
+  - Gemfile.lock
