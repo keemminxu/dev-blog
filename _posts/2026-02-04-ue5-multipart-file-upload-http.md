@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "UE5 HTTP 서비스에서 Multipart/form-data 파일 업로드 구현하기"
+title_en: "Implementing Multipart/form-data File Upload in UE5 HTTP Service"
+excerpt_en: "How to implement multipart/form-data file upload using UE5's HTTP module with FHttpMultipartFormData."
 date: 2026-02-04 00:00:00 +0900
 categories: [unreal-engine]
 tags: [ue5, http, multipart, file-upload, cpp, mobile]

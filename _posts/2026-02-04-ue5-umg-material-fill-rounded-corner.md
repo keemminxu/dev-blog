@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "UE5 UMG에서 외부 텍스처를 Fill + Rounded Corner 처리하는 머티리얼 만들기"
+title_en: "Creating a Fill + Rounded Corner Material for External Textures in UE5 UMG"
+excerpt_en: "Custom material with HLSL custom node to apply fill mode and rounded corners to external textures in UMG."
 date: 2026-02-04 00:00:00 +0900
 categories: [unreal-engine]
 tags: [ue5, material, hlsl, umg, rounded-corner, custom-node]

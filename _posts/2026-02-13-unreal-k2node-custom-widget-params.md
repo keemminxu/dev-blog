@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "언리얼 K2Node로 위젯 파라미터 전달 문제 해결하기"
+title_en: "Solving Widget Parameter Passing with Custom K2Nodes in Unreal Engine"
+excerpt_en: "Using custom K2Node and reflection to pass parameters to dynamically created widgets in UE5 Blueprint."
 date: 2026-02-13 00:00:00 +0900
 categories: [unreal-engine]
 tags: [k2node, blueprint, umg, widget, reflection, editor-module]

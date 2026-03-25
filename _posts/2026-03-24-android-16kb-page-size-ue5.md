@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "Android 16KB 페이지 크기 대응 - UE5 커스텀 엔진에서 Swappy 업데이트하기"
+title_en: "Android 16KB Page Size Support — Updating Swappy in Custom UE5 Engine"
+excerpt_en: "How to update Google Swappy library for 16KB page size alignment in a custom UE5 engine build for Google Play compliance."
 date: 2026-03-24 01:00:00 +0900
 categories: [mobile]
 tags: [android, 16kb-page-size, unreal-engine, swappy, google-play, googlegamesdk]

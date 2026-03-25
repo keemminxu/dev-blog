@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "UE5 Pull-to-Refresh 구현: SScrollBox의 Overscroll 값 접근하기"
+title_en: "Implementing Pull-to-Refresh in UE5: Accessing SScrollBox Overscroll Values"
+excerpt_en: "How to access Slate-level overscroll values from SScrollBox to implement pull-to-refresh in UE5 mobile UI."
 date: 2026-02-05 00:00:00 +0900
 categories: [unreal-engine]
 tags: [ue5, scrollbox, overscroll, pull-to-refresh, slate, umg, delegate]

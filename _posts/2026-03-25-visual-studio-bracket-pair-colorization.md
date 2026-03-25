@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "Visual Studio 중괄호 쌍 색 지정으로 괄호 지옥 탈출하기"
+title_en: "Enable Bracket Pair Colorization in Visual Studio"
+excerpt_en: "Built-in bracket pair colorization in Visual Studio 17.6+ — no extension needed."
 date: 2026-03-25 10:00:00 +0900
 categories: [tips]
 tags: [visual-studio, ide, productivity]

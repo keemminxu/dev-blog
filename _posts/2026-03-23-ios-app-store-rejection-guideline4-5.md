@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "iOS 앱스토어 리젝 대응 - 인앱 브라우저와 계정 삭제 정책"
+title_en: "Handling iOS App Store Rejection — In-App Browser and Account Deletion Policy"
+excerpt_en: "How to resolve App Store review guideline 4.5 rejection by replacing WKWebView with SFSafariViewController and adding account deletion."
 date: 2026-03-23 15:00:00 +0900
 categories: [mobile]
 tags: [ios, app-store-review, sfsafariviewcontroller, account-deletion, unreal-engine, apple-guidelines]

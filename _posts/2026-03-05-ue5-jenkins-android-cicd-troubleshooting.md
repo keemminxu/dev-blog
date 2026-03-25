@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "UE5 Android 빌드를 Jenkins로 자동화하며 만난 21가지 함정"
+title_en: "21 Pitfalls of Automating UE5 Android Builds with Jenkins CI/CD"
+excerpt_en: "A comprehensive troubleshooting guide for UE5 Android build automation with Jenkins, Gradle, and Google Play deployment."
 date: 2026-03-05 17:30:00 +0900
 categories: [devops]
 tags: [unreal-engine, jenkins, gradle, android, cicd, troubleshooting]

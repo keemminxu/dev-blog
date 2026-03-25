@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "UE5 iOS에서 AdMob SDK가 크래시를 일으키는 이유와 해결 과정"
+title_en: "Why AdMob SDK Crashes in UE5 iOS and How to Fix It"
+excerpt_en: "Fix for AdMob SDK crash caused by FMallocBinned memory allocator conflict in UE5 iOS shipping builds."
 date: 2026-03-18 11:00:00 +0900
 categories: [unreal-engine]
 tags: [ue5, ios, admob, memory-allocator, fmallocbinned, crash, strip]

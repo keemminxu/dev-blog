@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "UE5 PIE 종료 후 메세지 로그 창 안 뜨게 하기"
+title_en: "Disable Auto-Opening Message Log After PIE in UE5"
+excerpt_en: "Quick engine source fix to prevent the Message Log window from auto-opening after stopping PIE in Unreal Editor."
 date: 2026-03-25 11:00:00 +0900
 categories: [tips]
 tags: [unreal-engine, ue5, editor, pie, productivity]

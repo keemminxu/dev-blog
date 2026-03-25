@@ -1,6 +1,8 @@
 ---
 layout: post
 title: "UE5 ScrollBox로 양방향 무한 스크롤 만들기"
+title_en: "Building Bidirectional Infinite Scroll with UE5 ScrollBox"
+excerpt_en: "Implementing bidirectional infinite scroll with pagination using UE5 ScrollBox and Slate-level scroll detection."
 date: 2026-03-04 02:30:00 +0900
 categories: [unreal-engine]
 tags: [ue5, scrollbox, infinite-scroll, pagination, umg, mobile, slate]
