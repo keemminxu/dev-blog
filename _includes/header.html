@@ -1,0 +1,28 @@
+<header class="site-header">
+  <div class="wrapper">
+    <a class="site-brand" href="{{ '/' | relative_url }}">
+      <img src="{{ '/assets/profile/250x250.png' | relative_url }}" alt="Profile" class="site-profile">
+      <div class="site-brand-text">
+        <span class="site-title">{{ site.title | escape }}</span>
+        <span class="site-subtitle">{{ site.description | escape }}</span>
+      </div>
+    </a>
+
+    <nav class="site-nav">
+      <a class="page-link" href="{{ '/tags/' | relative_url }}">Tags</a>
+    </nav>
+
+    <button class="menu-toggle" aria-label="Menu" onclick="document.querySelector('.mobile-nav').classList.toggle('is-open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="mobile-nav wrapper">
+    <a href="{{ '/tags/' | relative_url }}">Tags</a>
+    <a href="{{ '/categories/' | relative_url }}">Categories</a>
+  </div>
+</header>
