@@ -193,7 +193,7 @@ img {
   border-right: 1px solid $border;
   overflow-y: auto;
   z-index: 200;
-  padding: 24px 20px;
+  padding: 24px 20px 80px;  // 하단 패딩 추가 (소셜 링크 잘림 방지)
 }
 
 .sidebar-left-inner {
@@ -288,7 +288,7 @@ img {
 // ── Main Content ──
 
 .main-content {
-  padding: 32px 40px;
+  padding: 32px 48px;
   min-width: 0;
 }
 
@@ -356,24 +356,34 @@ img {
   }
 }
 
-.fortune-section { text-align: center; margin-bottom: 28px; }
-
-.fortune-label { font-size: 0.85rem; font-weight: 500; color: $text; margin-bottom: 8px; }
+.fortune-section {
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid $border;
+}
 
 .fortune-btn {
   display: inline-block;
-  padding: 10px 24px;
+  padding: 12px 28px;
   background: linear-gradient(135deg, $accent, $accent-hover);
   color: $bg;
   font-family: $font-base;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   border: none;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s;
   animation: fortune-glow 2s ease-in-out infinite;
+
   &:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba($accent, 0.4); }
+  &:active { transform: scale(0.97); }
+
+  &.jackpot {
+    background: linear-gradient(135deg, #ffd700, #ffaa00, #ffd700);
+    animation: jackpot-glow 0.5s ease-in-out infinite;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+  }
 }
 
 @keyframes fortune-glow {
@@ -381,8 +391,24 @@ img {
   50% { box-shadow: 0 0 15px rgba($accent, 0.4); }
 }
 
-.fortune-result { margin-top: 12px; font-size: 0.8rem; font-weight: 300; color: $text; min-height: 20px; }
-.fortune-counter { margin-top: 6px; font-size: 0.7rem; color: $text-muted; }
+@keyframes jackpot-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+}
+
+.fortune-result {
+  margin-top: 12px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: $text;
+  min-height: 30px;
+
+  &.jackpot {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    font-size: 2rem;
+  }
+}
 
 .visitor-counter {
   display: flex;
@@ -390,7 +416,9 @@ img {
   gap: 16px;
   font-size: 0.75rem;
   color: $text-muted;
-  padding: 8px 0;
+  padding: 8px 0 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid $border;
   .counter-item {
     text-align: center;
     .counter-label { display: block; font-size: 0.65rem; }
