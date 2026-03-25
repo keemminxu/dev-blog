@@ -16,6 +16,12 @@
     <meta property="og:image:height" content="630">
   {% endif %}
 
+  <!-- English SEO meta (for international search) -->
+  {% if page.title_en %}
+    <meta name="description" lang="en" content="{{ page.excerpt_en | default: page.title_en }}">
+    <meta name="keywords" content="{{ page.tags | join: ', ' }}">
+  {% endif %}
+
   <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
   {%- feed_meta -%}
   {%- if jekyll.environment == 'production' and site.google_analytics -%}

@@ -14,6 +14,9 @@
     <h3 class="post-card-title">
       <a href="{{ include.post.url | relative_url }}">{{ include.post.title | escape }}</a>
     </h3>
+    {% if include.post.title_en %}
+      <p class="post-card-title-en">{{ include.post.title_en }}</p>
+    {% endif %}
     <p class="post-card-meta">
       {{ include.post.date | date: "%Y-%m-%d" }}
       {% if include.post.categories.size > 0 %}
