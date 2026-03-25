@@ -1,0 +1,45 @@
+---
+layout: null
+---
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"
+        xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% for post in site.posts %}
+    <url>
+        <loc>{{ site.url }}{{ site.baseurl }}{{ post.url }}</loc>
+        {% if post.lastmod %}
+        <lastmod>{{ post.lastmod | date_to_xmlschema }}</lastmod>
+        {% else %}
+        <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
+        {% endif %}
+        {% if post.sitemap.changefreq %}
+        <changefreq>{{ post.sitemap.changefreq }}</changefreq>
+        {% else %}
+        <changefreq>weekly</changefreq>
+        {% endif %}
+        {% if post.sitemap.priority %}
+        <priority>{{ post.sitemap.priority }}</priority>
+        {% else %}
+        <priority>0.8</priority>
+        {% endif %}
+    </url>
+    {% endfor %}
+
+    <url>
+        <loc>{{ site.url }}{{ site.baseurl }}/</loc>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>{{ site.url }}{{ site.baseurl }}/tags/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>{{ site.url }}{{ site.baseurl }}/categories/</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+</urlset>
