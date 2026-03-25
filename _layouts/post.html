@@ -2,8 +2,7 @@
 layout: default
 ---
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-  <div class="content-wrapper">
-    <header class="post-header">
+  <header class="post-header">
       <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
       {% if page.title_en %}
         <p class="post-title-en">{{ page.title_en }}</p>
@@ -29,8 +28,7 @@ layout: default
       {{ content }}
     </div>
 
-    {% include related-posts.html %}
-  </div>
+  {% include related-posts.html %}
 
   <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
 </article>
