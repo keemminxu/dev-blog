@@ -168,10 +168,10 @@ img {
 }
 
 .mobile-nav {
-  display: none;
+  display: none !important;
   padding: 16px 0;
   border-bottom: 1px solid $border;
-  &.is-open { display: block; }
+  &.is-open { display: block !important; }
   a {
     display: block;
     padding: 8px 0;
