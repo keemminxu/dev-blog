@@ -1,0 +1,35 @@
+---
+layout: default
+title: Categories
+permalink: /categories/
+---
+
+<div class="categories-index">
+  <h1 class="page-heading">Categories</h1>
+
+  <div class="category-list">
+    {% assign categories = site.categories | sort %}
+    {% for cat in categories %}
+      <a href="{{ '/category/' | append: cat[0] | relative_url }}" class="category-card">
+        <span class="cat-name">{{ cat[0] }}</span>
+        <span class="cat-count">({{ cat[1].size }})</span>
+      </a>
+    {% endfor %}
+  </div>
+
+  {% assign categories = site.categories | sort %}
+  {% for cat in categories %}
+  <div class="category-section" id="{{ cat[0] }}">
+    <h2>{{ cat[0] }} <span class="cat-count">({{ cat[1].size }})</span></h2>
+    <ul class="post-list">
+      {% assign sorted = cat[1] | sort: 'date' | reverse %}
+      {% for post in sorted %}
+      <li>
+        <span class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</span>
+        <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+</div>
