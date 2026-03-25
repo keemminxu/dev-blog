@@ -1,17 +1,4 @@
 <aside class="sidebar-right">
-  <!-- 방문자 카운터 (맨 위) -->
-  <div class="visitor-counter">
-    <div class="counter-item">
-      <span class="counter-label">TODAY</span>
-      <span class="counter-value" id="today-count">-</span>
-    </div>
-    <div class="counter-item">
-      <span class="counter-label">TOTAL</span>
-      <span class="counter-value" id="total-count">-</span>
-    </div>
-  </div>
-
-  <!-- TOC (포스트 페이지만) -->
   {% if page.layout == 'post' %}
   <div class="sidebar-section">
     <h4>바로가기</h4>
@@ -19,7 +6,6 @@
   </div>
   {% endif %}
 
-  <!-- 최근 포스트 -->
   <div class="sidebar-section">
     <h4>최근 포스트</h4>
     <ul class="recent-posts-list">
@@ -29,6 +15,5 @@
     </ul>
   </div>
 
-  <!-- 운세 버튼 (맨 아래) -->
   <div id="fortune-container"></div>
 </aside>

@@ -230,11 +230,42 @@ img {
   margin: 0 0 4px;
 }
 
-.profile-desc {
-  font-size: 0.75rem;
+.profile-sub {
+  font-size: 0.7rem;
   font-weight: 300;
   color: $text-muted;
+  margin: 0 0 8px;
+}
+
+.profile-desc {
+  font-size: 0.65rem;
+  font-weight: 300;
+  color: darken($text-muted, 10%);
   margin: 0;
+}
+
+// Toast notification
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: $surface;
+  color: $text;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: 1px solid $border;
+  font-size: 0.85rem;
+  font-weight: 300;
+  z-index: 9999;
+  opacity: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+
+  &.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .sidebar-nav { margin-bottom: 16px; }
