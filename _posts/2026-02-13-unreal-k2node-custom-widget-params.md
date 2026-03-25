@@ -18,9 +18,9 @@ excerpt: "UIManager로 위젯을 관리할 때 발생하는 캐스팅 종속성�
 UUserWidget* Widget = UIManager->ShowWidget("MainHome/UI", "WBP_Popup", 10);
 ```
 
-![BP에서 사용 예시](/dev-blog/assets/images/unreal-k2node-custom-widget-params/NoParams.png)
+![BP에서 사용 예시](/assets/images/unreal-k2node-custom-widget-params/NoParams.png)
 
-![기존 UI 생성 로직](/dev-blog/assets/images/unreal-k2node-custom-widget-params/Default.png)
+![기존 UI 생성 로직](/assets/images/unreal-k2node-custom-widget-params/Default.png)
 
 하지만 실제 프로젝트에서 사용하다 보면 두 가지 문제에 부딪힌다.
 
@@ -84,7 +84,7 @@ if (UWBP_Popup* Popup = Cast<UWBP_Popup>(Widget))
 └─────────────────────────────────┘
 ```
 
-![동적 파라미터 핀](/dev-blog/assets/images/unreal-k2node-custom-widget-params/Type.png)
+![동적 파라미터 핀](/assets/images/unreal-k2node-custom-widget-params/Type.png)
 
 
 ## K2Node 기본 구조
@@ -391,11 +391,11 @@ void UK2Node_ShowWidgetWithParams::GetNodeContextMenuActions(
     }
 }
 ```
-![변수명 변경](/dev-blog/assets/images/unreal-k2node-custom-widget-params/ChangeName.png)
-![변수명 커스텀](/dev-blog/assets/images/unreal-k2node-custom-widget-params/Rename.png)
+![변수명 변경](/assets/images/unreal-k2node-custom-widget-params/ChangeName.png)
+![변수명 커스텀](/assets/images/unreal-k2node-custom-widget-params/Rename.png)
 
 
-![파라미터값 변경](/dev-blog/assets/images/unreal-k2node-custom-widget-params/ChangeParam.png)
+![파라미터값 변경](/assets/images/unreal-k2node-custom-widget-params/ChangeParam.png)
 
 
 ## 정리
@@ -410,8 +410,8 @@ void UK2Node_ShowWidgetWithParams::GetNodeContextMenuActions(
 | 타입 안전성 | 컴파일 타임 | 런타임 (변수 없으면 조용히 무시) |
 | 패키징 or 청크 시스템 | 레퍼런스 잡힘 | 레퍼런스 안잡힘(패키징 이슈 해결) |
 
-![UI Manager](/dev-blog/assets/images/unreal-k2node-custom-widget-params/WithParams.png)
-![레퍼런스 뷰어](/dev-blog/assets/images/unreal-k2node-custom-widget-params/RefView.png)
+![UI Manager](/assets/images/unreal-k2node-custom-widget-params/WithParams.png)
+![레퍼런스 뷰어](/assets/images/unreal-k2node-custom-widget-params/RefView.png)
 
 ### 핵심 포인트
 

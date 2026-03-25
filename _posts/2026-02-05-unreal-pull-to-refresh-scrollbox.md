@@ -214,7 +214,7 @@ TSharedRef<SWidget> UPullToRefreshScrollBox::RebuildWidget()
 }
 ```
 
-![Overscroll 값 반환!](/dev-blog/assets/images/unreal-pull-to-refresh-scrollbox/scrollbox.png)  
+![Overscroll 값 반환!](/assets/images/unreal-pull-to-refresh-scrollbox/scrollbox.png)  
 
 ## 정리
 

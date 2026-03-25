@@ -293,7 +293,7 @@ ClearDynamicChildren → API(PageNo=1) → AddChild(ContentContainer) → Notify
 
 
 
-![](/dev-blog/assets/images/infinite-scroll-box-unreal-scrollbox/InfiniteScroll.gif)
+![](/assets/images/infinite-scroll-box-unreal-scrollbox/InfiniteScroll.gif)
 
 스크롤을 올릴때 가상화 처리 이슈가 있다. 높이를 기준으로 스크롤 박스의 offset을 재계산하기 때문
 하지만 뿌듯하다ㅋ 

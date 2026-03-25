@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!input || !results) return;
 
   var posts = [];
-  var baseUrl = '/dev-blog';
+  var baseUrl = '';
 
   fetch(baseUrl + '/search.json')
     .then(function(r) { return r.json(); })

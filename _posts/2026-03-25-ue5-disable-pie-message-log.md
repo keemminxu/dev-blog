@@ -15,7 +15,7 @@ excerpt: "에디터에서 플레이하고 종료할 때마다 뜨는 메세지 �
 
 개발자 입장에선 Output Log로 충분히 디버깅 가능하기 때문에 이 창이 굳이 필요 없다.
 
-![PIE 종료 시 자동으로 뜨는 메세지 로그 창](/dev-blog/assets/images/ue5-disable-pie-message-log/1.png)
+![PIE 종료 시 자동으로 뜨는 메세지 로그 창](/assets/images/ue5-disable-pie-message-log/1.png)
 
 ## 해결
 

@@ -19,7 +19,7 @@ BLOG_ROOT = Path(__file__).parent.parent
 POSTS_DIR = BLOG_ROOT / "_posts"
 
 SITE_URL = "https://keemminxu.github.io"
-BASE_URL = "/dev-blog"
+BASE_URL = ""
 SITEMAP_URL = f"{SITE_URL}{BASE_URL}/sitemap.xml"
 INDEXNOW_KEY = "8ffe854fb9974c4ca5c63e1fd1e78bf1"
 INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"

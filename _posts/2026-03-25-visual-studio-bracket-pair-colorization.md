@@ -19,11 +19,11 @@ Visual Studio 17.6 버전부터 **중괄호 쌍 색 지정** 기능이 기본 �
 
 **도구** → **옵션** → **텍스트 편집기** → **일반** → **중괄호 쌍 색 지정 사용** 체크
 
-![VS 옵션에서 중괄호 쌍 색 지정 설정](/dev-blog/assets/images/visual-studio-bracket-pair-colorization/1.png)
+![VS 옵션에서 중괄호 쌍 색 지정 설정](/assets/images/visual-studio-bracket-pair-colorization/1.png)
 
 이렇게 하면 중첩된 괄호마다 다른 색상이 적용되어 어떤 괄호가 어떤 괄호와 쌍인지 한눈에 보인다.
 
-![적용 후 중괄호 쌍이 색상으로 구분되는 모습](/dev-blog/assets/images/visual-studio-bracket-pair-colorization/2.png)
+![적용 후 중괄호 쌍이 색상으로 구분되는 모습](/assets/images/visual-studio-bracket-pair-colorization/2.png)
 
 ## 정리
 
