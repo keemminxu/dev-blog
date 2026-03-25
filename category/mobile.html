@@ -5,25 +5,12 @@ permalink: /category/mobile/
 ---
 
 <div class="category-page">
-  <h1 class="page-heading">Mobile</h1>
+  {% include category-tabs.html %}
 
-  <ul class="post-list">
+  <div class="post-list">
     {% assign posts = site.categories['mobile'] | sort: 'date' | reverse %}
     {% for post in posts %}
-    <li>
-      <span class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</span>
-      <h3><a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
-      {% if post.excerpt %}
-        <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
-      {% endif %}
-      <div class="post-tags">
-        {% for tag in post.tags %}
-          <a href="{{ '/tag/' | append: tag | relative_url }}" class="tag-link">{{ tag }}</a>
-        {% endfor %}
-      </div>
-    </li>
+      {% include post-card.html post=post %}
     {% endfor %}
-  </ul>
-
-  <p class="back-link"><a href="{{ '/categories' | relative_url }}">← 모든 카테고리 보기</a></p>
+  </div>
 </div>

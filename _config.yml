@@ -21,5 +21,3 @@ plugins:
 
 header_pages:
   - tags.html
-  - categories.html
-  - privacy-policy.md

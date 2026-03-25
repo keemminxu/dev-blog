@@ -20,12 +20,12 @@ permalink: /tags/
   {% for tag in tags %}
   <div class="tag-section" id="{{ tag[0] }}">
     <h2>{{ tag[0] }} <span class="tag-count">({{ tag[1].size }})</span></h2>
-    <ul class="post-list">
+    <ul class="post-list-simple">
       {% assign sorted = tag[1] | sort: 'date' | reverse %}
       {% for post in sorted %}
       <li>
         <span class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</span>
-        <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+        <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
       </li>
       {% endfor %}
     </ul>

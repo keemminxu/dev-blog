@@ -4,24 +4,16 @@ layout: default
 
 <div class="tag-page">
   <h1 class="page-heading">{{ page.tag }}</h1>
-  <p class="tag-description">태그 <strong>{{ page.tag }}</strong>에 해당하는 포스트 목록</p>
+  <p class="page-description">태그 <strong>{{ page.tag }}</strong>에 해당하는 포스트 목록</p>
 
-  <ul class="post-list">
+  <div class="post-list">
     {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
     {% for post in sorted_posts %}
       {% if post.tags contains page.tag %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</span>
-        <h3>
-          <a class="post-link" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-        </h3>
-        {% if post.excerpt %}
-          <p class="post-excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</p>
-        {% endif %}
-      </li>
+        {% include post-card.html post=post %}
       {% endif %}
     {% endfor %}
-  </ul>
+  </div>
 
-  <p class="back-link"><a href="{{ '/tags' | relative_url }}">← 모든 태그 보기</a></p>
+  <p class="back-link"><a href="{{ '/tags/' | relative_url }}">← 모든 태그 보기</a></p>
 </div>
