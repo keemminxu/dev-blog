@@ -332,3 +332,31 @@ img {
     }
   }
 }
+
+// ── Related posts ──
+
+.related-posts {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid lighten($background-color, 10%);
+
+  h3 {
+    font-size: 1.1em;
+    margin-bottom: 12px;
+    color: darken($text-color, 10%);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      margin-bottom: 8px;
+
+      .post-meta {
+        font-size: 0.85em;
+        margin-right: 8px;
+      }
+    }
+  }
+}

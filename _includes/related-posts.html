@@ -1,0 +1,38 @@
+{% comment %}
+  태그 기반 관련 포스트를 최대 3개 표시한다.
+  공통 태그가 1개 이상인 포스트를 최신순으로 표시.
+{% endcomment %}
+
+{% assign max_related = 3 %}
+{% assign related = "" | split: "" %}
+
+{% for post in site.posts %}
+  {% if post.url == page.url %}
+    {% continue %}
+  {% endif %}
+
+  {% assign common_tags = 0 %}
+  {% for tag in page.tags %}
+    {% if post.tags contains tag %}
+      {% assign common_tags = common_tags | plus: 1 %}
+    {% endif %}
+  {% endfor %}
+
+  {% if common_tags > 0 %}
+    {% assign related = related | push: post %}
+  {% endif %}
+{% endfor %}
+
+{% if related.size > 0 %}
+<div class="related-posts">
+  <h3>관련 포스트</h3>
+  <ul>
+    {% for post in related limit: max_related %}
+    <li>
+      <span class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</span>
+      <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
