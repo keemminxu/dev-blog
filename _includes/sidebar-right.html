@@ -11,9 +11,8 @@
   <div class="sidebar-section">
     <h4>인기 태그</h4>
     <div class="popular-tags">
-      {% assign sorted_tags = site.tags | sort: 'last' %}
       {% assign tag_count = 0 %}
-      {% for tag in sorted_tags reversed %}
+      {% for tag in site.tags %}
         {% if tag_count < 10 %}
           <a href="{{ '/tag/' | append: tag[0] | relative_url }}" class="tag-badge">{{ tag[0] }}</a>
           {% assign tag_count = tag_count | plus: 1 %}
