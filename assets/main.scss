@@ -267,18 +267,21 @@ img {
 }
 
 .visitor-stats {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 8px 12px;
-  margin-bottom: 12px;
+  padding: 6px 16px;
+  margin: 0 auto 12px;
   background: rgba($text, 0.04);
   border-radius: 8px;
   font-size: 0.75rem;
   opacity: 0;
   transition: opacity 0.3s;
   &.loaded { opacity: 1; }
+}
+.visitor-stats-wrap {
+  text-align: center;
 }
 .visitor-row {
   display: flex;
