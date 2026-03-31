@@ -1,0 +1,17 @@
+<section class="comments-section" id="comments"
+  data-supabase-url="https://mnatdbpscbvhhsxstvaq.supabase.co"
+  data-supabase-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uYXRkYnBzY2J2aGhzeHN0dmFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MDY4MzAsImV4cCI6MjA5MDQ4MjgzMH0.8iItsIbd06Sbi0PSt_4FAVGlEd8YdsTWL3xztszVieE"
+  data-post-slug="{{ page.slug }}">
+
+  <h2 class="comments-title">댓글</h2>
+
+  <form class="comment-form" id="comment-form">
+    <div class="comment-form-row">
+      <input type="text" id="comment-nickname" placeholder="닉네임 (선택)" maxlength="20">
+      <button type="submit" class="comment-submit">등록</button>
+    </div>
+    <textarea id="comment-content" placeholder="댓글을 남겨주세요" rows="3" maxlength="1000" required></textarea>
+  </form>
+
+  <div class="comments-list" id="comments-list"></div>
+</section>
