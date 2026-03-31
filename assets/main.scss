@@ -540,7 +540,7 @@ img {
   border-bottom: 1px solid $border;
   transition: opacity 0.2s;
   &:last-child { border-bottom: none; }
-  &:hover { opacity: 0.9; }
+  &:hover { background: rgba($text, 0.03); }
 }
 
 .post-card-thumbnail {
@@ -899,6 +899,15 @@ figure.highlight,
   .site-footer { grid-column: 1; }
 }
 
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  &.is-open { display: block; }
+}
+
 @media (max-width: 768px) {
   .top-bar { left: 0; }
   .menu-toggle { display: block; }
@@ -924,7 +933,7 @@ figure.highlight,
 .comments-section {
   margin-top: 48px;
   padding-top: 32px;
-  border-top: 1px solid rgba($text, 0.1);
+  border-top: 1px solid $border;
 }
 .comments-title {
   font-size: 1.1rem;
@@ -934,17 +943,12 @@ figure.highlight,
 .comment-form {
   margin-bottom: 24px;
 }
-.comment-form-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 8px;
-}
 #comment-nickname {
-  flex: 1;
   max-width: 180px;
+  margin-bottom: 8px;
   padding: 8px 12px;
-  background: rgba($text, 0.05);
-  border: 1px solid rgba($text, 0.1);
+  background: $surface;
+  border: 1px solid $border;
   border-radius: 6px;
   color: $text;
   font-size: 0.85rem;
@@ -953,8 +957,8 @@ figure.highlight,
 #comment-content {
   width: 100%;
   padding: 10px 12px;
-  background: rgba($text, 0.05);
-  border: 1px solid rgba($text, 0.1);
+  background: $surface;
+  border: 1px solid $border;
   border-radius: 6px;
   color: $text;
   font-size: 0.85rem;
@@ -976,6 +980,11 @@ figure.highlight,
   white-space: nowrap;
   &:hover { opacity: 0.9; }
   &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+.comment-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
 }
 .comments-list {
   display: flex;
