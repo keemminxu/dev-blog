@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var SUPABASE_URL = section.dataset.supabaseUrl;
   var SUPABASE_KEY = section.dataset.supabaseKey;
   var POST_SLUG = section.dataset.postSlug;
+  if (!SUPABASE_URL || !SUPABASE_KEY || !POST_SLUG) return;
   var API = SUPABASE_URL + '/rest/v1/comments';
   var HEADERS = {
     'apikey': SUPABASE_KEY,
@@ -33,7 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function loadComments() {
     var url = API + '?post_slug=eq.' + POST_SLUG + '&order=created_at.desc&select=*';
     fetch(url, { headers: HEADERS })
-      .then(function(res) { return res.json(); })
+      .then(function(res) {
+        if (!res.ok) throw new Error('댓글을 불러오지 못했습니다.');
+        return res.json();
+      })
       .then(function(comments) {
         var list = document.getElementById('comments-list');
         if (comments.length === 0) {
@@ -49,10 +53,15 @@ document.addEventListener('DOMContentLoaded', function() {
             + '<p class="comment-body">' + escapeHtml(c.content).replace(/\n/g, '<br>') + '</p>'
             + '</div>';
         }).join('');
+      })
+      .catch(function() {
+        var list = document.getElementById('comments-list');
+        list.innerHTML = '<p class="comments-empty">댓글을 불러오는 중 오류가 발생했습니다.</p>';
       });
   }
 
   var form = document.getElementById('comment-form');
+  if (!form) return;
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     var nickname = document.getElementById('comment-nickname').value.trim() || '익명';
@@ -72,10 +81,16 @@ document.addEventListener('DOMContentLoaded', function() {
         content: content
       })
     })
-    .then(function(res) { return res.json(); })
+    .then(function(res) {
+      if (!res.ok) throw new Error('댓글 등록에 실패했습니다.');
+      return res.json();
+    })
     .then(function() {
       document.getElementById('comment-content').value = '';
       loadComments();
+    })
+    .catch(function() {
+      alert('댓글 등록 중 오류가 발생했습니다. 다시 시도해주세요.');
     })
     .finally(function() {
       btn.disabled = false;
