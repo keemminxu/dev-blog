@@ -1,5 +1,8 @@
 <aside class="sidebar-left">
   <div class="sidebar-left-inner">
+    <button class="sidebar-close" aria-label="Close menu" onclick="this.closest('.sidebar-left').classList.remove('is-open')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
     <div class="profile-section">
       <div class="profile-model">
         <model-viewer

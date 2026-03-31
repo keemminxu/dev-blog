@@ -116,6 +116,18 @@ img {
   svg { width: 24px; height: 24px; stroke: $text; }
 }
 
+.sidebar-close {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+  color: $text-muted;
+  svg { width: 20px; height: 20px; }
+  &:hover { color: $text; }
+}
+
 .search-bar {
   flex: 1;
   max-width: 360px;
@@ -946,6 +958,7 @@ figure.highlight,
 @media (max-width: 768px) {
   .top-bar { left: 0; }
   .menu-toggle { display: block; }
+  .sidebar-close { display: block; }
   .site-container { margin-left: 0; grid-template-columns: 1fr; }
   .sidebar-left {
     transform: translateX(-100%);
