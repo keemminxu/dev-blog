@@ -28,19 +28,25 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   var tocLinks = tocList.querySelectorAll('a');
+  var ticking = false;
   window.addEventListener('scroll', function() {
-    var current = '';
-    headings.forEach(function(heading) {
-      if (window.scrollY >= heading.offsetTop - 100) {
-        current = heading.id;
-      }
-    });
-
-    tocLinks.forEach(function(link) {
-      link.classList.remove('active');
-      if (link.getAttribute('href') === '#' + current) {
-        link.classList.add('active');
-      }
-    });
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(function() {
+        var current = '';
+        headings.forEach(function(heading) {
+          if (heading.getBoundingClientRect().top <= 100) {
+            current = heading.id;
+          }
+        });
+        tocLinks.forEach(function(link) {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + current) {
+            link.classList.add('active');
+          }
+        });
+        ticking = false;
+      });
+    }
   });
 });
