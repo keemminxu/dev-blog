@@ -1,0 +1,16 @@
+---
+layout: default
+title: "Category: Godot"
+permalink: /category/godot/
+---
+
+<div class="category-page">
+  {% include category-tabs.html %}
+
+  <div class="post-list">
+    {% assign posts = site.categories['godot'] | sort: 'date' | reverse %}
+    {% for post in posts %}
+      {% include post-card.html post=post %}
+    {% endfor %}
+  </div>
+</div>
