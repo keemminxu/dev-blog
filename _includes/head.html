@@ -5,6 +5,7 @@
   <meta name="google-site-verification" content="MU5Kvlk3YqYMb6Jqinv-Ex2oF1FhnP9Btj2LcG4Y_tE" />
   <meta name="google-adsense-account" content="ca-pub-3365788439910856">
   <link rel="icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
+  <link rel="preload" href="{{ '/assets/NeoDunggeunmo/NeoDunggeunmoPro-Regular.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
   {%- seo -%}
 
   <!-- OG Image (jekyll-seo-tag가 page.image 미설정 시 og:image를 생성하지 않으므로 직접 추가) -->
@@ -33,7 +34,10 @@
   <!-- Custom Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <!-- Google Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
   <!-- Umami Analytics -->
   <script defer src="https://cloud.umami.is/script.js" data-website-id="69da4afd-2258-4121-84e7-b12c4e37ccac"></script>
@@ -42,12 +46,8 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3365788439910856"
      crossorigin="anonymous"></script>
 
-  <!-- 3D Model Viewer -->
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-
   <!-- Page Scripts -->
   <script defer src="{{ '/assets/js/search.js' | relative_url }}"></script>
-  <script defer src="{{ '/assets/js/fortune.js' | relative_url }}"></script>
   <script defer src="{{ '/assets/js/visitor-count.js' | relative_url }}"></script>
   {% if page.layout == 'post' %}
     <script defer src="{{ '/assets/js/toc.js' | relative_url }}"></script>

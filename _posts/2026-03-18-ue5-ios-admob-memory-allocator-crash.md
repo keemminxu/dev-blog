@@ -4,7 +4,7 @@ title: "UE5 iOS에서 AdMob SDK가 크래시를 일으키는 이유와 해결 �
 title_en: "Why AdMob SDK Crashes in UE5 iOS and How to Fix It"
 excerpt_en: "Fix for AdMob SDK crash caused by FMallocBinned memory allocator conflict in UE5 iOS shipping builds."
 date: 2026-03-18 11:00:00 +0900
-categories: [unreal-engine]
+categories: [unrealengine]
 tags: [ue5, ios, admob, memory-allocator, fmallocbinned, crash, strip]
 excerpt: "UE5 iOS Shipping 빌드에서 Google AdMob SDK가 앱 시작 직후 SIGABRT 크래시를 일으켰다. 원인은 UE5의 커스텀 메모리 할당자와 SDK 간의 충돌이었고, 여러 시행착오 끝에 엔진 소스 수정으로 근본 해결했다."
 ---
@@ -57,7 +57,7 @@ UE5는 `ModuleBoilerplate.h`에서 전역 `operator new`와 `operator delete`를
 원인을 확인하기 위해 UE5의 커스텀 할당자를 비활성화하고 시스템 malloc을 사용하도록 설정했다.
 
 ```csharp
-// SuperPlatM.Target.cs
+// MyProject.Target.cs
 if (Target.Platform == UnrealTargetPlatform.IOS)
 {
     GlobalDefinitions.Add("FORCE_ANSI_ALLOCATOR=1");
@@ -168,7 +168,7 @@ string StripArguments = "-x"; // 전역 심볼(operator new/delete) 보존
 수정 후 빌드된 바이너리에서 operator delete 심볼이 살아있는지 확인:
 
 ```bash
-nm -gU SuperPlatM-IOS-Shipping | c++filt | grep 'operator delete'
+nm -gU MyProject-IOS-Shipping | c++filt | grep 'operator delete'
 ```
 
 심볼이 출력되면 성공이다.

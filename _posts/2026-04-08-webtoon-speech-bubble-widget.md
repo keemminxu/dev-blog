@@ -4,7 +4,7 @@ title: "UE5에서 웹툰 말풍선 시스템 만들기"
 title_en: "Building a Webtoon-Style Speech Bubble System in UE5"
 excerpt_en: "How I built a dynamic speech bubble widget system in Unreal Engine 5 with SDF materials and viewport-based scroll fade-in"
 date: 2026-04-08 17:00:00 +0900
-categories: [unreal-engine]
+categories: [unrealengine]
 tags: [ue5, umg, slate, sdf, material, scrollbox, webtoon]
 excerpt: "에피소드 데이터로 들어오는 dialogues + bubblePositions 배열을 받아 이미지 위에 동적으로 말풍선을 배치하고, 스크롤에 따라 페이드인되는 시스템을 만든 과정 정리."
 ---
@@ -122,10 +122,11 @@ UMG는 위젯이 처음 만들어진 시점엔 `DesiredSize`가 0이다. layout 
 - Shading Model: Unlit
 
 C++에서 받는 파라미터:
-- `BodySizePx` (vec2) — 본체 픽셀 크기
+- `BodySizePx` (vec2) — 본체 픽셀 크기 (실제로는 위젯 전체 크기, 꼬리 여유 포함)
 - `BubbleTypeId` (scalar 0~3) — 모양 분기
 - `TailDirId` (scalar 0~6) — 꼬리 방향
 - `TailOffsetPx` (vec2) — 본체 중심 → 꼬리 끝 오프셋 (클램핑된 결과 반영)
+- `TailMarginPx` (scalar) — 본체 바깥 꼬리 여유 공간. 뒤에서 설명
 
 SDF 함수 핵심:
 

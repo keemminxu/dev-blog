@@ -4,7 +4,7 @@ title: "UMG 위젯 설계: 모듈화 vs 통합, 어떤 방식이 맞을까"
 title_en: "UMG Widget Architecture: Modular vs Monolithic — Which Approach is Right?"
 excerpt_en: "Comparing modular and monolithic widget design patterns in UE5 UMG with practical trade-offs."
 date: 2026-02-06 00:00:00 +0900
-categories: [unreal-engine]
+categories: [unrealengine]
 tags: [ue5, umg, widget, architecture, ui, best-practices]
 excerpt: "UMG 위젯을 설계할 때 컴포넌트로 분리할지, 한 위젯에 통합할지 고민된다면. 성능 차이는 거의 없고, 진짜 기준은 따로 있다."
 ---

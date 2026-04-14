@@ -4,7 +4,7 @@ title: "언리얼 K2Node로 위젯 파라미터 전달 문제 해결하기"
 title_en: "Solving Widget Parameter Passing with Custom K2Nodes in Unreal Engine"
 excerpt_en: "Using custom K2Node and reflection to pass parameters to dynamically created widgets in UE5 Blueprint."
 date: 2026-02-13 00:00:00 +0900
-categories: [unreal-engine]
+categories: [unrealengine]
 tags: [k2node, blueprint, umg, widget, reflection, editor-module]
 excerpt: "UIManager로 위젯을 관리할 때 발생하는 캐스팅 종속성과 초기화 타이밍 문제를 K2Node 커스텀 노드로 해결하는 방법을 다룬다."
 ---
@@ -96,10 +96,10 @@ K2Node는 Blueprint 그래프에서 보이는 노드의 "껍데기"다. 실제 �
 K2Node는 에디터 전용 기능이므로 별도의 Editor 모듈이 필요하다.
 
 ```cpp
-// SuperPlatMEditor.Build.cs
-public class SuperPlatMEditor : ModuleRules
+// MyProjectEditor.Build.cs
+public class MyProjectEditor : ModuleRules
 {
-    public SuperPlatMEditor(ReadOnlyTargetRules Target) : base(Target)
+    public MyProjectEditor(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -107,7 +107,7 @@ public class SuperPlatMEditor : ModuleRules
             "Core",
             "CoreUObject",
             "Engine",
-            "SuperPlatM"  // 런타임 모듈 참조
+            "MyProject"  // 런타임 모듈 참조
         });
 
         PrivateDependencyModuleNames.AddRange(new string[] {
@@ -129,12 +129,12 @@ public class SuperPlatMEditor : ModuleRules
 {
     "Modules": [
         {
-            "Name": "SuperPlatM",
+            "Name": "MyProject",
             "Type": "Runtime",
             "LoadingPhase": "Default"
         },
         {
-            "Name": "SuperPlatMEditor",
+            "Name": "MyProjectEditor",
             "Type": "Editor",
             "LoadingPhase": "PostEngineInit"
         }

@@ -3,7 +3,101 @@ layout: default
 ---
 
 <div class="home">
+  <section class="hero-section">
+    <!-- CRT Monitor -->
+    <div class="crt-casing">
+      <div class="crt-bezel">
+        <div class="crt-screen">
+          <canvas id="mario-canvas"></canvas>
+          <div class="scanline-overlay"></div>
+          <div class="crt-screen-off" id="crt-screen-off"></div>
+        </div>
+      </div>
+      <div class="crt-controls">
+        <div class="crt-led-group">
+          <div class="crt-led-dot red"></div>
+        </div>
+        <span class="crt-model-text">V-SYNC: LOCKED // 60Hz</span>
+        <div class="crt-engage-group">
+          <span class="crt-engage-text">SYS_ENGAGE</span>
+          <button class="crt-engage-btn" id="crt-power" aria-label="Power">
+            <div class="crt-power-led" id="crt-led"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spline Cable -->
+    <div class="gamepad-cable">
+      <svg class="cable-svg" viewBox="0 0 100 100">
+        <path d="M50 0 C 50 40, 70 50, 50 100" fill="none" stroke="#161311" stroke-linecap="round" stroke-width="6"/>
+        <path d="M50 0 C 50 40, 70 50, 50 100" fill="none" stroke="#2d2927" stroke-dasharray="1 3" stroke-linecap="round" stroke-width="2"/>
+      </svg>
+      <div class="cable-plug"></div>
+    </div>
+
+    <!-- PS4 Gamepad -->
+    <div class="gamepad">
+      <div class="gamepad-body">
+        <div class="gamepad-grip gamepad-grip-left"></div>
+        <div class="gamepad-grip gamepad-grip-right"></div>
+
+        <!-- D-Pad -->
+        <div class="gamepad-dpad">
+          <div class="dpad-base"></div>
+          <div class="dpad-cross">
+            <button class="dpad-btn dpad-up" data-dir="up"><span class="dpad-arrow">&#9650;</span></button>
+            <div class="dpad-row">
+              <button class="dpad-btn dpad-left" data-dir="left"><span class="dpad-arrow">&#9664;</span></button>
+              <div class="dpad-center"></div>
+              <button class="dpad-btn dpad-right" data-dir="right"><span class="dpad-arrow">&#9654;</span></button>
+            </div>
+            <button class="dpad-btn dpad-down" data-dir="down"><span class="dpad-arrow">&#9660;</span></button>
+          </div>
+        </div>
+
+        <!-- Center -->
+        <div class="gamepad-center">
+          <div class="gamepad-shoulders">
+            <div class="gamepad-shoulder-btn"></div>
+            <div class="gamepad-shoulder-btn"></div>
+          </div>
+          <button class="gamepad-touchpad" id="gamepad-option">
+            <div class="touchpad-light"></div>
+            <span class="touchpad-label">TOUCH_CTRL</span>
+          </button>
+        </div>
+
+        <!-- XYAB -->
+        <div class="gamepad-buttons">
+          <div class="buttons-base"></div>
+          <div class="buttons-diamond">
+            <button class="action-btn btn-top" data-btn="y">Y</button>
+            <div class="buttons-middle">
+              <button class="action-btn btn-left" data-btn="x">X</button>
+              <button class="action-btn btn-right" data-btn="b">B</button>
+            </div>
+            <button class="action-btn btn-bottom" data-btn="a">A</button>
+          </div>
+        </div>
+
+        <!-- Analog Sticks -->
+        <div class="analog-stick analog-left" id="analog-left"><div class="analog-inner"><div class="analog-cap" id="analog-cap-left"></div></div></div>
+        <div class="analog-stick analog-right" id="analog-right"><div class="analog-inner"><div class="analog-cap" id="analog-cap-right"></div></div></div>
+      </div>
+    </div>
+
+    <div class="hero-welcome">
+      <p>안녕하세요! 제 블로그에 오신것을 환영합니다 ㋡</p>
+      <p>저는 UE 클라이언트 개발자 김민수입니다 𐦂𖠋</p>
+      <p>재미있게, 멋지게, 오래오래... 할 수 있는 것들을 좋아해요 ˙𐃷˙</p>
+      <p>𓇼 다들 반가워요 𓇼</p>
+    </div>
+  </section>
+
   {% include category-tabs.html %}
+
+  <h2 class="section-heading">LATEST_BROADCASTS</h2>
 
   <div class="post-list">
     {% for post in site.posts %}
@@ -11,3 +105,57 @@ layout: default
     {% endfor %}
   </div>
 </div>
+
+<script>
+function setupGamepadUI() {
+  // D-pad buttons
+  document.querySelectorAll('.dpad-btn[data-dir]').forEach(btn => {
+    btn.addEventListener('mousedown', () => {
+      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: btn.dataset.dir}}));
+    });
+    btn.addEventListener('mouseup', () => {
+      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: 'none'}}));
+    });
+    btn.addEventListener('mouseleave', () => {
+      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: 'none'}}));
+    });
+    btn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: btn.dataset.dir}}));
+    });
+    btn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: 'none'}}));
+    });
+  });
+
+  // Action buttons
+  document.querySelectorAll('.action-btn[data-btn]').forEach(btn => {
+    btn.addEventListener('mousedown', () => {
+      document.dispatchEvent(new CustomEvent('mario-button', {detail: {button: btn.dataset.btn}}));
+    });
+    btn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      document.dispatchEvent(new CustomEvent('mario-button', {detail: {button: btn.dataset.btn}}));
+    });
+  });
+
+  // Power button
+  var powerBtn = document.getElementById('crt-power');
+  if (powerBtn) powerBtn.addEventListener('click', () => {
+    document.dispatchEvent(new CustomEvent('mario-screen-toggle'));
+  });
+
+  // Option button
+  var optionBtn = document.getElementById('gamepad-option');
+  if (optionBtn) optionBtn.addEventListener('click', () => {
+    document.dispatchEvent(new CustomEvent('mario-screen-toggle'));
+  });
+}
+
+document.addEventListener('DOMContentLoaded', setupGamepadUI);
+</script>
+<script type="importmap">
+  {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"}}
+</script>
+<script type="module" src="{{ '/assets/js/mario-game.js' | relative_url }}"></script>

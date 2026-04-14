@@ -4,7 +4,7 @@ title: "언리얼 엔진에서 딥링크 연동하기 — AppsFlyer OneLink 파�
 title_en: "Deep Link Integration in Unreal Engine — Complete AppsFlyer OneLink Pipeline Guide"
 excerpt_en: "End-to-end guide for integrating deep links in UE5 with AppsFlyer OneLink on both Android and iOS."
 date: 2026-03-11 18:00:00 +0900
-categories: [unreal-engine]
+categories: [unrealengine]
 tags: [deep-link, appsflyer, onelink, mobile, cpp, blueprint]
 excerpt: "AppsFlyer OneLink를 활용해 언리얼 엔진 모바일 앱에 딥링크를 연동하는 전체 파이프라인을 정리한다. URL이 생성되는 순간부터 앱 안에서 특정 화면이 열리기까지, 그 사이에 무슨 일이 벌어지는지 한눈에 볼 수 있다."
 ---

@@ -5,7 +5,7 @@
     {%- include header.html -%}
 
     <div class="site-container">
-      <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="this.classList.remove('is-open');document.querySelector('.sidebar-left').classList.remove('is-open')"></div>
+      <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="this.classList.remove('is-open');document.querySelector('.sidebar-left').classList.remove('is-open');document.body.classList.remove('sidebar-open')"></div>
       {%- include sidebar-left.html -%}
 
       <main class="main-content">

@@ -4,7 +4,7 @@ title: "UE5 모바일 햅틱 - PlayDynamicForceFeedback 말고 네이티브 API�
 title_en: "UE5 Mobile Haptic Feedback - Native Vibration API for iOS and Android"
 excerpt_en: "How to implement cross-platform haptic feedback in UE5 mobile games using Android Vibrator JNI and iOS AudioToolbox instead of the unreliable PlayDynamicForceFeedback."
 date: 2026-03-31 02:00:00 +0900
-categories: [unreal-engine]
+categories: [unrealengine]
 tags: [ue5, haptic, vibration, mobile, android, ios, jni, taptic-engine]
 excerpt: "UE5의 PlayDynamicForceFeedback은 Android에서만 동작하고 iOS에서는 안 된다. 네이티브 API를 직접 호출하면 양쪽 다 확실하게 진동이 동작한다."
 ---

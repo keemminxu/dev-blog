@@ -4,7 +4,7 @@ title: "iOS 앱스토어 리젝 대응 - 인앱 브라우저와 계정 삭제 �
 title_en: "Handling iOS App Store Rejection — In-App Browser and Account Deletion Policy"
 excerpt_en: "How to resolve App Store review guideline 4.5 rejection by replacing WKWebView with SFSafariViewController and adding account deletion."
 date: 2026-03-23 15:00:00 +0900
-categories: [mobile]
+categories: [unrealengine]
 tags: [ios, app-store-review, sfsafariviewcontroller, account-deletion, unreal-engine, apple-guidelines]
 excerpt: "iOS 앱스토어 심사에서 Guideline 4(외부 브라우저 로그인)와 Guideline 5.1.1(v)(계정 삭제 미구현)로 리젝당한 경험과 해결 방법을 정리한다."
 ---
@@ -41,18 +41,18 @@ Apple이 명시적으로 권장하는 `SFSafariViewController`를 사용하면 �
 UE5에는 SFSafariViewController가 기본 제공되지 않으므로, BFL(Blueprint Function Library)에 직접 구현한다. iOS 네이티브 코드를 `#if PLATFORM_IOS` 가드로 감싸는 기존 패턴을 따르면 된다.
 
 ```cpp
-// SuperPlatBFL.h
-UFUNCTION(BlueprintCallable, Category = "SuperPlatM|Platform")
+// MyProjectBFL.h
+UFUNCTION(BlueprintCallable, Category = "MyProject|Platform")
 static void OpenInAppBrowser(const FString& URL);
 ```
 
 ```cpp
-// SuperPlatBFL.cpp
+// MyProjectBFL.cpp
 #if PLATFORM_IOS
 #import <SafariServices/SafariServices.h>
 #endif
 
-void USuperPlatBFL::OpenInAppBrowser(const FString& URL)
+void UMyProjectBFL::OpenInAppBrowser(const FString& URL)
 {
     if (URL.IsEmpty()) return;
 

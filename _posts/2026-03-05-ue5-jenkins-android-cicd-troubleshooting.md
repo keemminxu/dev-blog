@@ -4,7 +4,7 @@ title: "UE5 Android 빌드를 Jenkins로 자동화하며 만난 21가지 함정"
 title_en: "21 Pitfalls of Automating UE5 Android Builds with Jenkins CI/CD"
 excerpt_en: "A comprehensive troubleshooting guide for UE5 Android build automation with Jenkins, Gradle, and Google Play deployment."
 date: 2026-03-05 17:30:00 +0900
-categories: [devops]
+categories: [unrealengine]
 tags: [unreal-engine, jenkins, gradle, android, cicd, troubleshooting]
 excerpt: "UE5 모바일 게임의 Jenkins CI/CD 파이프라인을 구축하면서 마주친 21개 이슈와 해결 과정. Java File 클래스의 user.dir 캐싱, SYSTEM 서비스 계정의 함정, Gradle init script 활용법까지."
 ---
@@ -20,7 +20,7 @@ UE5로 개발 중인 모바일 게임을 Jenkins에서 자동 빌드하고 Googl
 ```
 Jenkins (Windows SYSTEM 서비스)
   └─ Jenkinsfile
-       ├─ Checkout → D:\SuperPlatM
+       ├─ Checkout → D:\MyProject
        ├─ Setup: Config.json 생성, Credentials, bundle install
        └─ BuildAndroid.ps1 -Environment <track>
             ├─ PatchEngine.ps1 (엔진 소스 패치)
@@ -46,7 +46,7 @@ Jenkins를 Windows 서비스로 설치하면 `NT AUTHORITY\SYSTEM` 계정으로 
 
 **safe.directory 오류**. Git 2.35.2부터 디렉토리 소유자가 다르면 거부한다. SYSTEM 계정의 gitconfig 위치가 일반 사용자와 다르기 때문에, 시스템 레벨 gitconfig에 설정해야 한다.
 
-**고정 워크스페이스**. Jenkins 기본 workspace 대신 `D:\SuperPlatM`을 `ws()` 블록으로 고정했다. UE5가 Intermediate 디렉토리에 의존하는데, 경로가 바뀌면 처음부터 다시 쿠킹해야 하기 때문이다.
+**고정 워크스페이스**. Jenkins 기본 workspace 대신 `D:\MyProject`을 `ws()` 블록으로 고정했다. UE5가 Intermediate 디렉토리에 의존하는데, 경로가 바뀌면 처음부터 다시 쿠킹해야 하기 때문이다.
 
 ## 2부: 엔진 소스 패치 — 7번 시도한 디렉토리 문제
 
@@ -202,7 +202,7 @@ $params = @{ Environment = 'internal' }
 | USERPROFILE | `C:\Users\username` | `C:\Windows\system32\config\systemprofile` |
 | Gradle user.dir | 프로젝트 루트 | Daemon 레지스트리 디렉토리 |
 | PowerShell | 7.x | 5.1 |
-| 프로젝트 경로 | `E:\Project\superplat_m` | `D:\SuperPlatM` |
+| 프로젝트 경로 | `D:\MyProject` | `D:\MyProject` |
 
 ### 핵심 포인트
 

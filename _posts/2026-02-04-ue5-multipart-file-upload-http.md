@@ -4,7 +4,7 @@ title: "UE5 HTTP 서비스에서 Multipart/form-data 파일 업로드 구현하�
 title_en: "Implementing Multipart/form-data File Upload in UE5 HTTP Service"
 excerpt_en: "How to implement multipart/form-data file upload using UE5's HTTP module with FHttpMultipartFormData."
 date: 2026-02-04 00:00:00 +0900
-categories: [unreal-engine]
+categories: [unrealengine]
 tags: [ue5, http, multipart, file-upload, cpp, mobile]
 excerpt: "Unreal Engine 5의 IHttpRequest로 multipart/form-data 바이너리 파일 업로드를 구현하는 방법. Boundary 생성부터 바이너리 조립, 응답 처리, 실전 트러블슈팅까지 다룬다."
 ---
@@ -79,7 +79,7 @@ void UHttpService::RequestMultipartUpload(
     HttpRequest->SetVerb(TEXT("POST"));
 
     // Authorization
-    FString AccessToken = USuperPlatNetworkSubsystem::This().GetAccessToken();
+    FString AccessToken = UMyProjectNetworkSubsystem::This().GetAccessToken();
     if (!AccessToken.IsEmpty())
     {
         HttpRequest->SetHeader(TEXT("Authorization"),
@@ -193,7 +193,7 @@ void UHttpService::OnMultipartUploadCompletedEvent(
 네트워크 서브시스템에서 이렇게 호출한다:
 
 ```cpp
-void USuperPlatNetworkAPISubsystem::RequestPost_EpisodeUploadCharacterImage(
+void UMyProjectNetworkAPISubsystem::RequestPost_EpisodeUploadCharacterImage(
     const FString& ScenarioId,
     int32 CharacterIndex,
     const FString& StyleCode,

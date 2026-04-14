@@ -4,7 +4,7 @@ title: "AI(나노바나나), Aseprite 통합 실제 픽셀아트 만들어보기
 title_en: "Building a Real Pixel Art Pipeline with Gemini Nano Banana and Aseprite"
 excerpt_en: "A hands-on walkthrough: building Aseprite from source on Windows, then wiring Pyxelate and rembg into a pipeline that turns AI-generated images into real limited-palette pixel art."
 date: 2026-04-09 15:30:00 +0900
-categories: [pixel-art]
+categories: [etc]
 tags: [aseprite, pyxelate, rembg, pixel-art, gemini, nano-banana, python, cmake, windows-build]
 excerpt: "Aseprite 소스 빌드 및 NanoBanana로 뽑은 이미지를 Pyxelate + rembg 파이프라인으로 진짜 픽셀아트로 변환하는 워크플로우"
 ---

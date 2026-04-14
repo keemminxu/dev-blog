@@ -4,7 +4,7 @@ title: "서버 API를 UE5 C++로 자동 변환하기 - 백엔드와 협업할 �
 title_en: "Auto-converting Server APIs to UE5 C++ - Eliminating Manual Network Code When Collaborating with Backend"
 excerpt_en: "How we built a Python-based pipeline that auto-generates Unreal Engine 5 USTRUCT definitions and API request functions from OpenAPI/Swagger specs, eliminating manual network code integration."
 date: 2026-03-30 18:00:00 +0900
-categories: [unreal-engine]
+categories: [unrealengine]
 tags: [swagger, openapi, code-generation, python, cpp, network-api]
 excerpt: "서버 개발자가 Swagger를 업데이트하면 bat 파일 하나로 UE5 C++ 네트워크 코드가 전부 생성되는 시스템을 만들었다. 구조체, API 함수, 델리게이트까지 전부 자동이다."
 ---

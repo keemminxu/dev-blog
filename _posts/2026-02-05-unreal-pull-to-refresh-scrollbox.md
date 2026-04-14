@@ -4,7 +4,7 @@ title: "UE5 Pull-to-Refresh 구현: SScrollBox의 Overscroll 값 접근하기"
 title_en: "Implementing Pull-to-Refresh in UE5: Accessing SScrollBox Overscroll Values"
 excerpt_en: "How to access Slate-level overscroll values from SScrollBox to implement pull-to-refresh in UE5 mobile UI."
 date: 2026-02-05 00:00:00 +0900
-categories: [unreal-engine]
+categories: [unrealengine]
 tags: [ue5, scrollbox, overscroll, pull-to-refresh, slate, umg, delegate]
 excerpt: "UScrollBox에서 오버스크롤 값을 가져오려면 protected 멤버에 접근해야 한다. 커스텀 Slate 위젯을 만들어 Pull-to-Refresh를 구현하는 방법을 정리한다."
 ---
@@ -57,7 +57,7 @@ Blueprint에서 사용할 수 있도록 UScrollBox를 상속받는 UMG 위젯을
 // PullToRefreshScrollBox.h
 
 UCLASS()
-class SUPERPLATM_API UPullToRefreshScrollBox : public UScrollBox
+class MYPROJECT_API UPullToRefreshScrollBox : public UScrollBox
 {
     GENERATED_BODY()
 
