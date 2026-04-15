@@ -107,7 +107,7 @@ def generate_og_image(meta, output_path):
     padding = 60
 
     # ── Top: 블로그 이름 ──
-    blog_name = "Keemminxu's Dev Blog"
+    blog_name = "keem's blog."
     draw.text((padding, padding), blog_name, font=font_blog, fill=ACCENT_COLOR)
 
     # ── Accent line ──
@@ -186,7 +186,7 @@ def main():
     # --default: 기본 이미지만 생성
     if args.default:
         meta = {
-            "title": "Keemminxu's Dev Blog",
+            "title": "keem's blog.",
             "tags": ["ue5", "mobile", "game-dev"],
             "date": "2026",
             "slug": "default",
