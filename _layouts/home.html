@@ -8,7 +8,7 @@ layout: default
     <div class="crt-casing">
       <div class="crt-bezel">
         <div class="crt-screen">
-          <canvas id="mario-canvas"></canvas>
+          <canvas id="game-canvas"></canvas>
           <div class="scanline-overlay"></div>
           <div class="crt-screen-off" id="crt-screen-off"></div>
         </div>
@@ -111,45 +111,45 @@ function setupGamepadUI() {
   // D-pad buttons
   document.querySelectorAll('.dpad-btn[data-dir]').forEach(btn => {
     btn.addEventListener('mousedown', () => {
-      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: btn.dataset.dir}}));
+      document.dispatchEvent(new CustomEvent('game-dpad', {detail: {direction: btn.dataset.dir}}));
     });
     btn.addEventListener('mouseup', () => {
-      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: 'none'}}));
+      document.dispatchEvent(new CustomEvent('game-dpad', {detail: {direction: 'none'}}));
     });
     btn.addEventListener('mouseleave', () => {
-      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: 'none'}}));
+      document.dispatchEvent(new CustomEvent('game-dpad', {detail: {direction: 'none'}}));
     });
     btn.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: btn.dataset.dir}}));
+      document.dispatchEvent(new CustomEvent('game-dpad', {detail: {direction: btn.dataset.dir}}));
     });
     btn.addEventListener('touchend', (e) => {
       e.preventDefault();
-      document.dispatchEvent(new CustomEvent('mario-dpad', {detail: {direction: 'none'}}));
+      document.dispatchEvent(new CustomEvent('game-dpad', {detail: {direction: 'none'}}));
     });
   });
 
   // Action buttons
   document.querySelectorAll('.action-btn[data-btn]').forEach(btn => {
     btn.addEventListener('mousedown', () => {
-      document.dispatchEvent(new CustomEvent('mario-button', {detail: {button: btn.dataset.btn}}));
+      document.dispatchEvent(new CustomEvent('game-button', {detail: {button: btn.dataset.btn}}));
     });
     btn.addEventListener('touchstart', (e) => {
       e.preventDefault();
-      document.dispatchEvent(new CustomEvent('mario-button', {detail: {button: btn.dataset.btn}}));
+      document.dispatchEvent(new CustomEvent('game-button', {detail: {button: btn.dataset.btn}}));
     });
   });
 
   // Power button
   var powerBtn = document.getElementById('crt-power');
   if (powerBtn) powerBtn.addEventListener('click', () => {
-    document.dispatchEvent(new CustomEvent('mario-screen-toggle'));
+    document.dispatchEvent(new CustomEvent('game-screen-toggle'));
   });
 
   // Option button
   var optionBtn = document.getElementById('gamepad-option');
   if (optionBtn) optionBtn.addEventListener('click', () => {
-    document.dispatchEvent(new CustomEvent('mario-screen-toggle'));
+    document.dispatchEvent(new CustomEvent('game-screen-toggle'));
   });
 }
 
@@ -158,4 +158,4 @@ document.addEventListener('DOMContentLoaded', setupGamepadUI);
 <script type="importmap">
   {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"}}
 </script>
-<script type="module" src="{{ '/assets/js/mario-game.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/game.js' | relative_url }}"></script>
