@@ -19,7 +19,7 @@
       </a>
 
       {% assign is_tech = false %}
-      {% if page.url contains 'unrealengine' or page.url contains 'godot' or page.url contains '/category/etc' %}
+      {% if page.url contains 'unrealengine' or page.url contains 'godot' or page.url contains 'study' or page.url contains '/category/etc' %}
         {% assign is_tech = true %}
       {% endif %}
       <div class="nav-item nav-toggle {% if is_tech %}is-open{% endif %}" onclick="this.classList.toggle('is-open');this.nextElementSibling.classList.toggle('is-open')">
@@ -30,6 +30,7 @@
       <div class="nav-sub {% if is_tech %}is-open{% endif %}">
         <a href="{{ '/category/unrealengine' | relative_url }}" class="nav-child {% if page.url contains 'unrealengine' %}active{% endif %}">UNREAL</a>
         <a href="{{ '/category/godot' | relative_url }}" class="nav-child {% if page.url contains 'godot' %}active{% endif %}">GODOT</a>
+        <a href="{{ '/category/study' | relative_url }}" class="nav-child {% if page.url contains 'study' %}active{% endif %}">STUDY</a>
         <a href="{{ '/category/etc' | relative_url }}" class="nav-child {% if page.url contains '/category/etc' %}active{% endif %}">ETC</a>
       </div>
 

@@ -580,6 +580,58 @@ function buildCategoryPageHtml(cat) {
   ].join('\n');
 }
 
+async function ghListCategories() {
+  const url = 'https://api.github.com/repos/' + GH_OWNER + '/' + GH_REPO + '/contents/category?ref=' + GH_BRANCH;
+  const pat = getPat(false);
+  const headers = { 'Accept': 'application/vnd.github+json' };
+  if (pat) headers['Authorization'] = 'Bearer ' + pat;
+  const res = await fetch(url, { headers });
+  if (!res.ok) return [];
+  const items = await res.json();
+  return items
+    .filter(x => x.name && x.name.endsWith('.html'))
+    .map(x => x.name.replace(/\.html$/, ''))
+    .sort();
+}
+
+async function refreshCategoryChips() {
+  const box = $('ed-categories-chips');
+  if (!box) return;
+  try {
+    const cats = await ghListCategories();
+    box.innerHTML = cats
+      .map(c => '<button type="button" class="admin-editor-chip" data-cat="' + escapeHtml(c) + '">' + escapeHtml(c) + '</button>')
+      .join('');
+    box.querySelectorAll('.admin-editor-chip').forEach(btn => {
+      btn.addEventListener('click', () => toggleCategoryInInput(btn.dataset.cat));
+    });
+    updateChipSelectedState();
+  } catch (e) {
+    console.warn('[admin-editor] category chips 로드 실패:', e);
+  }
+}
+
+function toggleCategoryInInput(cat) {
+  const input = $('ed-categories');
+  if (!input) return;
+  const cur = input.value.split(',').map(s => s.trim()).filter(Boolean);
+  const idx = cur.indexOf(cat);
+  if (idx >= 0) cur.splice(idx, 1);
+  else cur.push(cat);
+  input.value = cur.join(', ');
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  updateChipSelectedState();
+}
+
+function updateChipSelectedState() {
+  const input = $('ed-categories');
+  if (!input) return;
+  const cur = new Set(input.value.split(',').map(s => s.trim()).filter(Boolean));
+  document.querySelectorAll('.admin-editor-chip').forEach(btn => {
+    btn.classList.toggle('is-selected', cur.has(btn.dataset.cat));
+  });
+}
+
 async function ensureCategoryPages(categories, onProgress) {
   const created = [];
   for (let i = 0; i < categories.length; i++) {
@@ -839,6 +891,7 @@ function loadForm(data) {
   $('ed-excerpt').value = data.excerpt || '';
   $('ed-excerpt-en').value = data.excerpt_en || '';
   $('ed-content').value = data.content || '';
+  updateChipSelectedState();
 }
 
 function setStatus(msg) {
@@ -1141,6 +1194,7 @@ function openEditor() {
   modal.setAttribute('aria-hidden', 'false');
   document.body.classList.add('admin-editor-open');
   refreshDraftList();
+  refreshCategoryChips();
   // preview 초기 렌더 (marked.js lazy-load 트리거)
   renderPreview();
 }
@@ -1217,6 +1271,10 @@ function init() {
     const el = $(id);
     if (el) el.addEventListener('input', scheduleAutoSave);
   }
+
+  // 카테고리 input 변경 시 칩 선택 상태 동기화
+  const catInput = $('ed-categories');
+  if (catInput) catInput.addEventListener('input', updateChipSelectedState);
 
   // 본문 변경 시 preview 렌더
   const contentEl = $('ed-content');

@@ -2158,3 +2158,33 @@ body.admin-editor-open {
   border-radius: 2px;
   margin-right: 4px;
 }
+
+/* Admin editor — category chips */
+.admin-editor-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.admin-editor-chip {
+  padding: 3px 10px;
+  background: #1a1a22;
+  color: #9a9aab;
+  border: 1px solid #2d2d3a;
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover {
+    border-color: #4a5bd1;
+    color: #e4e4ea;
+  }
+
+  &.is-selected {
+    background: #4a5bd1;
+    color: #fff;
+    border-color: #5a6be1;
+  }
+}
