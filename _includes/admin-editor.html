@@ -1,0 +1,78 @@
+<!-- Admin editor — body.is-admin 클래스 있을 때만 CSS에서 표시 -->
+<button id="admin-editor-btn" class="admin-editor-fab" aria-label="글 작성" title="글 작성">
+  <span class="admin-editor-fab-icon">✎</span>
+</button>
+
+<div id="admin-editor-modal" class="admin-editor-modal" aria-hidden="true">
+  <div class="admin-editor-panel">
+    <div class="admin-editor-topbar">
+      <select id="ed-draft-select" class="admin-editor-select" aria-label="드래프트 선택"></select>
+      <span id="ed-status" class="admin-editor-status"></span>
+      <button id="ed-reset-pat" class="admin-editor-icon-btn" title="GitHub PAT 재설정" type="button">🔑</button>
+      <button id="ed-close" class="admin-editor-icon-btn" aria-label="닫기">✕</button>
+    </div>
+
+    <div class="admin-editor-body">
+      <aside class="admin-editor-form">
+        <label class="admin-editor-field">
+          <span>제목 *</span>
+          <input id="ed-title" type="text" placeholder="한글 제목" autocomplete="off">
+        </label>
+        <label class="admin-editor-field">
+          <span>Title (EN)</span>
+          <input id="ed-title-en" type="text" placeholder="English title (optional)" autocomplete="off">
+        </label>
+        <label class="admin-editor-field">
+          <span>Slug (URL)</span>
+          <input id="ed-slug" type="text" placeholder="auto-from-title" autocomplete="off">
+        </label>
+        <label class="admin-editor-field">
+          <span>카테고리 (쉼표)</span>
+          <input id="ed-categories" type="text" placeholder="unrealengine, godot" autocomplete="off">
+        </label>
+        <label class="admin-editor-field">
+          <span>태그 (쉼표)</span>
+          <input id="ed-tags" type="text" placeholder="ue5, jenkins, cicd" autocomplete="off">
+        </label>
+        <label class="admin-editor-field">
+          <span>Excerpt (한글)</span>
+          <textarea id="ed-excerpt" rows="3" placeholder="요약 — 리스트/OG에 사용"></textarea>
+        </label>
+        <label class="admin-editor-field">
+          <span>Excerpt (EN)</span>
+          <textarea id="ed-excerpt-en" rows="3" placeholder="English summary (optional)"></textarea>
+        </label>
+        <div class="admin-editor-field">
+          <span>OG 썸네일</span>
+          <button id="ed-upload-og" class="admin-editor-btn-secondary" type="button">🖼 이미지 직접 업로드</button>
+          <input id="ed-og-input" type="file" accept="image/*" hidden>
+          <div id="ed-og-preview" class="admin-editor-og-preview"></div>
+        </div>
+      </aside>
+      <main class="admin-editor-content">
+        <div class="admin-editor-toolbar">
+          <button id="ed-upload-image" class="admin-editor-toolbar-btn" type="button" title="이미지 업로드 (현재 커서 위치에 삽입)">
+            🖼 파일 선택
+          </button>
+          <input id="ed-image-input" type="file" accept="image/*" multiple hidden>
+          <button id="ed-toggle-preview" class="admin-editor-toolbar-btn" type="button" title="미리보기 토글">
+            👁 미리보기
+          </button>
+          <span id="ed-upload-status" class="admin-editor-upload-status"></span>
+        </div>
+        <div id="ed-workspace" class="admin-editor-workspace">
+          <textarea id="ed-content" placeholder="# 마크다운으로 작성하세요&#10;&#10;본문...&#10;&#10;이미지는 Ctrl+V로 바로 붙여넣을 수 있어요"></textarea>
+          <div id="ed-preview" class="admin-editor-preview"></div>
+        </div>
+      </main>
+    </div>
+
+    <div class="admin-editor-actions">
+      <button id="ed-delete" class="admin-editor-btn-danger" type="button">드래프트 삭제</button>
+      <div class="admin-editor-actions-right">
+        <button id="ed-save" class="admin-editor-btn-secondary" type="button">지금 저장</button>
+        <button id="ed-publish" class="admin-editor-btn-primary" type="button">📢 발행</button>
+      </div>
+    </div>
+  </div>
+</div>

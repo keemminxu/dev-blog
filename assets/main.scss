@@ -1758,3 +1758,403 @@ figure.highlight,
   line-height: 1.6;
   margin: 0;
 }
+
+/* ==========================================================================
+   Admin editor — floating button + fullscreen modal
+   body.is-admin 상태에서만 표시 (admin.js가 클래스 토글)
+   ========================================================================== */
+
+.admin-editor-fab,
+.admin-editor-modal {
+  display: none;
+}
+
+body.is-admin .admin-editor-fab {
+  display: flex;
+}
+
+body.is-admin .admin-editor-modal.is-open {
+  display: flex;
+}
+
+.admin-editor-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: #4a5bd1;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  z-index: 9998;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: #5a6be1;
+  }
+
+  .admin-editor-fab-icon {
+    line-height: 1;
+  }
+}
+
+.admin-editor-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  align-items: stretch;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.admin-editor-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  background: #1a1a22;
+  border: 1px solid #2d2d3a;
+  border-radius: 8px;
+  overflow: hidden;
+  color: #e4e4ea;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.admin-editor-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #2d2d3a;
+  background: #20202a;
+}
+
+.admin-editor-select {
+  flex: 1;
+  padding: 6px 10px;
+  background: #15151d;
+  color: #e4e4ea;
+  border: 1px solid #2d2d3a;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.admin-editor-status {
+  font-size: 12px;
+  color: #9a9aab;
+  min-width: 140px;
+  text-align: right;
+}
+
+.admin-editor-icon-btn {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  color: #9a9aab;
+  border: 1px solid #2d2d3a;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    color: #fff;
+    border-color: #4a4a5a;
+  }
+}
+
+.admin-editor-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.admin-editor-form {
+  width: 320px;
+  padding: 16px;
+  overflow-y: auto;
+  border-right: 1px solid #2d2d3a;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #15151d;
+}
+
+.admin-editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #9a9aab;
+
+  input, textarea {
+    background: #1a1a22;
+    color: #e4e4ea;
+    border: 1px solid #2d2d3a;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+      border-color: #4a5bd1;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 60px;
+    font-family: inherit;
+  }
+}
+
+.admin-editor-content {
+  flex: 1;
+  display: flex;
+
+  textarea {
+    flex: 1;
+    background: #15151d;
+    color: #e4e4ea;
+    border: none;
+    padding: 20px;
+    font-family: "JetBrains Mono", "Menlo", "Consolas", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.admin-editor-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid #2d2d3a;
+  background: #20202a;
+}
+
+.admin-editor-actions-right {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-editor-btn-primary,
+.admin-editor-btn-secondary,
+.admin-editor-btn-danger {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.admin-editor-btn-primary {
+  background: #4a5bd1;
+  color: #fff;
+
+  &:hover { background: #5a6be1; }
+}
+
+.admin-editor-btn-secondary {
+  background: #2d2d3a;
+  color: #e4e4ea;
+
+  &:hover { background: #3d3d4a; }
+}
+
+.admin-editor-btn-danger {
+  background: transparent;
+  color: #e76060;
+  border: 1px solid #5a2a2a;
+
+  &:hover { background: #2a1818; }
+}
+
+body.admin-editor-open {
+  overflow: hidden;
+}
+
+/* 모바일 — 세로 배치로 전환 */
+@media (max-width: 720px) {
+  .admin-editor-modal {
+    padding: 0;
+  }
+  .admin-editor-panel {
+    border-radius: 0;
+    max-width: none;
+  }
+  .admin-editor-body {
+    flex-direction: column;
+  }
+  .admin-editor-form {
+    width: auto;
+    max-height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid #2d2d3a;
+  }
+}
+
+/* Admin editor toolbar (textarea 위 이미지 업로드 버튼) */
+.admin-editor-content {
+  flex-direction: column;
+}
+
+.admin-editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #2d2d3a;
+  background: #1a1a22;
+}
+
+.admin-editor-toolbar-btn {
+  padding: 6px 12px;
+  background: #2d2d3a;
+  color: #e4e4ea;
+  border: 1px solid #3d3d4a;
+  font-size: 12px;
+  font-family: inherit;
+  cursor: pointer;
+
+  &:hover {
+    background: #3d3d4a;
+    border-color: #4a5bd1;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.admin-editor-upload-status {
+  font-size: 11px;
+  color: #9a9aab;
+}
+
+/* Admin editor — split view workspace + preview pane */
+.admin-editor-workspace {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+
+  textarea {
+    flex: 1;
+    background: #15151d;
+    color: #e4e4ea;
+    border: none;
+    padding: 20px;
+    font-family: "JetBrains Mono", "Menlo", "Consolas", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+  }
+
+  .admin-editor-preview {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 28px;
+    background: #1a1a22;
+    border-left: 1px solid #2d2d3a;
+    color: #e4e4ea;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+
+    h1, h2, h3, h4 { color: #f4d97e; margin-top: 1.2em; }
+    h1 { font-size: 1.7em; }
+    h2 { font-size: 1.4em; border-bottom: 1px solid #2d2d3a; padding-bottom: 0.2em; }
+    h3 { font-size: 1.15em; }
+    a { color: #83a598; }
+    code { background: #2d2d3a; padding: 1px 6px; border-radius: 3px; font-size: 0.9em; }
+    pre { background: #0e0e14; padding: 12px; overflow-x: auto; border-radius: 4px;
+      code { background: none; padding: 0; font-size: 0.88em; }
+    }
+    blockquote { border-left: 3px solid #4a5bd1; margin: 0.5em 0; padding: 0.2em 0.9em; color: #a8a8b8; }
+    img { max-width: 100%; display: block; margin: 0.5em 0; border: 1px solid #2d2d3a; }
+    table { border-collapse: collapse; margin: 0.8em 0;
+      th, td { border: 1px solid #2d2d3a; padding: 4px 10px; }
+      th { background: #20202a; }
+    }
+    ul, ol { padding-left: 1.4em; }
+  }
+}
+
+.admin-editor-workspace.preview-off .admin-editor-preview {
+  display: none;
+}
+
+/* preview 영역이 좁으면 스크롤되도록, 모바일에서 세로 스택 */
+@media (max-width: 720px) {
+  .admin-editor-workspace {
+    flex-direction: column;
+    .admin-editor-preview {
+      border-left: none;
+      border-top: 1px solid #2d2d3a;
+      max-height: 40vh;
+    }
+  }
+}
+
+/* Admin editor — OG thumbnail preview + editing mode indicator */
+.admin-editor-og-preview {
+  margin-top: 4px;
+  min-height: 40px;
+  img {
+    max-width: 100%;
+    border: 1px solid #2d2d3a;
+  }
+  .admin-editor-btn-danger {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+}
+
+.admin-editor-og-placeholder {
+  padding: 8px;
+  border: 1px dashed #2d2d3a;
+  color: #7a7a8a;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* 편집 모드(발행된 글 수정) 시 panel 테두리 색상으로 시각적 구분 */
+.admin-editor-modal.mode-editing-post .admin-editor-panel {
+  border-color: #e49a3a;
+  box-shadow: 0 0 0 1px rgba(228, 154, 58, 0.3);
+}
+
+.admin-editor-modal.mode-editing-post .admin-editor-topbar::before {
+  content: "편집 모드";
+  padding: 3px 8px;
+  background: #e49a3a;
+  color: #1a1a22;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-radius: 2px;
+  margin-right: 4px;
+}
