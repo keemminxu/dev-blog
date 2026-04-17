@@ -547,6 +547,65 @@ async function migrateImagesToGitHub(content, slug, onProgress) {
 }
 
 // ---------------------------------------------------------------------------
+// Category page auto-creation
+// - 새 카테고리 쓰면 category/{slug}.html 파일을 자동 커밋
+// - 기존 파일 있으면 스킵
+// ---------------------------------------------------------------------------
+
+function buildCategoryPageHtml(cat) {
+  const title = cat.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  return [
+    '---',
+    'layout: default',
+    'title: "Category: ' + title + '"',
+    'permalink: /category/' + cat + '/',
+    '---',
+    '',
+    '<div class="category-page">',
+    '  {% include category-tabs.html %}',
+    '',
+    '  <div class="post-list">',
+    "    {% assign posts = site.categories['" + cat + "'] %}",
+    '    {% if posts and posts.size > 0 %}',
+    "      {% assign sorted = posts | sort: 'date' | reverse %}",
+    '      {% for post in sorted %}',
+    '        {% include post-card.html post=post %}',
+    '      {% endfor %}',
+    '    {% else %}',
+    '      <p class="empty-message">아직 작성된 글이 없습니다.</p>',
+    '    {% endif %}',
+    '  </div>',
+    '</div>',
+    '',
+  ].join('\n');
+}
+
+async function ensureCategoryPages(categories, onProgress) {
+  const created = [];
+  for (let i = 0; i < categories.length; i++) {
+    const cat = String(categories[i]).trim();
+    if (!cat) continue;
+    if (!/^[a-z0-9-]+$/.test(cat)) {
+      console.warn('[admin-editor] skip category with invalid chars:', cat);
+      continue;
+    }
+    const path = 'category/' + cat + '.html';
+    let exists = true;
+    try {
+      await ghGetFileContent(path);
+    } catch (_) {
+      exists = false;
+    }
+    if (exists) continue;
+    if (onProgress) onProgress(created.length + 1, cat);
+    const html = buildCategoryPageHtml(cat);
+    await ghPutFile(path, textToBase64(html), '[CAT] ' + cat);
+    created.push(cat);
+  }
+  return created;
+}
+
+// ---------------------------------------------------------------------------
 // Frontmatter parser — 발행된 글 수정용 (flow YAML 제한 지원)
 // ---------------------------------------------------------------------------
 
@@ -935,6 +994,22 @@ async function onPublish() {
       migratedPaths = mig.migratedPaths;
       if (currentDraftId) {
         try { await updateDraft(currentDraftId, { content: form.content }); } catch (_) {}
+      }
+    }
+
+    // 2) 새 카테고리면 카테고리 페이지 자동 생성
+    if (form.categories && form.categories.length) {
+      setStatus(action + ' 중... (카테고리 페이지 확인)');
+      try {
+        const createdCats = await ensureCategoryPages(form.categories, (_, cat) => {
+          setStatus(action + ' 중... (카테고리 [' + cat + '] 생성)');
+        });
+        if (createdCats.length) {
+          console.log('[admin-editor] created category pages:', createdCats);
+        }
+      } catch (catErr) {
+        console.warn('[admin-editor] 카테고리 페이지 생성 실패:', catErr);
+        alert('카테고리 페이지 생성 실패:\n' + catErr.message + '\n\n포스트는 계속 ' + action + '됩니다. 수동으로 category/{name}.html을 만들어주세요.');
       }
     }
 
