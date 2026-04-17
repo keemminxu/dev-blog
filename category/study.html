@@ -1,0 +1,21 @@
+---
+layout: default
+title: "Category: Study"
+permalink: /category/study/
+---
+
+<div class="category-page">
+  {% include category-tabs.html %}
+
+  <div class="post-list">
+    {% assign posts = site.categories['study'] %}
+    {% if posts and posts.size > 0 %}
+      {% assign sorted = posts | sort: 'date' | reverse %}
+      {% for post in sorted %}
+        {% include post-card.html post=post %}
+      {% endfor %}
+    {% else %}
+      <p class="empty-message">아직 작성된 글이 없습니다.</p>
+    {% endif %}
+  </div>
+</div>
