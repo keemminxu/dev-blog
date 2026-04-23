@@ -2,7 +2,7 @@
 layout: post
 title: "언리얼 플러그인 만들어서 Fab에 출시하기"
 title_en: "From Rejection to Fab Release"
-date: 2026-04-23 18:11:23 +0900
+date: 2026-04-23 18:17:43 +0900
 categories: ["unrealengine"]
 tags: ["ue5", "plugin", "fab", "blueprintanalyzer", "marketplace", "출시기", "blueprint", "llm", "ai"]
 excerpt: "작은 아이디어로 시작한 블루프린트 분석 플러그인을 드디어 Fab에 올렸음"
@@ -60,6 +60,12 @@ excerpt_en: "Released Blueprint Analyzer on Fab after one rejection and a long b
 그리고 이번엔 **디자인**도 신경 썼다. 피그마로 썸네일 4장 만들고, `LICENSE`랑 `THIRD_PARTY_NOTICES.md`도 제대로 붙였다.
 
 `FilterPlugin.ini`로 배포 패키지에서 제외할 파일 따로 명시 이슈로 한번 리젝을 먹긴 했으나 바로 해결했다!
+
+#### 미리 준비하면 좋을것들
+1. 영문 사용법, ReadMe md파일
+2. 썸네일
+3. 플러그인 .zip 파일
+4. .zip 파일 올릴 드라이브 경로 (저는 깃허브 릴리즈 사용했어요)
 
 ## Fab 등록
 
