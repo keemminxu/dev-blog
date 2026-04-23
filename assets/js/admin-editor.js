@@ -689,6 +689,93 @@ function parseFrontmatter(md) {
 }
 
 // ---------------------------------------------------------------------------
+// 로컬 .md 파일 → Supabase draft 가져오기
+// - File System Access API (showOpenFilePicker + handle.remove) 사용
+// - /archive 스킬이 작성한 로컬 초안을 에디터로 끌어올 때 사용
+// ---------------------------------------------------------------------------
+
+async function importFromFile() {
+  if (!('showOpenFilePicker' in window)) {
+    alert('이 브라우저는 File System Access API를 지원하지 않습니다.\n가져온 뒤 로컬 파일 자동 삭제를 위해 최신 Chrome/Edge에서 열어주세요.');
+    return;
+  }
+
+  let handle, file, text;
+  try {
+    const [h] = await window.showOpenFilePicker({
+      types: [{ description: 'Markdown', accept: { 'text/markdown': ['.md', '.markdown'] } }],
+      multiple: false,
+    });
+    handle = h;
+    file = await handle.getFile();
+    text = await file.text();
+  } catch (e) {
+    // AbortError = 사용자 취소 → 조용히 종료
+    if (e && e.name === 'AbortError') return;
+    alert('파일 열기 실패: ' + e.message);
+    return;
+  }
+
+  const { fm, body } = parseFrontmatter(text);
+  const filename = file.name;
+  const title = fm.title || filename.replace(/\.(md|markdown)$/i, '');
+  const slug = fm.slug || slugify(title);
+
+  const payload = {
+    title: title,
+    title_en: fm.title_en || '',
+    slug: slug,
+    categories: Array.isArray(fm.categories) ? fm.categories : (fm.categories ? [fm.categories] : []),
+    tags: Array.isArray(fm.tags) ? fm.tags : (fm.tags ? [fm.tags] : []),
+    excerpt: fm.excerpt || '',
+    excerpt_en: fm.excerpt_en || '',
+    content: body,
+    editing_filename: null,
+    og_custom_url: null,
+  };
+
+  let createdDraft;
+  try {
+    setStatus('가져오는 중: ' + filename);
+    createdDraft = await createDraft(payload);
+  } catch (e) {
+    setStatus('가져오기 실패: ' + e.message);
+    alert('Supabase 저장 실패: ' + e.message + '\n로컬 파일은 삭제되지 않았습니다.');
+    return;
+  }
+
+  // Supabase 저장 성공 → 에디터 상태 교체
+  currentDraftId = createdDraft.id;
+  editingFilename = null;
+  customOgUrl = null;
+  loadForm(payload);
+  updateOgPreview();
+  updateEditingModeUI();
+  renderPreview();
+  await refreshDraftList();
+  const sel = $('ed-draft-select');
+  if (sel) sel.value = 'draft:' + createdDraft.id;
+
+  // 로컬 파일 삭제 — 실패해도 import 자체는 성공
+  let removed = false;
+  try {
+    if (typeof handle.remove === 'function') {
+      await handle.remove();
+      removed = true;
+    }
+  } catch (e) {
+    console.error('[admin-editor] handle.remove failed:', e);
+  }
+
+  if (removed) {
+    setStatus('가져오기 완료 · 로컬 ' + filename + ' 삭제됨');
+  } else {
+    setStatus('가져오기 완료 · 로컬 파일 수동 삭제 필요: ' + filename);
+    alert('Supabase 드래프트로 가져오기는 성공했지만\n이 브라우저/버전에서 파일 자동 삭제가 불가합니다.\n직접 삭제해주세요: ' + filename);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // 발행된 글 조회/로드
 // ---------------------------------------------------------------------------
 
@@ -1219,6 +1306,10 @@ function init() {
   $('ed-publish').addEventListener('click', onPublish);
   $('ed-delete').addEventListener('click', onDeleteDraft);
   $('ed-draft-select').addEventListener('change', onDraftSelect);
+
+  // 로컬 .md 파일 가져오기
+  const importBtn = $('ed-import-file');
+  if (importBtn) importBtn.addEventListener('click', importFromFile);
 
   // PAT 재설정
   const resetPatBtn = $('ed-reset-pat');
