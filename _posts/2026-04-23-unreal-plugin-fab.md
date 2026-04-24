@@ -2,7 +2,7 @@
 layout: post
 title: "언리얼 플러그인 만들어서 Fab에 출시하기"
 title_en: "From Rejection to Fab Release"
-date: 2026-04-23 18:17:43 +0900
+date: 2026-04-24 09:46:30 +0900
 categories: ["unrealengine"]
 tags: ["ue5", "plugin", "fab", "blueprintanalyzer", "marketplace", "출시기", "blueprint", "llm", "ai"]
 excerpt: "작은 아이디어로 시작한 블루프린트 분석 플러그인을 드디어 Fab에 올렸음"
