@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Console Calibration Tool</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 13px/1.4 'JetBrains Mono', Consolas, monospace; background: #1c1d20; color: #c0c0c0; user-select: none; }
+  .layout { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
+  .sidebar { background: #15161a; padding: 14px; overflow-y: auto; border-right: 1px solid #444; }
+  .sidebar h1 { margin: 0 0 8px; font-size: 16px; color: #fff; }
+  .sidebar p.hint { margin: 0 0 12px; font-size: 11px; color: #888; line-height: 1.5; }
+  .scale-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; font-size: 11px; }
+  .scale-row input { flex: 1; }
+  .region-list { list-style: none; padding: 0; margin: 0 0 14px; }
+  .region-list li {
+    padding: 6px 10px; margin-bottom: 2px; cursor: pointer; border-left: 3px solid transparent;
+    display: flex; justify-content: space-between; align-items: center; font-size: 12px;
+  }
+  .region-list li:hover { background: #2a2b2e; }
+  .region-list li.active { border-left-color: #ff0; background: #2a2b2e; color: #fff; }
+  .region-list li.done { color: #6f6; }
+  .region-list li.done::after { content: '✓'; margin-left: 6px; }
+  .region-list .swatch { display: inline-block; width: 10px; height: 10px; margin-right: 6px; vertical-align: middle; }
+  button { background: #c0c0c0; color: #000; border: 0; padding: 7px 12px; margin: 0 4px 4px 0; cursor: pointer; font-family: inherit; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+  button:hover { background: #fff; }
+  button.danger { background: #803838; color: #fff; }
+  button.danger:hover { background: #a04040; }
+  pre { background: #0a0a0a; padding: 10px; font-size: 10px; line-height: 1.5; max-height: 36vh; overflow: auto; white-space: pre-wrap; word-break: break-all; color: #6f6; border: 1px solid #333; }
+  .canvas-wrap { position: relative; overflow: auto; padding: 20px; display: flex; justify-content: center; align-items: flex-start; background: #2a2b2e; }
+  .stage { position: relative; cursor: crosshair; }
+  .stage img { display: block; -webkit-user-drag: none; pointer-events: none; }
+  .rect { position: absolute; border: 2px solid; pointer-events: none; box-sizing: border-box; }
+  .rect-label { position: absolute; top: -16px; left: 0; font-size: 10px; padding: 1px 5px; background: rgba(0,0,0,0.85); color: #fff; white-space: nowrap; font-weight: bold; }
+  .rect.dragging { border-style: dashed; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <h1>Console Calibration</h1>
+    <p class="hint">
+      1. 좌측에서 영역 선택<br>
+      2. 이미지 위에 드래그해서 사각형 그리기<br>
+      3. 다 채우면 [Export SCSS] → 결과 복사<br>
+      자동으로 localStorage에 저장됨.
+    </p>
+    <div class="scale-row">
+      Scale: <input type="range" id="scale" min="0.15" max="1.0" step="0.05" value="0.4">
+      <span id="scale-val">0.40x</span>
+    </div>
+    <ul class="region-list" id="regions"></ul>
+    <button id="export">Export SCSS</button>
+    <button id="copy">Copy</button>
+    <button id="reset" class="danger">Reset</button>
+    <pre id="output">// Click 'Export SCSS' after defining all regions</pre>
+  </aside>
+  <div class="canvas-wrap">
+    <div class="stage" id="stage">
+      <img id="img" src="assets/images/crt/GameMode.png" alt="" draggable="false">
+    </div>
+  </div>
+</div>
+<script>
+const IMG_W = 1856, IMG_H = 2304;
+const REGIONS = [
+  { id: 'console-screen', label: 'Game Screen',     color: '#0f0' },
+  { id: 'hit-power',      label: 'Power LED',       color: '#ff0' },
+  { id: 'hit-vsync',      label: 'V-SYNC LED',      color: '#f33' },
+  { id: 'hit-up',         label: 'D-pad Up',    color: '#f44' },
+  { id: 'hit-down',       label: 'D-pad Down',  color: '#f44' },
+  { id: 'hit-left',       label: 'D-pad Left',  color: '#f44' },
+  { id: 'hit-right',      label: 'D-pad Right', color: '#f44' },
+  { id: 'hit-y',          label: 'Action Y',    color: '#0cf' },
+  { id: 'hit-x',          label: 'Action X',    color: '#0cf' },
+  { id: 'hit-b',          label: 'Action B',    color: '#0cf' },
+  { id: 'hit-a',          label: 'Action A',    color: '#0cf' },
+  { id: 'hit-touchpad',   label: 'Touchpad',    color: '#f0f' },
+  { id: 'analog-left',    label: 'Analog L',    color: '#08f' },
+  { id: 'analog-right',   label: 'Analog R',    color: '#08f' },
+];
+
+const state = JSON.parse(localStorage.getItem('console-calibration') || '{}');
+let activeRegion = REGIONS[0].id;
+let scale = 0.4;
+let dragging = null;
+
+const img = document.getElementById('img');
+const stage = document.getElementById('stage');
+const regionList = document.getElementById('regions');
+const scaleEl = document.getElementById('scale');
+const scaleVal = document.getElementById('scale-val');
+const output = document.getElementById('output');
+
+function regionDef(id) { return REGIONS.find(r => r.id === id); }
+
+function applyScale() {
+  img.style.width = (IMG_W * scale) + 'px';
+  img.style.height = (IMG_H * scale) + 'px';
+  scaleVal.textContent = scale.toFixed(2) + 'x';
+  renderRects();
+}
+
+function renderRegions() {
+  regionList.innerHTML = '';
+  REGIONS.forEach(r => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span><span class="swatch" style="background:${r.color}"></span>${r.label}</span>`;
+    if (activeRegion === r.id) li.classList.add('active');
+    if (state[r.id]) li.classList.add('done');
+    li.onclick = () => { activeRegion = r.id; renderRegions(); };
+    regionList.appendChild(li);
+  });
+}
+
+function renderRects() {
+  stage.querySelectorAll('.rect').forEach(r => r.remove());
+  REGIONS.forEach(r => {
+    if (!state[r.id]) return;
+    const rect = state[r.id];
+    const div = document.createElement('div');
+    div.className = 'rect';
+    div.style.left = (rect.x * scale) + 'px';
+    div.style.top = (rect.y * scale) + 'px';
+    div.style.width = (rect.w * scale) + 'px';
+    div.style.height = (rect.h * scale) + 'px';
+    div.style.borderColor = r.color;
+    if (dragging && dragging.id === r.id) div.classList.add('dragging');
+    const label = document.createElement('span');
+    label.className = 'rect-label';
+    label.textContent = r.id;
+    label.style.background = r.color;
+    label.style.color = '#000';
+    div.appendChild(label);
+    stage.appendChild(div);
+  });
+}
+
+scaleEl.addEventListener('input', (e) => {
+  scale = parseFloat(e.target.value);
+  applyScale();
+});
+
+stage.addEventListener('mousedown', (e) => {
+  if (!activeRegion) return;
+  e.preventDefault();
+  const rect = img.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / scale;
+  const y = (e.clientY - rect.top) / scale;
+  dragging = { id: activeRegion, startX: x, startY: y };
+  state[activeRegion] = { x: Math.round(x), y: Math.round(y), w: 1, h: 1 };
+  renderRects();
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (!dragging) return;
+  const rect = img.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / scale;
+  const y = (e.clientY - rect.top) / scale;
+  const minX = Math.min(dragging.startX, x);
+  const minY = Math.min(dragging.startY, y);
+  state[dragging.id] = {
+    x: Math.round(minX),
+    y: Math.round(minY),
+    w: Math.round(Math.abs(x - dragging.startX)),
+    h: Math.round(Math.abs(y - dragging.startY))
+  };
+  renderRects();
+});
+
+window.addEventListener('mouseup', () => {
+  if (!dragging) return;
+  dragging = null;
+  // Auto-advance to next undefined region
+  const idx = REGIONS.findIndex(r => r.id === activeRegion);
+  for (let i = 1; i <= REGIONS.length; i++) {
+    const next = REGIONS[(idx + i) % REGIONS.length];
+    if (!state[next.id]) { activeRegion = next.id; break; }
+  }
+  localStorage.setItem('console-calibration', JSON.stringify(state));
+  renderRegions();
+  renderRects();
+});
+
+document.getElementById('export').onclick = () => {
+  const lines = [];
+  REGIONS.forEach(r => {
+    if (!state[r.id]) return;
+    const rect = state[r.id];
+    const left   = (100 * rect.x / IMG_W).toFixed(2);
+    const top    = (100 * rect.y / IMG_H).toFixed(2);
+    const width  = (100 * rect.w / IMG_W).toFixed(2);
+    const height = (100 * rect.h / IMG_H).toFixed(2);
+    const sel = r.id === 'console-screen' ? '.console-screen' :
+                r.id.startsWith('analog-') ? `.${r.id}` :
+                `.${r.id}`;
+    lines.push(`${sel} { left: ${left}%; top: ${top}%; width: ${width}%; height: ${height}%; }`);
+  });
+  output.textContent = lines.length ? lines.join('\n') : '// No regions defined yet';
+};
+
+document.getElementById('copy').onclick = async () => {
+  if (output.textContent.startsWith('//')) document.getElementById('export').click();
+  try {
+    await navigator.clipboard.writeText(output.textContent);
+    document.getElementById('copy').textContent = 'Copied!';
+    setTimeout(() => { document.getElementById('copy').textContent = 'Copy'; }, 1200);
+  } catch (e) { alert('Clipboard failed — copy manually from textarea'); }
+};
+
+document.getElementById('reset').onclick = () => {
+  if (!confirm('모든 영역을 초기화할까요?')) return;
+  for (const k of Object.keys(state)) delete state[k];
+  localStorage.removeItem('console-calibration');
+  activeRegion = REGIONS[0].id;
+  renderRegions();
+  renderRects();
+};
+
+img.onload = () => {
+  const wrap = document.querySelector('.canvas-wrap');
+  const maxW = wrap.clientWidth - 40;
+  const fitScale = Math.min(0.6, maxW / IMG_W);
+  scale = Math.max(0.2, fitScale);
+  scaleEl.value = scale;
+  applyScale();
+};
+
+renderRegions();
+applyScale();
+</script>
+</body>
+</html>

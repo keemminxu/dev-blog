@@ -5,7 +5,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 BLOG_ROOT = Path(__file__).parent.parent
-FONT_PATH = BLOG_ROOT / "assets" / "NeoDunggeunmo" / "NeoDunggeunmoPro-Regular.ttf"
+FONT_PATH = BLOG_ROOT / "assets" / "fonts" / "HBIOS-SYS" / "HBIOS-SYS.ttf"
 OUTPUT = BLOG_ROOT / "assets" / "og" / "home-og.png"
 
 WIDTH, HEIGHT = 1200, 630

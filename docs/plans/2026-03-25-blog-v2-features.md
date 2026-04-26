@@ -374,7 +374,7 @@ assets/main.scss                 # Task 1-5: 전체 스타일 추가
   &.active { color: $accent; }
 }
 
-.nav-icon { font-size: 1rem; }
+.nav-icon { font-size: 1.0rem; }
 
 .nav-section-title {
   cursor: default;

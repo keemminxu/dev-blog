@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: 'ko' }}">
   {%- include head.html -%}
-  <body>
+  <body class="layout-{{ page.layout | default: 'page' }}{% if page.url == '/' %} is-home{% endif %}">
     {%- include header.html -%}
 
     <div class="site-container">
-      <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="this.classList.remove('is-open');document.querySelector('.sidebar-left').classList.remove('is-open');document.body.classList.remove('sidebar-open')"></div>
+      <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
       {%- include sidebar-left.html -%}
 
       <main class="main-content">
         {{ content }}
       </main>
-
-      {%- include sidebar-right.html -%}
     </div>
 
     {%- include footer.html -%}

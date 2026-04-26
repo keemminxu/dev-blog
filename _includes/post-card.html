@@ -1,26 +1,25 @@
 {% comment %}
-  포스트 카드 컴포넌트. 사용 시 include에 post 변수를 전달한다.
-  예: {% include post-card.html post=post %}
+  포스트 카드 — MS-DOS 윈도우 스타일.
+  타이틀바: "한글제목.md" / 본문: 썸네일 + 영어 excerpt (truncate)
 {% endcomment %}
 
-<article class="post-card">
-  <a href="{{ include.post.url | relative_url }}" class="post-card-thumbnail">
+<a href="{{ include.post.url | relative_url }}" class="post-card">
+  <div class="post-card-titlebar">
+    <span class="post-card-titlebar-text">{{ include.post.title | downcase | escape }}.md</span>
+  </div>
+
+  <div class="post-card-thumbnail">
     {% assign post_slug = include.post.url | split: '/' | last %}
     <img src="{{ '/assets/og/' | append: post_slug | append: '.png' | relative_url }}"
          alt="{{ include.post.title | escape }}"
-         loading="lazy">
+         loading="lazy"
+         onerror="this.style.display='none'">
     <div class="scanline-overlay" aria-hidden="true"></div>
-  </a>
-  <div class="post-card-content">
-    <h3 class="post-card-title">
-      <a href="{{ include.post.url | relative_url }}">{{ include.post.title | escape }}</a>
-    </h3>
-    {% if include.post.title_en %}
-      <p class="post-card-title-en">{{ include.post.title_en }}</p>
-    {% endif %}
-    <p class="post-card-meta">
-      {{ include.post.date | date: "%Y-%m-%d" }}
-    </p>
-    <a href="{{ include.post.url | relative_url }}" class="post-card-read">READ_FULL_LOG &rarr;</a>
   </div>
-</article>
+
+  <div class="post-card-content">
+    <p class="post-card-meta">{{ include.post.date | date: "%Y.%m.%d" }}</p>
+    <p class="post-card-excerpt">{{ include.post.excerpt | strip_html | strip_newlines }}</p>
+    <span class="post-card-read">→ read full log</span>
+  </div>
+</a>

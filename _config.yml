@@ -1,5 +1,5 @@
 title: "keem's blog."
-description: "GO HAVE SOME FUN!"
+description: "go have some fun!"
 url: "https://keemminxu.com"
 baseurl: ""
 theme: minima
@@ -27,3 +27,4 @@ exclude:
   - scripts/
   - Gemfile
   - Gemfile.lock
+  - calibrate.html

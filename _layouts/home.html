@@ -4,112 +4,76 @@ layout: default
 
 <div class="home">
   <section class="hero-section">
-    <!-- CRT Monitor -->
-    <div class="crt-casing">
-      <div class="crt-bezel">
-        <div class="crt-screen">
-          <canvas id="game-canvas"></canvas>
-          <div class="scanline-overlay"></div>
-          <div class="crt-screen-off" id="crt-screen-off"></div>
-        </div>
+    <div class="console-frame">
+      <img class="console-img" src="{{ '/assets/images/crt/GameMode.png' | relative_url }}" alt="Retro Console" draggable="false">
+
+      <!-- 게임 화면 (캔버스 + 스캔라인) — 이미지의 어두운 스크린 영역에 정렬 -->
+      <div class="console-screen">
+        <canvas id="game-canvas"></canvas>
+        <div class="scanline-overlay"></div>
+        <div class="crt-screen-off" id="crt-screen-off"></div>
       </div>
-      <div class="crt-controls">
-        <div class="crt-led-group">
-          <div class="crt-led-dot red"></div>
-        </div>
-        <span class="crt-model-text">V-SYNC: LOCKED // 60Hz</span>
-        <div class="crt-engage-group">
-          <span class="crt-engage-text">SYS_ENGAGE</span>
-          <button class="crt-engage-btn" id="crt-power" aria-label="Power">
-            <div class="crt-power-led" id="crt-led"></div>
-          </button>
-        </div>
-      </div>
-    </div>
 
-    <!-- Spline Cable -->
-    <div class="gamepad-cable">
-      <svg class="cable-svg" viewBox="0 0 100 100">
-        <path d="M50 0 C 50 40, 70 50, 50 100" fill="none" stroke="#161311" stroke-linecap="round" stroke-width="6"/>
-        <path d="M50 0 C 50 40, 70 50, 50 100" fill="none" stroke="#2d2927" stroke-dasharray="1 3" stroke-linecap="round" stroke-width="2"/>
-      </svg>
-      <div class="cable-plug"></div>
-    </div>
+      <!-- 투명 hit area — 이미지 위에 보이지 않게 깔림 -->
+      <button class="hit hit-power" id="crt-power" aria-label="Power"><span class="led-overlay" id="crt-led"></span></button>
+      <span class="hit hit-vsync" aria-hidden="true"><span class="led-overlay crt-led-dot red"></span></span>
 
-    <!-- PS4 Gamepad -->
-    <div class="gamepad">
-      <div class="gamepad-body">
-        <div class="gamepad-grip gamepad-grip-left"></div>
-        <div class="gamepad-grip gamepad-grip-right"></div>
+      <button class="hit hit-up"    data-dir="up"    aria-label="Up"></button>
+      <button class="hit hit-down"  data-dir="down"  aria-label="Down"></button>
+      <button class="hit hit-left"  data-dir="left"  aria-label="Left"></button>
+      <button class="hit hit-right" data-dir="right" aria-label="Right"></button>
 
-        <!-- D-Pad -->
-        <div class="gamepad-dpad">
-          <div class="dpad-base"></div>
-          <div class="dpad-cross">
-            <button class="dpad-btn dpad-up" data-dir="up"><span class="dpad-arrow">&#9650;</span></button>
-            <div class="dpad-row">
-              <button class="dpad-btn dpad-left" data-dir="left"><span class="dpad-arrow">&#9664;</span></button>
-              <div class="dpad-center"></div>
-              <button class="dpad-btn dpad-right" data-dir="right"><span class="dpad-arrow">&#9654;</span></button>
-            </div>
-            <button class="dpad-btn dpad-down" data-dir="down"><span class="dpad-arrow">&#9660;</span></button>
-          </div>
-        </div>
+      <button class="hit hit-y" data-btn="y" aria-label="Y"></button>
+      <button class="hit hit-x" data-btn="x" aria-label="X"></button>
+      <button class="hit hit-b" data-btn="b" aria-label="B"></button>
+      <button class="hit hit-a" data-btn="a" aria-label="A"></button>
 
-        <!-- Center -->
-        <div class="gamepad-center">
-          <div class="gamepad-shoulders">
-            <div class="gamepad-shoulder-btn"></div>
-            <div class="gamepad-shoulder-btn"></div>
-          </div>
-          <button class="gamepad-touchpad" id="gamepad-option">
-            <div class="touchpad-light"></div>
-            <span class="touchpad-label">TOUCH_CTRL</span>
-          </button>
-        </div>
+      <button class="hit hit-touchpad" id="gamepad-option" aria-label="Touchpad"></button>
 
-        <!-- XYAB -->
-        <div class="gamepad-buttons">
-          <div class="buttons-base"></div>
-          <div class="buttons-diamond">
-            <button class="action-btn btn-top" data-btn="y">Y</button>
-            <div class="buttons-middle">
-              <button class="action-btn btn-left" data-btn="x">X</button>
-              <button class="action-btn btn-right" data-btn="b">B</button>
-            </div>
-            <button class="action-btn btn-bottom" data-btn="a">A</button>
-          </div>
-        </div>
-
-        <!-- Analog Sticks -->
-        <div class="analog-stick analog-left" id="analog-left"><div class="analog-inner"><div class="analog-cap" id="analog-cap-left"></div></div></div>
-        <div class="analog-stick analog-right" id="analog-right"><div class="analog-inner"><div class="analog-cap" id="analog-cap-right"></div></div></div>
-      </div>
-    </div>
-
-    <div class="hero-welcome">
-      <p>안녕하세요! 제 블로그에 오신것을 환영합니다 ㋡</p>
-      <p>저는 UE 개발자 김민수입니다 𐦂𖠋</p>
-      <p>재미있게, 멋지게, 오래오래... 할 수 있는 것들을 좋아해요 ˙𐃷˙</p>
-      <p>𓇼 다들 반가워요 𓇼</p>
+      <!-- 아날로그 스틱 — 이미지의 cavity 위에 CSS 캡 표시, 드래그 가능 -->
+      <div class="analog-stick analog-left" id="analog-left"><div class="analog-cap" id="analog-cap-left"></div></div>
+      <div class="analog-stick analog-right" id="analog-right"><div class="analog-cap" id="analog-cap-right"></div></div>
     </div>
   </section>
 
-  {% include category-tabs.html %}
+  <section class="home-greeting">
+    <div class="greeting-box">
+      <div class="greeting-titlebar">
+        <span class="greeting-titlebar-text">README.txt</span>
+      </div>
+      <div class="greeting-body">
+        <div class="greeting-terminal" contenteditable="true" spellcheck="false" aria-label="terminal"><div>hello world!</div><div>제 블로그 방문해주셔서 감사해요!</div><div>오늘도 좋은 하루 되세요 😁</div></div>
+      </div>
+    </div>
+  </section>
 
-  <h2 class="section-heading">LATEST_BROADCASTS</h2>
-
-  <div class="post-list">
-    {% for post in site.posts %}
-      {% include post-card.html post=post %}
-    {% endfor %}
-  </div>
+  <section class="latest-posts">
+    <h2 class="latest-posts-heading">
+      <span class="latest-posts-heading-icon" aria-hidden="true">📰</span>recent posts
+    </h2>
+    <div class="latest-posts-grid">
+      {% for post in site.posts limit:3 %}
+        <a class="latest-post-card" href="{{ post.url | relative_url }}">
+          <div class="latest-post-card-titlebar">
+            <span class="latest-post-card-titlebar-text">{{ post.title | downcase }}.md</span>
+          </div>
+          <div class="latest-post-thumb">
+            <img src="{{ '/assets/og/' | append: post.slug | append: '.png' | relative_url }}" alt="{{ post.title | escape }}" loading="lazy" onerror="this.style.display='none'">
+          </div>
+          <div class="latest-post-meta">
+            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>
+            <h3 class="latest-post-title">{{ post.title }}</h3>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
 </div>
 
 <script>
 function setupGamepadUI() {
-  // D-pad buttons
-  document.querySelectorAll('.dpad-btn[data-dir]').forEach(btn => {
+  // D-pad
+  document.querySelectorAll('.hit[data-dir]').forEach(btn => {
     btn.addEventListener('mousedown', () => {
       document.dispatchEvent(new CustomEvent('game-dpad', {detail: {direction: btn.dataset.dir}}));
     });
@@ -130,7 +94,7 @@ function setupGamepadUI() {
   });
 
   // Action buttons
-  document.querySelectorAll('.action-btn[data-btn]').forEach(btn => {
+  document.querySelectorAll('.hit[data-btn]').forEach(btn => {
     btn.addEventListener('mousedown', () => {
       document.dispatchEvent(new CustomEvent('game-button', {detail: {button: btn.dataset.btn}}));
     });
@@ -140,20 +104,115 @@ function setupGamepadUI() {
     });
   });
 
-  // Power button
+  // Power button (yellow LED)
   var powerBtn = document.getElementById('crt-power');
   if (powerBtn) powerBtn.addEventListener('click', () => {
     document.dispatchEvent(new CustomEvent('game-screen-toggle'));
   });
 
-  // Option button
+  // Touchpad
   var optionBtn = document.getElementById('gamepad-option');
   if (optionBtn) optionBtn.addEventListener('click', () => {
     document.dispatchEvent(new CustomEvent('game-screen-toggle'));
   });
+
+  // Shift+D — hit area 디버그 토글
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'D' && e.shiftKey) {
+      var frame = document.querySelector('.console-frame');
+      if (frame) frame.classList.toggle('debug-hits');
+    }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', setupGamepadUI);
+
+// README.TXT 터미널 — 각 줄을 <div>로 감싸고 "> "는 CSS ::before로만 그림
+// (사용자가 직접 지울 수 없게). Enter 누르면 캐럿에서 줄 분할.
+(function setupReadmeTerminal() {
+  var term = document.querySelector('.greeting-terminal');
+  if (!term) return;
+
+  function getLine(node) {
+    while (node && node !== term && node.parentNode !== term) node = node.parentNode;
+    return (node && node.parentNode === term) ? node : null;
+  }
+
+  term.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+    e.preventDefault();
+    var sel = window.getSelection();
+    if (!sel || !sel.rangeCount) return;
+    var range = sel.getRangeAt(0);
+    range.deleteContents();
+
+    var line = getLine(range.startContainer);
+    var newLine = document.createElement('div');
+
+    if (line) {
+      var tail = document.createRange();
+      tail.setStart(range.startContainer, range.startOffset);
+      tail.setEndAfter(line.lastChild || line);
+      var frag = tail.extractContents();
+      newLine.appendChild(frag);
+      if (!newLine.firstChild) newLine.appendChild(document.createElement('br'));
+      if (!line.firstChild) line.appendChild(document.createElement('br'));
+      line.parentNode.insertBefore(newLine, line.nextSibling);
+    } else {
+      newLine.appendChild(document.createElement('br'));
+      term.appendChild(newLine);
+    }
+
+    var newRange = document.createRange();
+    if (newLine.firstChild) {
+      newRange.setStartBefore(newLine.firstChild);
+    } else {
+      newRange.setStart(newLine, 0);
+    }
+    newRange.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+    // 새 줄을 뷰포트로 스크롤
+    if (newLine.scrollIntoView) newLine.scrollIntoView({ block: 'nearest' });
+  });
+
+  // 붙여넣기 — 줄바꿈을 <div>로 분리
+  term.addEventListener('paste', function (e) {
+    e.preventDefault();
+    var text = (e.clipboardData || window.clipboardData).getData('text');
+    if (!text) return;
+    var lines = text.split(/\r?\n/);
+    var sel = window.getSelection();
+    if (!sel.rangeCount) return;
+    var range = sel.getRangeAt(0);
+    range.deleteContents();
+
+    var line = getLine(range.startContainer);
+    if (!line) {
+      line = document.createElement('div');
+      term.appendChild(line);
+    }
+    // 첫 줄은 현재 위치에 텍스트로 삽입
+    var firstNode = document.createTextNode(lines[0]);
+    range.insertNode(firstNode);
+    range.setStartAfter(firstNode);
+    range.collapse(true);
+
+    // 나머지는 새 div로 추가
+    for (var i = 1; i < lines.length; i++) {
+      var d = document.createElement('div');
+      d.textContent = lines[i] || '';
+      if (!d.firstChild) d.appendChild(document.createElement('br'));
+      line.parentNode.insertBefore(d, line.nextSibling);
+      line = d;
+    }
+    var endRange = document.createRange();
+    endRange.selectNodeContents(line);
+    endRange.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(endRange);
+  });
+})();
 </script>
 <script type="importmap">
   {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"}}

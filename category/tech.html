@@ -1,0 +1,28 @@
+---
+layout: default
+title: "Category: Tech"
+permalink: /category/tech/
+---
+
+<div class="category-page">
+  {% comment %} tech 그룹은 unrealengine / godot / study / etc 합집합 {% endcomment %}
+  {% assign tech_cats = "unrealengine,godot,study,etc" | split: "," %}
+  {% assign tech_posts = "" | split: "" %}
+  {% for cat in tech_cats %}
+    {% if site.categories[cat] %}
+      {% assign tech_posts = tech_posts | concat: site.categories[cat] %}
+    {% endif %}
+  {% endfor %}
+  {% assign tech_posts = tech_posts | uniq %}
+
+  <div class="post-list">
+    {% if tech_posts.size > 0 %}
+      {% assign sorted = tech_posts | sort: 'date' | reverse %}
+      {% for post in sorted %}
+        {% include post-card.html post=post %}
+      {% endfor %}
+    {% else %}
+      <p class="empty-message">아직 작성된 글이 없습니다.</p>
+    {% endif %}
+  </div>
+</div>
