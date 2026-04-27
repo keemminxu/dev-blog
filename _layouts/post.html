@@ -28,6 +28,14 @@ layout: default
       {{ content }}
     </div>
 
+    <!-- 플로팅 TOC (PC 뷰) — toc.js 가 헤딩 추출해 채움 -->
+    <aside class="floating-toc" aria-label="Table of contents">
+      <div class="floating-toc-titlebar">
+        <span class="floating-toc-titlebar-text">CONTENTS</span>
+      </div>
+      <ul id="toc-list" class="toc-list"></ul>
+    </aside>
+
   {% include comments.html %}
 
   {% include related-posts.html %}

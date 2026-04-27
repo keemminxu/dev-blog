@@ -55,9 +55,26 @@
     document.documentElement.classList.remove('sidebar-preopen');
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', restore);
-  } else {
+  // 사이드바 내부 링크 클릭 시 닫기 (다음 페이지에서 닫힌 상태로 로드)
+  function bindNavClose() {
+    var sidebar = document.querySelector('.sidebar-left');
+    if (!sidebar) return;
+    sidebar.addEventListener('click', function (e) {
+      var link = e.target.closest('a');
+      if (!link || !sidebar.contains(link)) return;
+      // 외부 링크(target=_blank)나 다른 호스트 링크는 그대로 두고 다른 경우만 닫음
+      persist(false);
+    });
+  }
+
+  function init() {
     restore();
+    bindNavClose();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 })();
