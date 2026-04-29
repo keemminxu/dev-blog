@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var todayEl = document.getElementById('visitor-today');
     var totalEl = document.getElementById('visitor-total');
     if (todayEl) todayEl.textContent = formatNumber(results[0].visitors || 0);
-    if (totalEl) totalEl.textContent = formatNumber(results[1].visitors || 0);
+    if (totalEl) totalEl.textContent = formatNumber(results[1].visits || 0);
     container.classList.add('loaded');
   }).catch(function() {});
 });
