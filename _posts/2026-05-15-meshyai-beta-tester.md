@@ -2,7 +2,7 @@
 layout: post
 title: "MeshyAI 앱 베타 테스터 참여 후기"
 title_en: "MeshyAI App Review (Beta)"
-date: 2026-05-15 13:01:59 +0900
+date: 2026-05-15 13:04:34 +0900
 categories: ["etc"]
 tags: ["meshyai", "ue5", "app", "fbx", "glb", "tester", "betatester", "meshy", "3d", "3d assets"]
 excerpt: "MeshyAI 앱 베타 테스터 참여 후기"
