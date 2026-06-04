@@ -2,11 +2,11 @@
 layout: post
 title: "라이브 영상을 언리얼 인게임 송출 방법 (m3u8 - HLS)"
 title_en: "Playing a Live OBS Stream Inside Unreal Engine 5 (HLS)"
-excerpt_en: "How to pipe a live OBS broadcast into an Unreal Engine 5 in-game screen using HLS via MediaMTX and the Electra player, with the gotchas that actually made it work."
-date: 2026-06-04 00:00:00 +0900
-categories: [unrealengine]
-tags: [ue5, hls, obs, mediamtx, electra, live-streaming, streaming, live]
+date: 2026-06-04 10:54:06 +0900
+categories: ["unrealengine"]
+tags: ["ue5", "hls", "obs", "mediamtx", "electra", "live-streaming", "streaming", "live"]
 excerpt: "OBS로 송출한 라이브 영상을 UE5 인게임 메시에 재생하는 전체 파이프라인과, 실제로 되게 만든 삽질 포인트 정리."
+excerpt_en: "How to pipe a live OBS broadcast into an Unreal Engine 5 in-game screen using HLS via MediaMTX and the Electra player, with the gotchas that actually made it work."
 ---
 
 ## 배경
