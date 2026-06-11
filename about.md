@@ -90,8 +90,8 @@ permalink: /about/
           <span class="about-project-titlebar-text">editor_cursor_skin.exe</span>
         </div>
         <a class="about-project-link" href="https://fab.com/s/dbe5befc72f6" target="_blank" rel="noopener">
-          <div class="about-project-media about-project-media--link">
-            <span class="about-project-cta">VIEW ON FAB →</span>
+          <div class="about-project-media">
+            <img src="{{ '/assets/images/logo/EditorCursorSkin.jpg' | relative_url }}" alt="Editor Cursor Skin">
           </div>
         </a>
         <div class="about-project-info">
