@@ -20,18 +20,18 @@
 
     <nav class="sidebar-nav">
       <a href="{{ '/' | relative_url }}" class="nav-item {% if page.url == '/' %}active{% endif %}">
-        <span class="nav-icon" aria-hidden="true">🏠</span>
+        <span class="nav-icon material-symbols-outlined" aria-hidden="true">home</span>
         home
         <span class="nav-marker" aria-hidden="true">*</span>
       </a>
       <a href="{{ '/about/' | relative_url }}" class="nav-item {% if page.url contains '/about' %}active{% endif %}">
-        <span class="nav-icon" aria-hidden="true">👤</span>
+        <span class="nav-icon material-symbols-outlined" aria-hidden="true">person</span>
         about
         <span class="nav-marker" aria-hidden="true">*</span>
       </a>
 
       <a href="{{ '/category/tech/' | relative_url }}" class="nav-item {% if page.url contains '/category/tech' %}active{% endif %}">
-        <span class="nav-icon" aria-hidden="true">💻</span>
+        <span class="nav-icon material-symbols-outlined" aria-hidden="true">terminal</span>
         tech
         <span class="nav-marker" aria-hidden="true">*</span>
       </a>
@@ -52,24 +52,24 @@
           <span class="nav-marker" aria-hidden="true">*</span>
         </a>
         <a href="{{ '/category/study' | relative_url }}" class="nav-child {% if page.url contains 'study' %}active{% endif %}">
-          <span class="nav-child-icon" aria-hidden="true">📚</span>
+          <span class="nav-child-icon material-symbols-outlined" aria-hidden="true">menu_book</span>
           study
           <span class="nav-marker" aria-hidden="true">*</span>
         </a>
         <a href="{{ '/category/etc' | relative_url }}" class="nav-child {% if page.url contains '/category/etc' %}active{% endif %}">
-          <span class="nav-child-icon" aria-hidden="true">📁</span>
+          <span class="nav-child-icon material-symbols-outlined" aria-hidden="true">folder</span>
           etc
           <span class="nav-marker" aria-hidden="true">*</span>
         </a>
       </div>
 
       <a href="{{ '/category/daily' | relative_url }}" class="nav-item {% if page.url contains 'daily' %}active{% endif %}">
-        <span class="nav-icon" aria-hidden="true">📝</span>
+        <span class="nav-icon material-symbols-outlined" aria-hidden="true">edit_note</span>
         daily
         <span class="nav-marker" aria-hidden="true">*</span>
       </a>
       <a href="{{ '/tags/' | relative_url }}" class="nav-item {% if page.url == '/tags/' %}active{% endif %}">
-        <span class="nav-icon" aria-hidden="true">🔖</span>
+        <span class="nav-icon material-symbols-outlined" aria-hidden="true">sell</span>
         tags
         <span class="nav-marker" aria-hidden="true">*</span>
       </a>

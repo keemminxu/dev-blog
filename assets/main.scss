@@ -33,7 +33,7 @@ $surface-lowest: #131418;
 $text: #C0C0C0;
 $text-muted: #909090;   // #666666에서 상향 — 다크 배경(#1c1d20) 대비 약 5.3:1 (WCAG AA 충족)
 $primary: #FFFFFF;
-$yellow: #FFFF00;
+$amber: #CBA040;     // muted gold — 포스트 헤딩과 동일 톤 (구 #FFFF00 대체)
 $primary-container: #C0C0C0;
 $accent: #FFFFFF;
 $accent-hover: #CCCCCC;
@@ -64,7 +64,7 @@ $site-title-color: $text;
 // ═══════════════════════════════════════
 
 .pixel-shadow {
-  box-shadow: 4px 4px 0px 0px $border;
+  box-shadow: 2px 2px 0px 0px $border;
 }
 
 // Corner brackets 박스: 모서리 4곳에 L자 픽셀 마커만
@@ -661,7 +661,7 @@ html.sidebar-preopen {
 
   &.active {
     background: $surface;
-    color: $yellow !important;
+    color: $amber !important;
 
     .nav-marker { display: inline-block; }
   }
@@ -670,7 +670,7 @@ html.sidebar-preopen {
 // 활성 표시용 별표 — 아이콘 오른쪽, 텍스트 왼쪽에 위치
 .nav-marker {
   display: none;
-  color: $yellow;
+  color: $amber;
   //font-weight: 400;
   line-height: 1;
 }
@@ -681,6 +681,23 @@ html.sidebar-preopen {
   font-size: 1.2rem;
   line-height: 1;
   flex-shrink: 0;
+}
+
+// Material Symbols 단색 아이콘 — currentColor 상속 (엔진 로고 mask와 동일한 모노톤)
+// .nav-icon 뒤에 선언해 font-family를 덮어쓴다. 리거처가 깨지지 않게 transform/spacing 리셋.
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-variation-settings: 'FILL' 0, 'wght' 300;
+  -webkit-font-smoothing: antialiased;
 }
 
 .nav-sub {
@@ -769,7 +786,7 @@ html.sidebar-preopen {
 
   &.active {
     background: $surface;
-    color: $yellow !important;
+    color: $amber !important;
 
     .nav-marker { display: inline-block; }
   }
@@ -790,7 +807,7 @@ html.sidebar-preopen {
     justify-content: center;
     text-decoration: none;
     &:hover { color: $primary; }
-    &:active { color: $yellow; }
+    &:active { color: $amber; }
     svg { width: 20px; height: 20px; fill: currentColor; }
   }
 }
@@ -898,7 +915,7 @@ body.is-home .main-content {
   box-shadow:
     inset 1px 1px 0 $primary,
     inset -1px -1px 0 $text-muted,
-    4px 4px 0 #000;
+    2px 2px 0 #000;
 }
 
 .greeting-titlebar {
@@ -996,7 +1013,7 @@ body.is-home .main-content {
   box-shadow:
     inset 1px 1px 0 $primary,
     inset -1px -1px 0 $text-muted,
-    4px 4px 0 #000;
+    2px 2px 0 #000;
   min-width: 0;
   transition: filter 0.15s ease;
 
@@ -1058,6 +1075,80 @@ body.is-home .main-content {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+// ── 데스크톱 홈 2컬럼: 콘솔(좌) ↔ README + recent posts(우) ──
+// 콘솔 양옆 빈 공간을 콘텐츠로 채워 첫 화면에서 글이 바로 보이게 한다.
+@media (min-width: 1025px) {
+  .home {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    column-gap: 56px;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 16px 40px 48px;
+  }
+
+  .hero-section {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    margin: 0;
+    padding: 0;
+  }
+
+  // 컬럼 폭 기준으로 다시 계산 — 높이는 viewport 안에 들어가게 vh로 캡
+  .console-frame {
+    width: min(100%, calc(82vh * 1856 / 2304));
+  }
+
+  .home-greeting {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    margin: 0;
+    max-width: 540px;
+    width: 100%;
+    padding: 0;
+  }
+
+  .latest-posts {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+    margin: 32px 0 0;
+    max-width: 540px;
+    width: 100%;
+    padding: 0;
+  }
+
+  // 우측 컬럼에선 카드 3장을 가로형(썸네일 좌 + 메타 우)으로 쌓는다
+  .latest-posts-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .latest-post-card {
+    display: grid;
+    grid-template-columns: 148px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+
+  .latest-post-card-titlebar { grid-column: 1 / -1; }
+
+  .latest-post-thumb {
+    grid-row: 2;
+    grid-column: 1;
+    height: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .latest-post-meta {
+    grid-row: 2;
+    grid-column: 2;
+    padding: 8px 12px;
+    justify-content: center;
+  }
 }
 
 // --- Console Frame (image-based CRT + Gamepad) ---
@@ -1329,7 +1420,7 @@ body.is-home .main-content {
       transition: color 0.2s, border-color 0.2s;
       word-break: break-word;
       &:hover { color: $primary; }
-      &.active { color: $yellow; border-left-color: $yellow; }
+      &.active { color: $amber; border-left-color: $amber; }
     }
     &.toc-h3 a { padding-left: 20px; font-size: 0.75rem; }
     &.toc-h4 a { padding-left: 32px; font-size: 0.7rem; }
@@ -1351,7 +1442,7 @@ body.is-home .main-content {
   box-shadow:
     inset 1px 1px 0 $primary,
     inset -1px -1px 0 $text-muted,
-    4px 4px 0 #000;
+    2px 2px 0 #000;
   overflow: hidden;
 }
 
@@ -1484,7 +1575,7 @@ body.is-home .main-content {
   box-shadow:
     inset 1px 1px 0 $primary,
     inset -1px -1px 0 $text-muted,
-    4px 4px 0 #000;
+    2px 2px 0 #000;
   min-width: 0;
   transition: filter 0.15s ease;
 
@@ -1640,7 +1731,7 @@ body.is-home .main-content {
     font-family: $font-base;   // HBIOS-SYS 픽셀 폰트
     margin-top: 2em;
     margin-bottom: 0.5em;
-    color: #CBA040 !important;
+    color: $amber !important;
     font-weight: 700 !important;
     text-transform: none;
     overflow-wrap: break-word;
@@ -1713,7 +1804,7 @@ body.is-home .main-content {
     box-shadow:
       inset 1px 1px 0 $primary,
       inset -1px -1px 0 $text-muted,
-      4px 4px 0 #000;
+      2px 2px 0 #000;
 
     // 타이틀바 — 기본 fallback
     &::before {
@@ -1827,7 +1918,7 @@ body.is-home .main-content {
     box-shadow:
       inset 1px 1px 0 $primary,
       inset -1px -1px 0 $text-muted,
-      4px 4px 0 #000;
+      2px 2px 0 #000;
   }
 
   // 헤더 행 — 타이틀바 톤 (밝은 회색 + 어두운 텍스트)
@@ -2268,7 +2359,7 @@ div.highlighter-rouge {
   font-family: $font-base;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 4px 4px 0px 0px $surface-lowest;
+  box-shadow: 2px 2px 0px 0px $surface-lowest;
   transition: all 0.2s;
 
   &:hover {
@@ -2813,10 +2904,10 @@ body.admin-editor-open {
 
 // D-day 강조 — 노란색 highlight
 .about-dday {
-  color: $yellow;
+  color: $amber;
   font-weight: 400;
   letter-spacing: 0.04em;
-  text-shadow: 0 0 6px rgba(255, 255, 0, 0.35);
+  text-shadow: 0 0 6px rgba(203, 160, 64, 0.45);
 }
 
 .about-avatar {
@@ -2981,7 +3072,7 @@ body.admin-editor-open {
   box-shadow:
     inset 1px 1px 0 $primary,
     inset -1px -1px 0 $text-muted,
-    4px 4px 0 #000;
+    2px 2px 0 #000;
   display: flex;
   flex-direction: column;
 }
