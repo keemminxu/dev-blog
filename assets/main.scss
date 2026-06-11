@@ -31,7 +31,7 @@ $surface-high: #2a2b2e;
 $surface-highest: #34353a;
 $surface-lowest: #131418;
 $text: #C0C0C0;
-$text-muted: #666666;
+$text-muted: #909090;   // #666666에서 상향 — 다크 배경(#1c1d20) 대비 약 5.3:1 (WCAG AA 충족)
 $primary: #FFFFFF;
 $yellow: #FFFF00;
 $primary-container: #C0C0C0;
@@ -629,59 +629,6 @@ html.sidebar-preopen {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
-}
-
-// visitor-stats: 현재 사이드바에선 렌더 안 됨 (다른 위치로 이동 예정)
-// 상단바용 visitor-stats — 작은 텍스트 옆에 카운터
-.visitor-stats {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: 12px;
-  font-family: $font-base;
-  font-size: 0.95rem;
-  color: $bg;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.3s;
-  &.loaded { opacity: 1; }
-}
-
-.visitor-pair {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.visitor-emoji {
-  font-family: 'Mona12Emoji', inherit;
-  line-height: 1;
-}
-
-.visitor-row {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.visitor-label {
-  color: $text-muted;
-  font-size: 1.2rem;
-  font-weight: 000;
-}
-
-.visitor-value {
-  color: $primary;
-  font-size: 1.2rem;
-  font-weight: 400;
-}
-
-.visitor-divider {
-  width: 2px;
-  height: 30px;
-  background: rgba($border, 0.3);
 }
 
 .sidebar-nav { margin-bottom: 16px; }
@@ -2159,12 +2106,6 @@ div.highlighter-rouge {
     #status-weather,
     .status-sep { display: none; }
   }
-  .visitor-stats { font-size: 0.85rem; gap: 6px; }
-}
-
-// 더 좁은 화면 — visitor-stats도 숨기고 시간만
-@media (max-width: 480px) {
-  .visitor-stats { display: none; }
 }
 
 .sidebar-backdrop {
