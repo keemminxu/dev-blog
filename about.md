@@ -87,6 +87,26 @@ permalink: /about/
 
       <article class="about-project">
         <div class="about-project-titlebar">
+          <span class="about-project-titlebar-text">editor_cursor_skin.exe</span>
+        </div>
+        <a class="about-project-link" href="https://fab.com/s/dbe5befc72f6" target="_blank" rel="noopener">
+          <div class="about-project-media about-project-media--link">
+            <span class="about-project-cta">VIEW ON FAB →</span>
+          </div>
+        </a>
+        <div class="about-project-info">
+          <h3 class="about-project-title">Editor Cursor Skin</h3>
+          <p class="about-project-desc">에디터 마우스 커서를 이미지·GIF로 교체하는 엔진 툴 플러그인</p>
+          <div class="about-project-tags">
+            <span class="about-project-tag">UE5.3–5.7</span>
+            <span class="about-project-tag">C++</span>
+            <span class="about-project-tag">Editor-Only</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="about-project">
+        <div class="about-project-titlebar">
           <span class="about-project-titlebar-text">bicus.mov</span>
         </div>
         <div class="about-project-media">
