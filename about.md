@@ -15,7 +15,7 @@ permalink: /about/
       <p class="about-role">
         UE 클라이언트 개발자 — <span class="about-dday" id="career-dday" data-start="2022-03-01">계산 중…</span>
       </p>
-      <p class="about-tagline">재밌는걸 멋있게 오래 할 수 있는걸 좋아합니다.</p>
+      <p class="about-tagline">재밌는걸.. 멋지게.. 오래.. 할 수 있는 것들을 좋아합니다</p>
     </div>
   </section>
 
@@ -45,7 +45,7 @@ permalink: /about/
         <time class="about-timeline-date">2025.04 — 현재</time>
         <div class="about-timeline-body">
           <strong>더크로싱랩</strong>
-          <span> · 개발실 주임</span>
+          <span> · 개발실 클라이언트팀 주임</span>
           <p>UE 클라이언트 개발 및 모바일 프로젝트 담당 관리</p>
         </div>
       </li>
@@ -75,12 +75,11 @@ permalink: /about/
         </a>
         <div class="about-project-info">
           <h3 class="about-project-title">Blueprint Analyzer</h3>
-          <p class="about-project-desc">엔진 툴 플러그인</p>
+          <p class="about-project-desc">BP To JSON or LLM Friendly Text로 변환해주는 엔진 툴 플러그인</p>
           <div class="about-project-tags">
-            <span class="about-project-tag">UE5.5</span>
-            <span class="about-project-tag">UE5.6</span>
-            <span class="about-project-tag">UE5.7</span>
+            <span class="about-project-tag">UE5.5 - 5.7</span>
             <span class="about-project-tag">C++</span>
+            <span class="about-project-tag">Editor-Only</span>
           </div>
         </div>
       </article>
@@ -98,7 +97,7 @@ permalink: /about/
           <h3 class="about-project-title">Editor Cursor Skin</h3>
           <p class="about-project-desc">에디터 마우스 커서를 이미지·GIF로 교체하는 엔진 툴 플러그인</p>
           <div class="about-project-tags">
-            <span class="about-project-tag">UE5.3–5.7</span>
+            <span class="about-project-tag">UE5.3 - 5.7</span>
             <span class="about-project-tag">C++</span>
             <span class="about-project-tag">Editor-Only</span>
           </div>
@@ -116,11 +115,9 @@ permalink: /about/
           <h3 class="about-project-title">bicus</h3>
           <p class="about-project-desc">소셜 플랫폼</p>
           <div class="about-project-tags">
+            <span class="about-project-tag">UE4.27</span>
             <span class="about-project-tag">UE5.3</span>
             <span class="about-project-tag">C++</span>
-            <span class="about-project-tag">Python</span>
-            <span class="about-project-tag">AWS</span>
-            <span class="about-project-tag">Firebase</span>
           </div>
         </div>
       </article>
@@ -134,12 +131,10 @@ permalink: /about/
         </div>
         <div class="about-project-info">
           <h3 class="about-project-title">SuperPlat</h3>
-          <p class="about-project-desc">소셜 액션 RPG</p>
+          <p class="about-project-desc">소셜 RPG</p>
           <div class="about-project-tags">
             <span class="about-project-tag">UE5.5</span>
             <span class="about-project-tag">C++</span>
-            <span class="about-project-tag">MediaPipe</span>
-            <span class="about-project-tag">IOCP</span>
           </div>
         </div>
       </article>
@@ -157,9 +152,6 @@ permalink: /about/
           <div class="about-project-tags">
             <span class="about-project-tag">UE5.3</span>
             <span class="about-project-tag">C++</span>
-            <span class="about-project-tag">Python</span>
-            <span class="about-project-tag">AWS</span>
-            <span class="about-project-tag">Firebase</span>
           </div>
         </div>
       </article>
