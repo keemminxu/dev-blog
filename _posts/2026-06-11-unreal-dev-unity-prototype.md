@@ -4,7 +4,7 @@ title: "Unity를 써보자!"
 title_en: "An Unreal Developer's First Unity Prototype: Engine Choice, Pitfalls, and a Vibe-Coding Workflow"
 excerpt_en: "Why an Unreal developer picked Unity 6.3 LTS for a mobile puzzle prototype — with a Unity cheat sheet for Unreal devs, a pure-C# core testing workflow, and balance bugs caught on day one."
 date: 2026-06-11 10:34:00 +0900
-categories: [game-dev]
+categories: [unity]
 tags: [unity, unreal-engine, prototyping, vibe-coding, claude-code, game-balance]
 excerpt: "모바일 퍼즐 게임 프로토타입을 Unity로 만들기로 했다. 엔진 선택 이유부터 설치 함정, 언리얼↔Unity 개념 매핑, 순수 C# 코어 분리 워크플로, 첫 플레이테스트에서 터진 밸런스 구멍까지."
 ---

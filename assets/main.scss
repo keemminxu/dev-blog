@@ -760,6 +760,11 @@ html.sidebar-preopen {
   mask-image: url('/assets/images/logo/ue.svg');
 }
 
+.nav-child-logo--unity {
+  -webkit-mask-image: url('/assets/images/logo/unity.svg');
+  mask-image: url('/assets/images/logo/unity.svg');
+}
+
 .nav-child-logo--godot {
   -webkit-mask-image: url('/assets/images/logo/icon_monochrome_dark.svg');
   mask-image: url('/assets/images/logo/icon_monochrome_dark.svg');

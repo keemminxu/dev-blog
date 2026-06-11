@@ -3,3 +3,4 @@ _drafts/
 _site/
 .sass-cache/
 .claude/
+.jekyll-metadata

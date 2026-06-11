@@ -5,8 +5,8 @@ permalink: /category/tech/
 ---
 
 <div class="category-page">
-  {% comment %} tech 그룹은 unrealengine / godot / study / etc 합집합 {% endcomment %}
-  {% assign tech_cats = "unrealengine,godot,study,etc" | split: "," %}
+  {% comment %} tech 그룹은 unrealengine / unity / godot / study / etc 합집합 {% endcomment %}
+  {% assign tech_cats = "unrealengine,unity,godot,study,etc" | split: "," %}
   {% assign tech_posts = "" | split: "" %}
   {% for cat in tech_cats %}
     {% if site.categories[cat] %}
