@@ -119,7 +119,7 @@ export function initBackrooms(scene) {
   });
   startOverlay.innerHTML =
     `<div style="color:#f4d97e;font-size:16px">BACKROOMS</div>` +
-    `<div style="margin-top:10px;opacity:.85">PRESS <b>A</b> TO ENTER</div>`;
+    `<div style="margin-top:10px;opacity:.85">PRESS <b>O</b> TO ENTER</div>`;
   parent.appendChild(startOverlay);
 }
 

@@ -36,21 +36,44 @@ layout: default
     </div>
   </section>
 
+  <div class="home-side">
+
+  <section class="home-plugins">
+    <div class="home-plugins-grid">
+      <a class="plugin-card" href="https://fab.com/s/926b85b74bed" target="_blank" rel="noopener">
+        <img class="plugin-card-sticker" src="{{ '/assets/images/logo/Hot.png' | relative_url }}" alt="" aria-hidden="true">
+        <div class="plugin-card-titlebar">
+          <span class="plugin-card-titlebar-text">blueprint_analyzer.exe</span>
+        </div>
+        <div class="plugin-card-thumb">
+          <img src="{{ '/assets/images/logo/ba.png' | relative_url }}" alt="Blueprint Analyzer" loading="lazy">
+        </div>
+      </a>
+      <a class="plugin-card" href="https://fab.com/s/dbe5befc72f6" target="_blank" rel="noopener">
+        <img class="plugin-card-sticker" src="{{ '/assets/images/logo/New.png' | relative_url }}" alt="" aria-hidden="true">
+        <div class="plugin-card-titlebar">
+          <span class="plugin-card-titlebar-text">editor_cursor_skin.exe</span>
+        </div>
+        <div class="plugin-card-thumb">
+          <img src="{{ '/assets/images/logo/EditorCursorSkin.jpg' | relative_url }}" alt="Editor Cursor Skin" loading="lazy">
+        </div>
+      </a>
+    </div>
+  </section>
+
   <section class="home-greeting">
     <div class="greeting-box">
       <div class="greeting-titlebar">
         <span class="greeting-titlebar-text">README.txt</span>
       </div>
       <div class="greeting-body">
+        <pre class="greeting-ascii" id="ascii-invader" aria-hidden="true" title="drag to spin"></pre>
         <div class="greeting-terminal" contenteditable="true" spellcheck="false" aria-label="terminal"><div>hello world!</div><div>제 블로그 방문해주셔서 감사해요!</div><div>오늘도 좋은 하루 되세요 😁</div></div>
       </div>
     </div>
   </section>
 
   <section class="latest-posts">
-    <h2 class="latest-posts-heading">
-      <span class="latest-posts-heading-icon material-symbols-outlined" aria-hidden="true">newspaper</span>recent posts
-    </h2>
     <div class="latest-posts-grid">
       {% for post in site.posts limit:3 %}
         <a class="latest-post-card" href="{{ post.url | relative_url }}">
@@ -68,6 +91,8 @@ layout: default
       {% endfor %}
     </div>
   </section>
+
+  </div><!-- /.home-side -->
 </div>
 
 <script>
@@ -218,3 +243,4 @@ document.addEventListener('DOMContentLoaded', setupGamepadUI);
   {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"}}
 </script>
 <script type="module" src="{{ '/assets/js/game.js' | relative_url }}"></script>
+<script defer src="{{ '/assets/js/invader.js' | relative_url }}"></script>

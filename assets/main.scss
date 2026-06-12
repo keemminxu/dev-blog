@@ -457,8 +457,10 @@ img {
 .site-container {
   display: grid;
   grid-template-columns: 1fr;
+  box-sizing: border-box;  // 패딩 포함 100vh — 콘텐츠가 짧아도 불필요한 스크롤 방지
   min-height: 100vh;
   padding-top: 28px;
+  padding-bottom: 28px;   // 고정 푸터에 가려지지 않게
 }
 
 // ═══════════════════════════════════════
@@ -494,6 +496,44 @@ img {
   &.is-wide { width: 700px; }
 }
 
+// ── 데스크톱: 사이드바를 토글 오버레이가 아닌 상시 고정 컬럼으로 ──
+// 창 프레임(타이틀바·베벨·배경)을 걷어내 메인 배경에 스며들게 한다.
+@media (min-width: 769px) {
+  .sidebar-left {
+    transform: none;
+    transition: none;
+    top: 28px;                       // 상단바 아래 ~ 고정 푸터 위
+    height: calc(100vh - 56px);
+    height: calc(100dvh - 56px);
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    &.is-wide { width: 300px; }      // 오버레이용 확장 무효화
+
+    // 메인 콘텐츠와의 흐릿한 경계선 — 위아래로 사라지는 그라데이션
+    &::after {
+      content: '';
+      position: absolute;
+      top: 6%;
+      bottom: 6%;
+      right: 0;
+      width: 1px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba($border, 0.25) 20%,
+        rgba($border, 0.25) 80%,
+        transparent
+      );
+      pointer-events: none;
+    }
+  }
+  .sidebar-left .sidebar-titlebar { display: none; }     // "hello world!" 창 타이틀바 제거
+  .site-container { padding-left: 300px; }
+  .menu-toggle { display: none; }                        // 상단바 menu 버튼 불필요
+  .sidebar-backdrop { display: none !important; }
+}
+
 // 사이드바 자체의 타이틀 바
 .sidebar-titlebar {
   flex-shrink: 0;
@@ -519,14 +559,17 @@ img {
   text-overflow: ellipsis;
 }
 
-body.sidebar-open { overflow: hidden; }
+// 오버레이 모드(모바일)에서만 배경 스크롤 잠금
+@media (max-width: 768px) {
+  body.sidebar-open { overflow: hidden; }
 
-// 페이지 로드 시 사이드바 상태 즉시 복원 (inline head 스크립트가 html 클래스 부여)
-// → 첫 페인트부터 열린 상태로 렌더되어 깜빡임 없음
-html.sidebar-preopen {
-  .sidebar-left { transform: translateX(0); }
-  .sidebar-backdrop { display: block; }
-  body { overflow: hidden; }
+  // 페이지 로드 시 사이드바 상태 즉시 복원 (inline head 스크립트가 html 클래스 부여)
+  // → 첫 페인트부터 열린 상태로 렌더되어 깜빡임 없음
+  html.sidebar-preopen {
+    .sidebar-left { transform: translateX(0); }
+    .sidebar-backdrop { display: block; }
+    body { overflow: hidden; }
+  }
 }
 
 .sidebar-left-inner {
@@ -544,6 +587,62 @@ html.sidebar-preopen {
 .profile-section {
   margin: 0 -20px 16px;
   padding: 16px 20px 0px;
+}
+
+// ── 네온사인 (OPEN 24 HOURS) — ON/OFF 이미지 교차 점멸 ──
+.neon-sign {
+  position: relative;
+  width: 86%;
+  margin: 4px auto 0;
+
+  .neon-sign-off,
+  .neon-sign-on {
+    display: block;
+    width: 100%;
+    height: auto;
+    user-select: none;
+  }
+
+  // 켜질 때 뒤에서 새어 나오는 빛 — ON 이미지와 동일 타이밍으로 점멸
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -16% -14%;
+    background: radial-gradient(
+      closest-side,
+      rgba(255, 214, 150, 0.26),
+      rgba(255, 130, 90, 0.12) 55%,
+      transparent 78%
+    );
+    opacity: 0;
+    animation: neon-blink 3.6s infinite;
+    pointer-events: none;
+  }
+}
+
+.neon-sign-on {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: neon-blink 3.6s infinite;
+  filter: drop-shadow(0 0 7px rgba(255, 170, 120, 0.55));
+}
+
+// 점등 순간 치직거리는 스터터 → 절반 켜짐 유지 → 소등
+@keyframes neon-blink {
+  0%, 3%   { opacity: 0; }
+  4%, 5%   { opacity: 1; }
+  6%, 8%   { opacity: 0; }
+  9%, 52%  { opacity: 1; }
+  53%, 100% { opacity: 0; }
+}
+
+@media (max-height: 800px) {
+  .neon-sign { width: 74%; }
+}
+
+@media (max-height: 680px) {
+  .neon-sign { width: 62%; }
 }
 
 // 프로필 프레임: 프레임 자체는 투명 — 스티커 앵커 + 레이아웃 용도만
@@ -610,7 +709,7 @@ html.sidebar-preopen {
 // Toast notification
 .toast {
   position: fixed;
-  bottom: 30px;
+  bottom: 46px;   // 고정 푸터(28px) 위로
   left: 50%;
   transform: translateX(-50%) translateY(100px);
   background: $surface;
@@ -902,10 +1001,93 @@ body.is-home .main-content {
 }
 
 // 홈 인사말 — MS-DOS 박스 (recent posts와 동일 폭)
-.home-greeting {
+// ── Fab 플러그인 미니 카드 (README 위) ──
+.home-plugins {
   margin: 56px auto 0;
   max-width: 720px;
   padding: 0 16px;
+}
+
+.home-plugins-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.plugin-card {
+  position: relative;     // 좌상단 스티커 기준점
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  background: $bg;
+  border: 2px solid;
+  border-color: $primary $text-muted $text-muted $primary;
+  box-shadow:
+    inset 1px 1px 0 $primary,
+    inset -1px -1px 0 $text-muted,
+    2px 2px 0 #000;
+  min-width: 0;
+  transition: filter 0.15s ease;
+
+  &:hover { filter: brightness(1.3); }
+}
+
+// 카드 모서리에 붙는 픽셀 스티커 (PNG 자체가 기울어져 있어 위치만 잡음)
+.plugin-card-sticker {
+  position: absolute;
+  top: -14px;
+  left: -14px;
+  width: clamp(48px, 34%, 84px);
+  height: auto;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.plugin-card-titlebar {
+  background: $border;
+  color: $bg;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid $text-muted;
+  font-family: $font-code;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.plugin-card-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: $surface-high;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.home-greeting {
+  margin: 32px auto 0;
+  max-width: 720px;
+  padding: 0 16px;
+}
+
+// 섹션 사이 은은한 가로 경계선 — 사이드바 세로 경계선과 동일 톤
+.home-greeting::before,
+.latest-posts::before {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-bottom: 24px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba($border, 0.25) 18%,
+    rgba($border, 0.25) 82%,
+    transparent
+  );
 }
 
 .greeting-box {
@@ -935,6 +1117,29 @@ body.is-home .main-content {
   padding: 14px 16px 16px;
 }
 
+// 3D ASCII 아트 (스페이스 인베이더) — 드래그로 회전 가능
+.greeting-ascii {
+  margin: 0 auto 8px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  overflow: hidden;       // minima pre 기본 overflow:auto 무효화 (스크롤바 방지)
+  font-family: $font-code;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0;
+  color: #55FF55;
+  text-shadow: 0 0 5px rgba(85, 255, 85, 0.3);
+  white-space: pre;
+  text-align: center;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;   // 세로 스크롤은 살리고 드래그 회전만 가로채기
+
+  &:active { cursor: grabbing; }
+}
+
 // 편집 가능한 터미널 영역 — 각 줄(<div>) 앞에 "> " 가상 prompt (편집 불가)
 .greeting-terminal {
   font-family: 'JetBrains Mono', 'Mona12Emoji', 'Consolas', monospace;
@@ -948,6 +1153,10 @@ body.is-home .main-content {
   outline: none;
   caret-color: $text;
   min-height: 1.55em;
+  // 높이 고정(3줄) + 내부 스크롤 — 줄을 추가해도 창이 안 자라서
+  // 홈 그리드 재정렬(CRT가 같이 밀리는 현상)이 일어나지 않는다
+  max-height: calc(1.55em * 3);
+  overflow-y: auto;
   cursor: text;
 
   // 각 줄: padding-left 로 prompt 공간 확보, ::before 는 absolute 로 띄움
@@ -1084,15 +1293,14 @@ body.is-home .main-content {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     column-gap: 56px;
-    align-items: center;
+    align-items: start;     // CRT가 상단에 붙게 — 세로 중앙정렬 제거
     max-width: 1280px;
     margin: 0 auto;
-    padding: 16px 40px 48px;
+    padding: 0 40px 48px;
   }
 
   .hero-section {
     grid-column: 1;
-    grid-row: 1 / 3;
     margin: 0;
     padding: 0;
   }
@@ -1102,25 +1310,26 @@ body.is-home .main-content {
     width: min(100%, calc(82vh * 1856 / 2304));
   }
 
-  .home-greeting {
+  // 우측 컬럼 래퍼 — 플러그인 / README / recent posts 세로 스택
+  .home-side {
     grid-column: 2;
-    grid-row: 1;
-    align-self: end;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .home-plugins,
+  .home-greeting,
+  .latest-posts {
     margin: 0;
     max-width: 540px;
     width: 100%;
     padding: 0;
   }
 
-  .latest-posts {
-    grid-column: 2;
-    grid-row: 2;
-    align-self: start;
-    margin: 32px 0 0;
-    max-width: 540px;
-    width: 100%;
-    padding: 0;
-  }
+  .home-greeting { margin-top: 28px; }
+  .latest-posts { margin-top: 28px; }
 
   // 우측 컬럼에선 카드 3장을 가로형(썸네일 좌 + 메타 우)으로 쌓는다
   .latest-posts-grid {
@@ -1498,12 +1707,17 @@ body.is-home .main-content {
 // Footer
 // ═══════════════════════════════════════
 
+// 상시 노출 status bar — 상단 헤더와 같은 높이(28px)의 고정 푸터 (가운데 콘텐츠만 스크롤)
 .site-footer {
-  grid-column: 1 / -1;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 28px;
+  z-index: 300;            // fixed 사이드바(z 200) 위 — 좌측 소셜 아이콘 클릭 보장
   background-color: $border;
   color: $bg;
-  padding: 4px 12px;
-  text-align: center;
+  padding: 0 6px;
   font-size: 0.85rem;
   // Win95 status bar 스타일 (top-bar와 동일 inset 3D)
   box-shadow:
@@ -1511,9 +1725,54 @@ body.is-home .main-content {
     inset -1px -1px 0 $text-muted;
 }
 
+.footer-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+// 좌측 소셜 아이콘 — 상단바 window-btn과 동일한 3D 버튼
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 22px;
+    background: $border;
+    color: $bg;
+    text-decoration: none;
+    // 3D outset (튀어나옴)
+    box-shadow:
+      inset 1px 1px 0 $primary,
+      inset -1px -1px 0 $text-muted,
+      0 0 0 1px $bg;
+
+    &:hover { color: #000; }
+
+    &:active {
+      // 눌리면 inset (들어감)
+      box-shadow:
+        inset -1px -1px 0 $primary,
+        inset 1px 1px 0 $text-muted,
+        0 0 0 1px $bg;
+    }
+
+    svg { width: 14px; height: 14px; fill: currentColor; }
+  }
+}
+
 // (status bar에는 검정 글씨가 가독성 좋음)
 .footer-copyright {
-  font-size: 0.9rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.15rem;
   color: $surface;
   letter-spacing: 0.05em;
 }
@@ -2266,8 +2525,13 @@ div.highlighter-rouge {
   // 좌우 viewport edge 2px 장식 라인 숨김 (콘솔이 끝까지 닿게)
   html::before, html::after { display: none; }
 
+  // 홈 플러그인 카드 모바일 (recent posts와 동일 폭)
+  .home-plugins { margin: 40px auto 0; max-width: 320px; padding: 0; }
+  .home-plugins-grid { gap: 12px; }
+  .plugin-card-titlebar { font-size: 0.6rem; }
+
   // 홈 인사말 모바일 (recent posts와 동일 폭)
-  .home-greeting { margin: 40px auto 0; max-width: 320px; padding: 0; }
+  .home-greeting { margin: 24px auto 0; max-width: 320px; padding: 0; }
   .greeting-titlebar { font-size: 0.7rem; }
   .greeting-body { padding: 12px 12px 14px; }
   .greeting-terminal { font-size: 0.82rem; }
@@ -3244,4 +3508,17 @@ body.admin-editor-open {
     width: 100px;
     height: 100px;
   }
+}
+
+// ═══════════════════════════════════════
+// 고해상도 모니터 보정
+// ═══════════════════════════════════════
+// 사이트가 px/rem 고정 스케일이라 QHD·4K(100% 배율)에서 전체가 너무 작게 보임.
+// 뷰포트 폭 기준으로 페이지 전체를 비례 확대한다. (media query는 zoom의 영향을 받지 않음)
+@media (min-width: 2240px) {
+  html { zoom: 1.25; }
+}
+
+@media (min-width: 3200px) {
+  html { zoom: 1.5; }
 }
