@@ -81,7 +81,8 @@ layout: default
             <span class="latest-post-card-titlebar-text">{{ post.title | downcase }}.md</span>
           </div>
           <div class="latest-post-thumb">
-            <img src="{{ '/assets/og/' | append: post.slug | append: '.png' | relative_url }}" alt="{{ post.title | escape }}" loading="lazy" onerror="this.style.display='none'">
+            {% if post.thumbnail %}{% assign card_thumb = post.thumbnail %}{% else %}{% assign card_thumb = '/assets/og/' | append: post.slug | append: '.png' %}{% endif %}
+            <img src="{{ card_thumb | relative_url }}" alt="{{ post.title | escape }}" loading="lazy" onerror="this.style.display='none'">
           </div>
           <div class="latest-post-meta">
             <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>

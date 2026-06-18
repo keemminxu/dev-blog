@@ -9,8 +9,13 @@
   </div>
 
   <div class="post-card-thumbnail">
-    {% assign post_slug = include.post.url | split: '/' | last %}
-    <img src="{{ '/assets/og/' | append: post_slug | append: '.png' | relative_url }}"
+    {% if include.post.thumbnail %}
+      {% assign card_thumb = include.post.thumbnail %}
+    {% else %}
+      {% assign post_slug = include.post.url | split: '/' | last %}
+      {% assign card_thumb = '/assets/og/' | append: post_slug | append: '.png' %}
+    {% endif %}
+    <img src="{{ card_thumb | relative_url }}"
          alt="{{ include.post.title | escape }}"
          loading="lazy"
          onerror="this.style.display='none'">
