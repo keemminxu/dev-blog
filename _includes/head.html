@@ -66,4 +66,7 @@
     <script defer src="{{ '/assets/js/toc.js' | relative_url }}"></script>
     <script defer src="{{ '/assets/js/comments.js' | relative_url }}"></script>
   {% endif %}
+  {% if page.url == '/daily/' %}
+    <script defer src="{{ '/assets/js/daily.js' | relative_url }}"></script>
+  {% endif %}
 </head>

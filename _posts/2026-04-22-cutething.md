@@ -3,7 +3,7 @@ layout: post
 title: "귀여운거"
 title_en: "cute thing"
 date: 2026-04-22 18:29:39 +0900
-categories: ["daily"]
+categories: ["etc"]
 tags: ["gif", "slack", "emoji", "이모티콘", "이모지", "emoticon"]
 ---
 
