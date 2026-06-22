@@ -3530,6 +3530,10 @@ body.admin-editor-open {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  /* 본문 글과 동일한 760px 읽기 폭. (site-container가 grid라 콘텐츠가 짧으면
+     main 칼럼이 줄어드는데, 폭을 명시해 카드가 옹졸하게 쪼그라들지 않게 한다) */
+  width: 760px;
+  max-width: 100%;
 }
 
 .daily-loading,
