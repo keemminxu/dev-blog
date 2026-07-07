@@ -2,7 +2,7 @@
 layout: post
 title: "언리얼 엔진 5.8 정리 — UE5 마지막 메이저, Claude MCP"
 title_en: "Unreal Engine 5.8: The Last Major UE5 Release, MegaLights, Mobile Deferred, and the MCP Plugin"
-date: 2026-07-07 11:46:23 +0900
+date: 2026-06-18 11:00:00 +0900
 categories: ["unrealengine"]
 tags: ["unreal-engine", "ue5-8", "megalights", "lumen", "mcp", "mobile"]
 excerpt: "State of Unreal 2026에서 나온 언리얼 5.8 핵심 정리. UE5의 마지막 메이저 릴리스이고, MegaLights가 Production-Ready로, Lumen Lite가 스위치 2 60fps를 노리고, MCP 플러그인으로 Claude를 에디터에 직접 연결할 수 있다. 모든 항목은 공식 출처 기준."
