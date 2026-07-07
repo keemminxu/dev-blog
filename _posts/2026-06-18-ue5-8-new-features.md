@@ -2,7 +2,7 @@
 layout: post
 title: "언리얼 엔진 5.8 정리 — UE5 마지막 메이저, Claude MCP"
 title_en: "Unreal Engine 5.8: The Last Major UE5 Release, MegaLights, Mobile Deferred, and the MCP Plugin"
-date: 2026-07-07 11:43:05 +0900
+date: 2026-07-07 11:46:23 +0900
 categories: ["unrealengine"]
 tags: ["unreal-engine", "ue5-8", "megalights", "lumen", "mcp", "mobile"]
 excerpt: "State of Unreal 2026에서 나온 언리얼 5.8 핵심 정리. UE5의 마지막 메이저 릴리스이고, MegaLights가 Production-Ready로, Lumen Lite가 스위치 2 60fps를 노리고, MCP 플러그인으로 Claude를 에디터에 직접 연결할 수 있다. 모든 항목은 공식 출처 기준."
@@ -117,17 +117,22 @@ excerpt_en: "A source-checked rundown of Unreal Engine 5.8 — the final planned
 
 ## 참고 이미지·영상 (공식 출처)
 
-기능별 스크린샷·영상은 아래 공식 페이지에 캡션과 함께 올라와 있다. (에픽 자산이라 여기 직접 임베드하진 않고 출처만 건다 — 필요하면 가서 확인하면 된다.)
+**기능 전반 이미지/영상** (Mesh Terrain, PVE, MegaLights, Lumen, FSSS, Toon Shader, MetaHuman, MCP 등 각 항목별 캡션 미디어): 공식 공지 페이지 [Unreal Engine 5.8 is now available][^announce]
 
-- **기능 전반 이미지/영상** (Mesh Terrain, PVE, MegaLights, Lumen, FSSS, Toon Shader, MetaHuman, MCP 등 각 항목별 캡션 미디어): 공식 공지 페이지 [Unreal Engine 5.8 is now available][^announce]
-- **State of Unreal / UE6 / Lore 관련 이미지**: [State of Unreal 2026: Top news from the show][^sou]
-- **CG 아티스트 관점 5대 기능 + 데모 영상**(Mesh Terrain, MetaHuman Crowd, DMC, Control Rig Dynamics, MegaLights): [CG Channel 정리글][^cg]
+**State of Unreal / UE6 / Lore 관련 이미지**: [State of Unreal 2026: Top news from the show][^sou]
+
+**CG 아티스트 관점 5대 기능 + 데모 영상**(Mesh Terrain, MetaHuman Crowd, DMC, Control Rig Dynamics, MegaLights): [CG Channel 정리글][^cg]
 
 ## 출처
 
-1. [^announce]: Epic Games, "Unreal Engine 5.8 is now available" (공식 공지) — <https://www.unrealengine.com/news/unreal-engine-5-8-is-now-available>
-2. [^relnotes]: Epic Games, "Unreal Engine 5.8 Release Notes" (공식 릴리스 노트) — <https://dev.epicgames.com/documentation/unreal-engine/unreal-engine-5-8-release-notes>
-3. [^sou]: Epic Games, "State of Unreal 2026: Top news from the show" — <https://www.unrealengine.com/news/state-of-unreal-2026-top-news-from-the-show>
-4. [^forum]: Epic Developer Community Forums, "Unreal Engine 5.8 Released" — <https://forums.unrealengine.com/t/unreal-engine-5-8-released/2729274>
-5. [^cg]: CG Channel, "Unreal Engine 5.8 is here: see its 5 key features for CG artists" (2차) — <https://www.cgchannel.com/2026/06/see-5-key-features-for-cg-artists-in-unreal-engine-5-8/>
-6. [^gfs]: GameFromScratch, "Unreal Engine 5.8 Released" (2차) — <https://gamefromscratch.com/unreal-engine-5-8-released/>
+[^announce]: Epic Games, "Unreal Engine 5.8 is now available" (공식 공지) — <https://www.unrealengine.com/news/unreal-engine-5-8-is-now-available>
+
+[^relnotes]: Epic Games, "Unreal Engine 5.8 Release Notes" (공식 릴리스 노트) — <https://dev.epicgames.com/documentation/unreal-engine/unreal-engine-5-8-release-notes>
+
+[^sou]: Epic Games, "State of Unreal 2026: Top news from the show" — <https://www.unrealengine.com/news/state-of-unreal-2026-top-news-from-the-show>
+
+[^forum]: Epic Developer Community Forums, "Unreal Engine 5.8 Released" — <https://forums.unrealengine.com/t/unreal-engine-5-8-released/2729274>
+
+[^cg]: CG Channel, "Unreal Engine 5.8 is here: see its 5 key features for CG artists" (2차) — <https://www.cgchannel.com/2026/06/see-5-key-features-for-cg-artists-in-unreal-engine-5-8/>
+
+[^gfs]: GameFromScratch, "Unreal Engine 5.8 Released" (2차) — <https://gamefromscratch.com/unreal-engine-5-8-released/>
