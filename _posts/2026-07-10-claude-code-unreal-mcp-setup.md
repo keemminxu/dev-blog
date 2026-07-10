@@ -4,7 +4,7 @@ title: "언리얼 MCP 서버 Claude Code 연동"
 title_en: "Connecting an Unreal Engine MCP Server to Claude Code"
 excerpt_en: "How Claude Code discovers MCP servers, why a generated .mcp.json in the wrong directory silently does nothing, and the one-liner that actually registers the server."
 date: 2026-07-10 15:05:00 +0900
-categories: [ai-tools]
+categories: [unrealengine]
 tags: [claude-code, mcp, unreal-engine, model-context-protocol, dev-environment]
 excerpt: "언리얼 MCP 플러그인, Claude Code의 MCP 스코프 3종과 claude mcp add 한 줄로 연동한 기록. 덤으로 툴셋 구조 훑어보기와 WBP 생성·레벨 배치 테스트."
 ---
