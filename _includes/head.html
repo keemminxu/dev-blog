@@ -44,7 +44,8 @@
   <!-- Custom Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <!-- 400 외에 700/이탤릭도 로드 — 코드 하이라이터의 bold 키워드·italic 주석이 합성 렌더링되지 않게 -->
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <!-- Google Material Symbols -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -58,6 +59,7 @@
 
   <!-- Page Scripts -->
   <script defer src="{{ '/assets/js/search.js' | relative_url }}"></script>
+  <script defer src="{{ '/assets/js/paginate.js' | relative_url }}"></script>
   <script defer src="{{ '/assets/js/sidebar.js' | relative_url }}"></script>
   <script defer src="{{ '/assets/js/topbar-status.js' | relative_url }}"></script>
   <script defer src="{{ '/assets/js/admin.js' | relative_url }}"></script>
@@ -65,6 +67,7 @@
   {% if page.layout == 'post' %}
     <script defer src="{{ '/assets/js/toc.js' | relative_url }}"></script>
     <script defer src="{{ '/assets/js/comments.js' | relative_url }}"></script>
+    <script defer src="{{ '/assets/js/lightbox.js' | relative_url }}"></script>
   {% endif %}
   {% if page.url == '/daily/' %}
     <script defer src="{{ '/assets/js/daily.js' | relative_url }}"></script>

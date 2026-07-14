@@ -42,7 +42,9 @@ $secondary: #888888;
 $secondary-container: #333333;
 
 $font-base: 'HBIOS-SYS', 'Mona12Emoji', -apple-system, BlinkMacSystemFont, sans-serif;
-$font-code: 'JetBrains Mono', 'Consolas', monospace;
+// 한글 폴백(맑은 고딕) 명시 — JetBrains Mono/Consolas엔 한글 글리프가 없어
+// 코드 주석·표의 한글이 브라우저 임의 폰트(굴림 등)로 렌더되는 것을 방지
+$font-code: 'JetBrains Mono', 'Consolas', 'Malgun Gothic', monospace;
 
 $max-width: 720px;
 $max-width-wide: 960px;
@@ -163,7 +165,8 @@ $site-title-color: $text;
 }
 
 // 모든 글꼴 bold 제거 — 기본 굵은 태그도 일반 두께로
-body, h1, h2, h3, h4, h5, h6, strong, b, th {
+// (strong/b 는 제외 — md **강조**가 죽는 원인이었음. 본문 강조는 .post-content에서 처리)
+body, h1, h2, h3, h4, h5, h6, th {
   font-weight: 400 !important;
 }
 
@@ -394,59 +397,6 @@ img {
 
   &::placeholder {
     color: $text-muted;
-  }
-}
-
-.search-bar {
-  flex: 1;
-  max-width: 360px;
-  margin-left: auto;
-  margin-right: 16px;
-  position: relative;
-
-  input {
-    width: 100%;
-    padding: 8px 16px;
-    background-color: $surface;
-    border: 2px solid $border;
-    color: $text;
-    font-family: $font-base;
-    font-size: 0.85rem;
-    font-weight: 400;
-    text-transform: uppercase;
-    outline: none;
-    transition: border-color 0.2s;
-    &::placeholder { color: $text-muted; text-transform: uppercase; }
-    &:focus { border-color: $accent; }
-  }
-}
-
-.search-results {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: 4px;
-  background: $surface;
-  border: 2px solid $border;
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 200;
-
-  &.is-open { display: block; }
-
-  .search-item {
-    display: block;
-    padding: 10px 16px;
-    color: $text;
-    text-decoration: none;
-    border-bottom: 1px solid rgba($border, 0.3);
-    font-size: 0.85rem;
-    &:last-child { border-bottom: none; }
-    &:hover { background: rgba($accent, 0.1); }
-    .search-item-title { font-weight: 400; text-transform: uppercase; }
-    .search-item-date { color: $text-muted; font-size: 0.8rem; }
   }
 }
 
@@ -968,7 +918,8 @@ img {
 // ═══════════════════════════════════════
 
 .main-content {
-  padding: 32px 0;
+  // 좌우 24px — 769~1060px 구간에서 본문이 사이드바 경계/화면 끝에 붙는 것 방지
+  padding: 32px 24px;
   max-width: 760px;
   margin: 0 auto;
   min-width: 0;
@@ -1961,7 +1912,7 @@ body.is-home .main-content {
     background-color: transparent;
     color: $text-muted;
     border: 1px solid rgba($border, 0.35);
-    font-size: 0.56rem;          // 0.7rem 의 80% (20% 축소)
+    font-size: 0.7rem;           // 0.56rem은 판독 한계 이하 — 존재감은 색/보더로 낮춤
     font-weight: 400;
     text-decoration: none;
     text-transform: uppercase;
@@ -1976,43 +1927,47 @@ body.is-home .main-content {
 }
 
 .post-content {
-  // 본문은 픽셀 폰트(HBIOS-SYS) 대신 얇은 시스템 한글 폰트로 — 두꺼운 느낌 제거
+  // 본문은 픽셀 폰트(HBIOS-SYS) 대신 시스템 한글 폰트로
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-  font-weight: 300;
+  // 300(Light)은 리스트·표·인용구만 얇아지는 혼재를 만들었음 — 400으로 통일
+  font-weight: 400;
   line-height: 1.8;
   overflow-wrap: break-word;
-  word-break: break-word;
-  word-wrap: break-word;
+  // keep-all: 한글이 어절 중간에서 잘리지 않게 (긴 URL은 overflow-wrap이 처리)
+  word-break: keep-all;
   max-width: 100%;
 
-  // 헤딩 (#, ##, ### …) — 볼드 + 색상 #CBA040, 픽셀 폰트 유지
+  > :first-child { margin-top: 0; }
+
+  // 헤딩 (#, ##, ### …) — 색상 #CBA040, 픽셀 폰트 유지
+  // HBIOS-SYS는 단일 웨이트라 700 강제 시 합성 볼드로 픽셀이 뭉개짐 → 400 + 합성 차단
   h1, h2, h3, h4, h5, h6 {
     font-family: $font-base;   // HBIOS-SYS 픽셀 폰트
     margin-top: 2em;
     margin-bottom: 0.5em;
     color: $amber !important;
-    font-weight: 700 !important;
+    font-weight: 400 !important;
+    font-synthesis: none;
     text-transform: none;
     overflow-wrap: break-word;
-    word-break: break-word;
+    word-break: keep-all;
   }
   h1 { font-size: 1.8rem; }
   h2 { font-size: 1.5rem; }
   h3 { font-size: 1.25rem; }
-  h4 { font-size: 1.1rem; }
-  h5 { font-size: 1rem; }
-  h6 { font-size: 0.95rem; }
+  h4 { font-size: 1.2rem; }
+  h5 { font-size: 1.1rem; }
+  h6 { font-size: 1rem; }
 
   p {
     margin-bottom: 1.2em;
-    font-weight: 400;
     overflow-wrap: break-word;
-    word-break: break-word;
+    word-break: keep-all;
   }
 
-  // 본문 내 strong/b 도 볼드 제거 (헤딩만 볼드)
+  // md **강조** — 본문은 시스템 폰트라 진짜 볼드 페이스가 있음
   strong, b {
-    font-weight: 400 !important;
+    font-weight: 700;
   }
 
   // 인라인 `code` — 색상 강조 (밝은 푸른 톤) + 미세한 동일 톤 배경
@@ -2156,8 +2111,10 @@ body.is-home .main-content {
     border-left: 4px solid $accent;
     padding: 0.5em 1em;
     margin: 1.5em 0;
-    color: $text-muted;
-    background-color: $surface;
+    // 인용이 본문보다 흐려지는 역전 방지 — 본문색 유지, 배경으로 구분
+    // ($surface는 $bg와 같은 값이라 배경 효과가 없었음 → surface-high)
+    color: $text;
+    background-color: $surface-high;
   }
 
   // 표 — MS-DOS 패널 스타일 (양각 보더 + 회색 헤더 = 타이틀바)
@@ -2169,7 +2126,8 @@ body.is-home .main-content {
     border-spacing: 0;
     margin: 1.75em 0;
     background: $bg;
-    font-family: $font-code;
+    // 코드 폰트엔 한글 글리프가 없어 표 안에서 두 폰트가 섞였음 — 본문 폰트 사용
+    font-family: inherit;
     color: $text;
     // 외곽 양각 + 검은 그림자 (다른 윈도우 패턴과 통일)
     border: 2px solid;
@@ -2191,7 +2149,7 @@ body.is-home .main-content {
     border: none;
     border-right: 1px solid $text-muted;
     border-bottom: 1px solid $text-muted;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     letter-spacing: 0.06em;
     &:last-child { border-right: none; }
   }
@@ -2221,15 +2179,15 @@ body.is-home .main-content {
       border-right: 1px dashed rgba($text-muted, 0.35) !important;
       background: transparent !important;
       color: $text !important;
-      font-size: 0.85rem;
+      font-size: 0.92rem;
       word-break: keep-all;
       vertical-align: top;
       &:last-child { border-right: none !important; }
     }
   }
 
-  // 모바일에서 표가 너무 넓으면 가로 스크롤
-  @media (max-width: 768px) {
+  // 표가 본문 폭(760px)보다 넓으면 가로 스크롤 — 769~1080px 구간까지 커버
+  @media (max-width: 1080px) {
     table {
       display: block;
       overflow-x: auto;
@@ -2243,7 +2201,19 @@ body.is-home .main-content {
     border: 2px solid $border;
   }
 
-  strong { font-weight: 400; }
+  // 각주 — 위첨자 번호는 차분하게, 하단 목록은 본문과 분리
+  a.footnote {
+    text-decoration: none;
+    padding: 0 2px;
+  }
+  .footnotes {
+    margin-top: 3em;
+    padding-top: 14px;
+    border-top: 1px dashed rgba($border, 0.5);
+    font-size: 0.85rem;
+    color: $text-muted;
+    p { margin-bottom: 0.4em; }
+  }
 }
 
 // ═══════════════════════════════════════
@@ -2471,7 +2441,7 @@ div.highlighter-rouge {
   .top-bar-title { display: block; }
   body.sidebar-open .top-bar-title { display: none; }
   .site-container { grid-template-columns: 1fr; }
-  .main-content { padding: 16px 12px; }
+  .main-content { padding: 16px 16px; }
   .site-footer { grid-column: 1; }
 
   // 포스트 카드 — 모바일 1열
@@ -3609,4 +3579,242 @@ body.is-daily .main-content {
   color: $text-muted;
   min-width: 56px;
   text-align: center;
+}
+
+// ═══════════════════════════════════════
+// Home Search (search.exe) — 콘솔(모니터) 위 통합 검색
+// ═══════════════════════════════════════
+
+.home-search {
+  margin: 0 auto 20px;
+  max-width: 720px;
+  width: 100%;
+  padding: 0 16px;
+}
+
+.search-window {
+  position: relative;
+  background: $bg;
+  border: 2px solid;
+  border-color: $primary $text-muted $text-muted $primary;
+  box-shadow:
+    inset 1px 1px 0 $primary,
+    inset -1px -1px 0 $text-muted,
+    2px 2px 0 #000;
+}
+
+.search-titlebar {
+  background: $border;
+  color: $bg;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid $text-muted;
+  font-family: $font-code;
+}
+
+.search-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+
+  .search-prompt { color: $amber; }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: $text;
+    font-family: $font-base;
+    font-size: 1rem;   // 16px 미만이면 iOS Safari가 포커스 시 페이지를 확대함
+
+    &::placeholder { color: $text-muted; opacity: 0.7; }
+  }
+}
+
+// 결과 드롭다운 — 검색 윈도우 테두리에 맞춰 바로 아래에 뜬다
+.search-results {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: -2px;
+  right: -2px;
+  z-index: 60;
+  max-height: 60vh;
+  overflow-y: auto;
+  background: $bg;
+  border: 2px solid $border;
+  box-shadow: 2px 2px 0 #000;
+
+  &.is-open { display: block; }
+}
+
+.search-group-label {
+  padding: 8px 12px 2px;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $amber;
+  font-family: $font-code;
+}
+
+.search-item {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: $text;
+  border-bottom: 1px solid rgba($border, 0.15);
+
+  &:last-child { border-bottom: none; }
+  &:hover,
+  &.is-active { background: $surface-high; color: $primary; }
+}
+
+.search-item-title { font-size: 0.9rem; }
+
+.search-item-snippet {
+  margin-top: 2px;
+  font-size: 0.78rem;
+  color: $text-muted;
+  word-break: break-word;
+}
+
+.search-item-date {
+  margin-top: 2px;
+  font-size: 0.7rem;
+  color: $text-muted;
+  font-family: $font-code;
+}
+
+.search-empty {
+  padding: 12px;
+  font-size: 0.8rem;
+  color: $text-muted;
+}
+
+// 데스크톱 홈 2컬럼: 검색창을 콘솔과 같은 폭으로 모니터 바로 위에 배치
+@media (min-width: 1025px) {
+  // row1(검색창)은 intrinsic 높이 고정 — home-side(row 1/span 2)의 초과 높이가
+  // row1/row2에 균등 분배되어 검색창-콘솔 사이가 벌어지는 것을 막는다
+  .home { grid-template-rows: auto 1fr; }
+
+  .home-search {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: center;
+    width: min(100%, calc(82vh * 1856 / 2304));
+    max-width: none;
+    margin: 0 0 20px;
+    padding: 0;
+  }
+
+  .hero-section { grid-row: 2; }
+
+  .home-side { grid-row: 1 / span 2; }
+}
+
+// ═══════════════════════════════════════
+// Lightbox — 포스트 이미지 클릭 확대
+// ═══════════════════════════════════════
+
+.post-content img { cursor: zoom-in; }
+
+body.lightbox-open { overflow: hidden; }
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.85);
+  cursor: zoom-out;
+
+  &.is-open { display: flex; }
+}
+
+.lightbox-frame {
+  display: flex;
+  flex-direction: column;
+  max-width: min(1280px, 94vw);
+  max-height: 92vh;
+  background: $bg;
+  border: 2px solid;
+  border-color: $primary $text-muted $text-muted $primary;
+  box-shadow:
+    inset 1px 1px 0 $primary,
+    inset -1px -1px 0 $text-muted,
+    4px 4px 0 #000;
+}
+
+.lightbox-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: $border;
+  color: $bg;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-family: $font-code;
+}
+
+.lightbox-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lightbox-close {
+  background: none;
+  border: none;
+  padding: 0 2px;
+  color: $bg;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  &:hover { color: #660000; }
+}
+
+.lightbox-img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(92vh - 48px);
+  object-fit: contain;
+  background: #000;
+}
+
+// ═══════════════════════════════════════
+// Post List Pagination (6개/페이지)
+// ═══════════════════════════════════════
+
+.post-card.is-paged-out { display: none; }
+
+.post-list-pager { margin-top: 28px; }
+
+// ═══════════════════════════════════════
+// 가독성 검수 후속 — 반응형 보정
+// ═══════════════════════════════════════
+
+// 플로팅 TOC가 보이는 좁은 데스크톱 구간(1280~1580px)에서 본문과 겹치지 않게
+// 오른쪽에 TOC 폭(220px)+여백만큼 공간을 확보한다
+@media (min-width: 1280px) and (max-width: 1580px) {
+  .layout-post .main-content {
+    margin-right: 268px;
+    margin-left: auto;
+  }
+}
+
+// 모바일 — 본문 헤딩이 글 제목(1.5rem)보다 커지는 위계 역전 방지
+@media (max-width: 768px) {
+  .post-content h1 { font-size: 1.35rem; }
+  .post-content h2 { font-size: 1.25rem; }
+  .post-content h3 { font-size: 1.15rem; }
+  .post-content h4 { font-size: 1.05rem; }
 }

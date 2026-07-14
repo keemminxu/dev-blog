@@ -5,8 +5,11 @@ permalink: /daily/
 ---
 
 <div class="daily-page"
-  data-supabase-url="https://mnatdbpscbvhhsxstvaq.supabase.co"
-  data-supabase-key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uYXRkYnBzY2J2aGhzeHN0dmFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ5MDY4MzAsImV4cCI6MjA5MDQ4MjgzMH0.8iItsIbd06Sbi0PSt_4FAVGlEd8YdsTWL3xztszVieE">
+  data-supabase-url="{{ site.supabase_url }}"
+  data-supabase-key="{{ site.supabase_anon_key }}">
+
+  <h1 class="page-heading">📝 daily</h1>
+  <p class="page-description">하루하루 남기는 짧은 일기</p>
 
   <div class="daily-feed" id="daily-feed">
     <p class="daily-loading">불러오는 중…</p>
