@@ -426,7 +426,8 @@ img {
   // 모바일 주소창 변동에도 잘리지 않도록 동적 viewport 사용 (지원하지 않는 브라우저는 bottom:0 유지)
   height: 100vh;
   height: 100dvh;
-  width: 300px;
+  // 320px대 초소형 화면에서도 백드롭 탭 영역 48px 확보 (≥348px에선 기존 300px 유지)
+  width: min(300px, calc(100vw - 48px));
   background-color: $bg;
   overflow: hidden;
   z-index: 200;
@@ -662,6 +663,10 @@ img {
   bottom: 46px;   // 고정 푸터(28px) 위로
   left: 50%;
   transform: translateX(-50%) translateY(100px);
+  // left:50% 고정 요소는 shrink-to-fit 가용폭이 뷰포트 절반이라 좁은 화면에서 과도하게 꺾임
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  box-sizing: border-box;
   background: $surface;
   color: $text;
   padding: 12px 24px;
@@ -862,7 +867,9 @@ img {
 }
 
 // ── 짧은 viewport 단계적 축소 (사이드바 기본 룰 뒤에 두어 source order 로 우선 적용) ──
-@media (max-height: 900px) {
+// min-width 가드: '짧은 데스크톱 창'용 규칙 — 모바일 세로모드(높이 568~800px대)의
+// nav 터치 타깃까지 24px 미만으로 쪼그라뜨리는 부작용이 있어 데스크톱으로 한정
+@media (min-width: 769px) and (max-height: 900px) {
   .profile-section { margin: 0 -14px 8px; padding: 8px 14px 0; }
   .profile-frame { padding: 12px 0 0; margin: 10px 6px 6px; }
   .profile-sticker { font-size: 1.1rem; padding: 4px 12px; top: -8px; }
@@ -875,7 +882,7 @@ img {
   .sidebar-nav { margin-bottom: 8px; }
 }
 
-@media (max-height: 800px) {
+@media (min-width: 769px) and (max-height: 800px) {
   .sidebar-left-inner { padding: 8px 12px; }
   .profile-section { margin: 0 -12px 4px; padding: 4px 12px 0; }
   .profile-frame { padding: 8px 0 0; margin: 6px 5px 4px; }
@@ -890,7 +897,7 @@ img {
   .sidebar-titlebar { height: 22px; font-size: 0.8rem; }
 }
 
-@media (max-height: 680px) {
+@media (min-width: 769px) and (max-height: 680px) {
   .sidebar-left-inner { padding: 6px 10px; }
   .profile-section { margin: 0 -10px 2px; padding: 2px 10px 0; }
   .profile-frame { padding: 6px 0 0; margin: 4px 4px 2px; }
@@ -904,7 +911,7 @@ img {
   .sidebar-social { gap: 10px; a svg { width: 14px; height: 14px; } }
 }
 
-@media (max-height: 540px) {
+@media (min-width: 769px) and (max-height: 540px) {
   .profile-frame { padding: 4px 0 0; margin: 2px 3px 0; }
   .profile-sticker { font-size: 0.7rem; padding: 1px 6px; top: -3px; }
   .profile-sub { font-size: 0.72rem; margin: 2px 0 0; }
@@ -920,7 +927,12 @@ img {
 .main-content {
   // 좌우 24px — 769~1060px 구간에서 본문이 사이드바 경계/화면 끝에 붙는 것 방지
   padding: 32px 24px;
-  max-width: 760px;
+  // width:100% 명시가 중요: width:auto(margin auto → fit-content)는 본문 이미지의
+  // 고유 폭을 min-content로 전파해 좁은 화면에서 컨테이너째 뷰포트를 뚫었음.
+  // 808px = 기존 콘텐츠 760px + 패딩 48px (border-box라 데스크톱 렌더링 동일)
+  width: 100%;
+  max-width: 808px;
+  box-sizing: border-box;
   margin: 0 auto;
   min-width: 0;
 }
@@ -1381,8 +1393,15 @@ body.is-home .main-content {
   cursor: pointer;
   z-index: 5;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;   // 더블탭 줌 지연 제거 (연타 조작 반응성)
   &:active { background: rgba(255, 255, 255, 0.18); }
   &:focus { outline: none; }
+}
+
+// 게임 화면 위에서 시작한 세로 스와이프는 페이지 스크롤로 — 가로 드래그(카메라 회전)만 게임이 처리
+.console-screen,
+#game-canvas {
+  touch-action: pan-y;
 }
 
 // V-SYNC LED (빨간 점) — 항상 켜져있는 시각 표시 (입력 없음)
@@ -2191,6 +2210,7 @@ body.is-home .main-content {
     table {
       display: block;
       overflow-x: auto;
+      box-sizing: border-box;   // display:block 전환 시 width:100% + border 4px 오버플로 방지
     }
   }
 
@@ -2199,6 +2219,7 @@ body.is-home .main-content {
     margin: 1.5em auto;
     max-width: 100%;
     border: 2px solid $border;
+    box-sizing: border-box;   // border 4px가 max-width 밖으로 삐져나오지 않게
   }
 
   // 각주 — 위첨자 번호는 차분하게, 하단 목록은 본문과 분리
@@ -2330,6 +2351,21 @@ div.highlighter-rouge {
   margin-bottom: 8px;
   text-transform: uppercase;
   color: $primary;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+// 페이지 헤딩 아이콘 — 왼쪽 사이드바 탭과 동일한 아이콘 사용 (Material Symbols / 엔진 로고 mask)
+.page-heading-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
+
+  &.nav-child-logo {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
 }
 
 .page-description {
@@ -2426,6 +2462,26 @@ div.highlighter-rouge {
     #status-weather,
     .status-sep { display: none; }
   }
+
+  // ─ ▢ ✕ 는 모바일에서 무의미(✕는 window.close no-op, ─/▢는 menu와 중복) — 숨김
+  // (.top-bar 스코프 필수: 사이드바 타이틀바의 ✕ 는 유지해야 함)
+  .top-bar .window-controls { display: none; }
+
+  // menu 버튼 — 유일한 내비 진입점인데 높이 22px라 터치 미스 잦음. 히트 영역만 확장
+  .menu-toggle {
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      top: -3px;      // 버튼이 바 안 y=3에 있어 위로는 3px만 (화면 밖 낭비 방지)
+      bottom: -19px;  // 아래로 확장해 유효 히트 44px 확보 (top-bar가 z-index 100이라 우선)
+      left: -6px;
+      right: -6px;
+    }
+  }
+
+  // 사이드바 타이틀바 ✕ — 오버레이를 닫는 핵심 버튼이라 터치 타깃 확대
+  .sidebar-titlebar .window-controls .window-btn { width: 40px; height: 24px; }
 }
 
 .sidebar-backdrop {
@@ -2441,15 +2497,55 @@ div.highlighter-rouge {
   .top-bar-title { display: block; }
   body.sidebar-open .top-bar-title { display: none; }
   .site-container { grid-template-columns: 1fr; }
-  .main-content { padding: 16px 16px; }
+  .main-content { padding: 16px 16px; }   // width:100% + border-box는 base 규칙에서 상속
   .site-footer { grid-column: 1; }
 
   // 포스트 카드 — 모바일 1열
   .post-list { grid-template-columns: 1fr; gap: 16px; }
-  .post-card-titlebar { font-size: 0.65rem; }
+  // 카드에서 글 제목이 표시되는 유일한 곳 — 한 줄 ellipsis 대신 2줄 클램프로 잘림 최소화
+  .post-card-titlebar {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
   .post-card-content { padding: 10px 12px; }
   .post-card-excerpt { font-size: 0.78rem; }
   .post-title { font-size: 1.5rem; }
+
+  // 푸터 copyright — absolute 중앙 고정(1.15rem)이 소셜 아이콘과 겹치고 탭을 가로챘음 → 우측 정렬
+  .footer-copyright {
+    position: static;
+    transform: none;
+    margin-left: auto;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  // 푸터 소셜 아이콘 — 26x22px 터치 미달. 간격 + 보이지 않는 히트 영역 확장
+  .footer-social {
+    gap: 10px;
+    a {
+      position: relative;
+      z-index: 1;
+      &::after {
+        content: '';
+        position: absolute;
+        inset: -8px -4px;
+      }
+    }
+  }
+
+  // 댓글 입력 — 16px 미만이면 iOS Safari가 포커스 시 페이지를 확대함 (검색창과 동일 처리)
+  #comment-nickname,
+  #comment-content { font-size: 1rem; }
+
+  // 사이드바 내부 — 기본 크기 nav가 짧은 화면에서 잘리지 않게 스크롤 허용
+  .sidebar-left-inner { overflow-y: auto; }
 
   // 카테고리 탭
   .category-tabs {
@@ -2486,30 +2582,60 @@ div.highlighter-rouge {
     overflow-x: hidden;     // 콘솔 프레임 확장을 이 섹션 안에서만 격리 (top-bar 영향 없음)
   }
   .console-frame {
-    // 모바일: PNG 좌우 투명 여백을 hero-section 밖으로 밀어내 viewport 가득
-    width: 135vw !important;
-    max-width: 135vw !important;
-    margin-left: calc(50% - 67.5vw) !important;
-    margin-right: calc(50% - 67.5vw) !important;
+    // 모바일: PNG 좌우 투명 여백을 hero-section 밖으로 밀어내 viewport 가득.
+    // 단 화면비가 세로로 긴 자산(1856:2304)이라, 낮은 화면에선 콘솔 하나가 한 화면을
+    // 다 먹지 않게 (뷰포트 높이 - 고정 크롬 56px) 기준 역산 폭으로 캡.
+    --cw: min(135vw, calc((100vh - 56px) * 0.92 * 1856 / 2304));
+    width: var(--cw) !important;
+    max-width: none !important;
+    // 좌우 대칭 마진 필수: hero-section이 align-items:center flex라 outer 폭이
+    // 컨테이너와 같아야 추가 시프트 없이 정중앙에 붙음
+    margin-left: calc((100% - var(--cw)) / 2) !important;
+    margin-right: calc((100% - var(--cw)) / 2) !important;
+  }
+  @supports (height: 100svh) {
+    .console-frame {
+      // svh: 모바일 URL바가 보이는 상태 기준 — vh보다 정확
+      --cw: min(135vw, calc((100svh - 56px) * 0.92 * 1856 / 2304));
+    }
   }
   // 좌우 viewport edge 2px 장식 라인 숨김 (콘솔이 끝까지 닿게)
   html::before, html::after { display: none; }
 
-  // 홈 플러그인 카드 모바일 (recent posts와 동일 폭)
-  .home-plugins { margin: 40px auto 0; max-width: 320px; padding: 0; }
-  .home-plugins-grid { gap: 12px; }
-  .plugin-card-titlebar { font-size: 0.6rem; }
+  // 게임패드 터치 타깃 확대 — %기반 히트 영역이 모바일에선 20px대까지 줄어 오탭이 잦음.
+  // 중심 좌표를 유지한 채 영역만 키움 (히트 영역은 투명 오버레이라 아트에 영향 없음)
+  .hit-up    { left: 23.70%; top: 79.01%; width: 8%; height: 6%; }
+  .hit-down  { left: 23.64%; top: 86.39%; width: 8%; height: 6%; }
+  .hit-left  { left: 18.95%; top: 82.94%; width: 8%; height: 6%; }
+  .hit-right { left: 28.28%; top: 82.70%; width: 8%; height: 6%; }
+  .hit-y     { left: 63.85%; top: 82.55%; width: 7.6%; height: 6%; }
+  .hit-x     { left: 69.34%; top: 78.21%; width: 7.6%; height: 6%; }
+  .hit-b     { left: 69.34%; top: 87.02%; width: 7.6%; height: 6%; }
+  .hit-a     { left: 74.65%; top: 82.68%; width: 7.6%; height: 6%; }
+  // 전원 LED — 요소 자체를 키우면 글로우도 커지므로 투명 자식으로만 히트 확장
+  .hit-power::after {
+    content: '';
+    position: absolute;
+    inset: -70%;
+    border-radius: 50% !important;
+  }
+
+  // 홈 플러그인 카드 모바일 — 2열 유지 시 카드가 ~150px까지 줄어 라벨 판독 불가 → 1열
+  .home-plugins { margin: 40px auto 0; max-width: min(480px, calc(100% - 32px)); padding: 0; }
+  .home-plugins-grid { grid-template-columns: 1fr; gap: 12px; }
 
   // 홈 인사말 모바일 (recent posts와 동일 폭)
-  .home-greeting { margin: 24px auto 0; max-width: 320px; padding: 0; }
+  .home-greeting { margin: 24px auto 0; max-width: min(480px, calc(100% - 32px)); padding: 0; }
   .greeting-titlebar { font-size: 0.7rem; }
   .greeting-body { padding: 12px 12px 14px; }
-  .greeting-terminal { font-size: 0.82rem; }
+  // 16px 미만 contenteditable은 iOS Safari가 포커스 시 페이지를 확대함
+  .greeting-terminal { font-size: 1rem; }
+  // ASCII 인베이더(고정 폭 ~302px)가 초소형 화면 박스 안에 들어가게 비례 축소
+  .greeting-ascii { font-size: min(12px, 3.2vw); }
 
-  // 최신 글 카드 모바일 — 1열, 작게
-  .latest-posts { margin: 24px auto 32px; max-width: 320px; padding: 0; }
+  // 최신 글 카드 모바일 — 1열
+  .latest-posts { margin: 24px auto 32px; max-width: min(480px, calc(100% - 32px)); padding: 0; }
   .latest-posts-heading { font-size: 0.95rem; margin-bottom: 12px; }
-  .latest-post-card-titlebar { font-size: 0.65rem; }
   .latest-posts-grid { grid-template-columns: 1fr; gap: 12px; }
   .latest-post-card { padding: 4px; }
   .latest-post-thumb { aspect-ratio: 16 / 7; }
@@ -2528,10 +2654,7 @@ div.highlighter-rouge {
   .section-heading { font-size: 1.1rem; }
 }
 
-// 극초소형 화면 (340px 이하)
-@media (max-width: 340px) {
-  .latest-posts { max-width: 280px; }
-}
+// (극초소형 340px 특례는 홈 섹션 max-width가 calc(100% - 32px)로 유동화되며 불필요해짐)
 
 // ═══════════════════════════════════════
 // Comments
@@ -2644,6 +2767,7 @@ div.highlighter-rouge {
   font-weight: 400;
   font-size: 0.85rem;
   color: $primary;
+  overflow-wrap: anywhere;   // 무공백 긴 닉네임이 flex 컨테이너를 뚫지 않게
 }
 
 .comment-time {
@@ -2655,6 +2779,9 @@ div.highlighter-rouge {
   font-size: 0.85rem;
   line-height: 1.6;
   margin: 0;
+  // 사용자 입력 긴 URL/무공백 문자열이 가로 스크롤을 만들지 않게 (.post-content와 동일 패턴)
+  overflow-wrap: break-word;
+  word-break: keep-all;
 }
 
 /* ==========================================================================
@@ -2896,6 +3023,7 @@ body.admin-editor-open {
   .admin-editor-modal {
     padding: 0;
   }
+  .admin-editor-status { min-width: 0; }
   .admin-editor-panel {
     border-radius: 0;
     max-width: none;
@@ -3295,7 +3423,8 @@ body.admin-editor-open {
 .about-projects {
   display: grid;
   gap: 24px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  // min(280px, 100%): 컨테이너가 280px보다 좁은 초소형 화면에서 트랙이 컨테이너 폭으로 축소
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
 }
 
 // MS-DOS 창 형태 — 양각 보더 + 검은 그림자, 타이틀바 + 본문 구조
@@ -3478,6 +3607,12 @@ body.admin-editor-open {
     width: 100px;
     height: 100px;
   }
+  // .main-content 패딩 16px과 중첩되어 콘텐츠 폭이 과도하게 좁아지는 것 방지
+  .about-page { padding: 24px 0 56px; }
+  // 배너 이미지 — 33%는 모바일에서 ~100px로 과소 렌더링됨
+  .about-banner img { width: 60%; max-width: 240px; }
+  // 타임라인 들여쓰기 축소로 본문 실폭 확보
+  .about-timeline-item { padding-left: 28px; }
 }
 
 // ═══════════════════════════════════════
@@ -3496,12 +3631,8 @@ body.admin-editor-open {
 /* ==========================================================================
    daily — 일기 피드 (터미널 로그 스타일). Discord #코멘트 → Supabase → 여기
    ========================================================================== */
-/* daily 페이지에서는 main-content가 콘텐츠 길이에 맞춰 줄어들지 않도록 760px 고정.
-   (site-container가 grid이고 justify-items:start라 짧은 콘텐츠면 칼럼이 쪼그라듦) */
-body.is-daily .main-content {
-  width: 760px;
-  max-width: 100%;
-}
+/* (구) daily 전용 760px 고정 규칙은 .main-content base가 width:100% + max-width:808px
+   (border-box)로 바뀌면서 불필요해짐 — 짧은 콘텐츠여도 컬럼이 쪼그라들지 않음 */
 
 .daily-page {
   display: flex;
@@ -3581,6 +3712,13 @@ body.is-daily .main-content {
   text-align: center;
 }
 
+// daily/pippi 모바일 — 큰 패딩·들여쓰기 축소 + 페이저 터치 타깃 확보
+@media (max-width: 768px) {
+  .daily-entry { padding: 14px 14px; }
+  .daily-entry-body { padding-left: 6px; font-size: 1rem; }
+  .daily-pager-btn { padding: 10px 18px; }
+}
+
 // ═══════════════════════════════════════
 // Home Search (search.exe) — 콘솔(모니터) 위 통합 검색
 // ═══════════════════════════════════════
@@ -3588,7 +3726,7 @@ body.is-daily .main-content {
 .home-search {
   margin: 0 auto 20px;
   max-width: 720px;
-  width: 100%;
+  // width:100% + padding(content-box) 조합은 부모 폭 + 32px 오버플로를 만들었음 — width:auto가 안전
   padding: 0 16px;
 }
 
@@ -3654,7 +3792,7 @@ body.is-daily .main-content {
 
 .search-group-label {
   padding: 8px 12px 2px;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: $amber;
@@ -3790,6 +3928,13 @@ body.lightbox-open { overflow: hidden; }
   background: #000;
 }
 
+// 모바일 — 오버레이 패딩 48px 때문에 '확대'가 본문 인라인보다 작아지는 역전 방지
+@media (max-width: 768px) {
+  .lightbox { padding: 8px; }
+  .lightbox-frame { max-width: 100%; max-height: calc(100vh - 16px); }
+  .lightbox-img { max-height: calc(100vh - 60px); }
+}
+
 // ═══════════════════════════════════════
 // Post List Pagination (6개/페이지)
 // ═══════════════════════════════════════
@@ -3806,6 +3951,8 @@ body.lightbox-open { overflow: hidden; }
 // 오른쪽에 TOC 폭(220px)+여백만큼 공간을 확보한다
 @media (min-width: 1280px) and (max-width: 1580px) {
   .layout-post .main-content {
+    // width:100% base와 margin-right가 합쳐지면 트랙을 넘치므로 TOC 폭만큼 차감
+    width: calc(100% - 268px);
     margin-right: 268px;
     margin-left: auto;
   }

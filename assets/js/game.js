@@ -635,7 +635,8 @@ function setupCrtDragInput() {
 
   target.addEventListener('touchstart', (e) => {
     if (e.touches.length !== 1) return;
-    e.preventDefault();
+    // preventDefault 금지: 화면 중앙의 큰 스크롤 데드존을 만들었음.
+    // CSS touch-action: pan-y가 세로 스크롤은 브라우저에, 가로 드래그(카메라 회전)는 여기로 보냄.
     const t = e.touches[0];
     start(t.clientX, t.clientY);
   });
