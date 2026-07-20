@@ -4,7 +4,6 @@ layout: default
 
 <div class="tag-page">
   <h1 class="page-heading">{{ page.tag }}</h1>
-  <p class="page-description">태그 <strong>{{ page.tag }}</strong>에 해당하는 포스트 목록</p>
 
   <div class="post-list">
     {% assign sorted_posts = site.posts | sort: 'date' | reverse %}

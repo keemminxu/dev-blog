@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
     addFeedGroup('daily', '/daily/', dailyHits, q);
-    addFeedGroup('pippi', '/pippi/', pippiHits, q);
+    addFeedGroup('ai_daily', '/pippi/', pippiHits, q);
 
     if (prevHref) {
       var items = results.querySelectorAll('.search-item');
