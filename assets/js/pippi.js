@@ -1,5 +1,5 @@
-// pippi 아무말 피드 — Blog Supabase의 bot_muse를 최신순으로 페이징 렌더.
-// 작성/삭제는 삐삐(내 AI 비서)가 재량껏 담당. 여기는 읽기 전용.
+// pippi 피드 — Blog Supabase의 bot_muse를 최신순으로 페이징 렌더.
+// 작성은 삐삐(내 AI 비서)의 격리 세션이 뉴스·날씨 견해만 담당. 여기는 읽기 전용.
 document.addEventListener('DOMContentLoaded', function () {
   var page = document.querySelector('.daily-page');
   if (!page) return;
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function render(entries) {
     if (entries.length === 0) {
-      feed.innerHTML = '<p class="daily-empty">아직 아무말이 없습니다. 삐삐가 곧 씁니다.</p>';
+      feed.innerHTML = '<p class="daily-empty">아직 글이 없습니다. 삐삐가 곧 씁니다.</p>';
       return;
     }
     feed.innerHTML = entries.map(function (e) {
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       })
       .catch(function () {
-        feed.innerHTML = '<p class="daily-empty">아무말을 불러오지 못했습니다.</p>';
+        feed.innerHTML = '<p class="daily-empty">글을 불러오지 못했습니다.</p>';
         pager.hidden = true;
       });
   }
