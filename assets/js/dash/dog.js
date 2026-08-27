@@ -59,9 +59,6 @@ export async function loadDog(url) {
   const object3d = new THREE.Group();
   object3d.add(root, shadow);
 
-  // Hips에 상수 scale 키(0.9248)가 있어 오버라이드는 항상 "곱"으로
-  const hipsBaseScale = new THREE.Vector3();
-
   // 상태
   const st = {
     mode: 'attract',        // attract | run | dead
@@ -102,9 +99,9 @@ export async function loadDog(url) {
       if (st.duck) bones.head.quaternion.multiply(qTmp.setFromAxisAngle(AX, 0.5));
       if (st.barkT > 0) bones.head.quaternion.multiply(qTmp.setFromAxisAngle(AX, -Math.sin(st.barkT * Math.PI / 0.25) * 0.35));
     }
-    if (bones.Hips) {
-      if (hipsBaseScale.lengthSq() === 0) hipsBaseScale.copy(bones.Hips.scale);
-      if (st.mode === 'attract') bones.Hips.scale.multiplyScalar(1 + Math.sin(st.t * Math.PI * 0.7) * 0.02);
+    if (bones.Hips && st.mode === 'attract') {
+      // mixer가 매 프레임 Hips scale(상수 키 0.9248)을 다시 쓰므로 "곱"은 누적되지 않음
+      bones.Hips.scale.multiplyScalar(1 + Math.sin(st.t * Math.PI * 0.7) * 0.02);
     }
   }
 

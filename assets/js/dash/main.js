@@ -195,12 +195,15 @@ function addObstacle(o) {
   obMeshes.set(o.id, m);
   scene.add(m);
 }
+function disposeGroup(g) {
+  g.traverse((o) => { if (o.isMesh) o.geometry.dispose(); });   // 머티리얼은 propMat 공유라 유지
+}
 function removeObstacle(id) {
   const m = obMeshes.get(id);
-  if (m) { scene.remove(m); obMeshes.delete(id); }
+  if (m) { scene.remove(m); disposeGroup(m); obMeshes.delete(id); }
 }
 function clearObstacles() {
-  for (const m of obMeshes.values()) scene.remove(m);
+  for (const m of obMeshes.values()) { scene.remove(m); disposeGroup(m); }
   obMeshes.clear();
 }
 function syncObstacles(t) {
@@ -370,10 +373,13 @@ function simStep(dt) {
 
 let frozen = false;                  // 하네스 수동 스텝용
 let dbgInvincible = false;           // 하네스 전용 무적 (야간 등 장시간 재현)
+let visible = true;                  // IntersectionObserver — 화면 밖이면 루프 정지
+let pageHidden = false;              // visibilitychange
+let ctxLost = false;                 // webglcontextlost
 
 function frame(t) {
   rafId = requestAnimationFrame(frame);
-  if (!screenOn || frozen || mode === 'loading') { lastT = t; return; }
+  if (!screenOn || frozen || ctxLost || pageHidden || !visible || mode === 'loading') { lastT = t; return; }
   acc += Math.min((t - lastT) / 1000, 0.25);
   lastT = t;
   let stepped = false;
@@ -427,10 +433,25 @@ function setupScreenToggle() {
 // Init
 // ---------------------------------------------------------------------------
 
+// WebGL·GLB 실패 시 정적 포스터(로고) 폴백
+function showPoster(container) {
+  const img = document.createElement('img');
+  img.className = 'dash-logo dash-poster';
+  img.alt = '몽구랑 산책가자';
+  img.src = new URL('../../images/crt/logo-dash.webp', import.meta.url).href;
+  container.appendChild(img);
+}
+
 export async function initGame() {
   const canvas = document.getElementById('game-canvas');
   if (!canvas || renderer) return;
-  createScene(canvas);
+  try {
+    createScene(canvas);
+  } catch (err) {
+    console.error('dash: WebGL 초기화 실패', err);
+    showPoster(canvas.parentElement);
+    return;
+  }
   setupScreenToggle();
   hud = createHud(canvas.parentElement);
   attract = createAttract(canvas.parentElement);
@@ -471,8 +492,19 @@ export async function initGame() {
   } catch (err) {
     console.error('dash: GLB 로드 실패', err);
     hud.showMsg('LOAD ERROR');
+    showPoster(canvas.parentElement);
     return;
   }
+
+  // 가시성·컨텍스트 위생
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((entries) => {
+      visible = entries.some((en) => en.isIntersecting);
+    }).observe(canvas.parentElement);
+  }
+  document.addEventListener('visibilitychange', () => { pageHidden = document.hidden; });
+  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); ctxLost = true; });
+  canvas.addEventListener('webglcontextrestored', () => { ctxLost = false; });
 
   lastT = performance.now();
   rafId = requestAnimationFrame(frame);

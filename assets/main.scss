@@ -4047,3 +4047,9 @@ body.lightbox-open { overflow: hidden; }
   image-rendering: pixelated;
   filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.45));
 }
+.dash-poster {
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 55%;
+  opacity: 0.9;
+}

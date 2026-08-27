@@ -145,10 +145,10 @@ function setupGamepadUI() {
     document.dispatchEvent(new CustomEvent('game-screen-toggle'));
   });
 
-  // Touchpad
+  // Touchpad — 게임 일시정지 (dash에서 처리)
   var optionBtn = document.getElementById('gamepad-option');
   if (optionBtn) optionBtn.addEventListener('click', () => {
-    document.dispatchEvent(new CustomEvent('game-screen-toggle'));
+    document.dispatchEvent(new CustomEvent('game-button', {detail: {button: 'option'}}));
   });
 
   // Shift+D — hit area 디버그 토글
@@ -255,5 +255,24 @@ document.addEventListener('DOMContentLoaded', setupGamepadUI);
     "three/addons/":"{{ '/assets/vendor/three-0.185.1/jsm/' | relative_url }}"
   }}
 </script>
-<script type="module" src="{{ '/assets/js/dash/main.js' | relative_url }}"></script>
+<script type="module">
+  // dash 지연 부팅 — 콘솔이 뷰포트에 들어올 때 로드 (LCP 이후로 미룸)
+  (function () {
+    var booted = false;
+    var boot = function () {
+      if (booted) return;
+      booted = true;
+      import("{{ '/assets/js/dash/main.js' | relative_url }}");
+    };
+    var screen = document.querySelector('.console-screen');
+    if (!screen || !('IntersectionObserver' in window)) {
+      window.addEventListener('load', boot, { once: true });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      if (entries.some(function (e) { return e.isIntersecting; })) { io.disconnect(); boot(); }
+    });
+    io.observe(screen);
+  })();
+</script>
 <script defer src="{{ '/assets/js/invader.js' | relative_url }}"></script>
