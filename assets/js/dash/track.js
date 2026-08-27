@@ -22,7 +22,7 @@ export const DIMS = {
   [TYPES.FENCE2]:  { w: 0.80, h: 0.55, y: 0 },
   [TYPES.HYDRANT]: { w: 0.30, h: 0.38, y: 0 },
   [TYPES.LINE]:    { w: 0.50, h: 0.25, y: 0.62 },            // 상단 장애(숙이기)
-  [TYPES.PIGEON]:  { w: 0.40, h: 0.30, y: 0.35, vx: -1.5 },  // 저공 비행
+  [TYPES.PIGEON]:  { w: 0.40, h: 0.30, y: 0.55, vx: -1.5 },  // 중공 비행 — 숙이기(또는 짖기)로 회피
   [TYPES.BIKE]:    { w: 1.20, h: 0.80, y: 0, vx: -2.5, warn: 'horn' },
 };
 
@@ -56,8 +56,8 @@ export function createTrack(rng = Math.random) {
 
   // 스폰 간 "시간" 간격이 속도와 무관하게 2.2s → 1.1s(±30%)로 줄도록 거리 간격을 속도에 비례시킴
   function rollGap() {
-    const baseSec = 2.2 + (1.1 - 2.2) * speedNorm();
-    const jitter = 1 + (rng() - 0.5) * 0.6; // 0.7 ~ 1.3
+    const baseSec = 2.2 + (1.25 - 2.2) * speedNorm();
+    const jitter = 1 + (rng() - 0.5) * 0.5; // 0.75 ~ 1.25 (최고속에서도 최소 ~0.94s 반응 시간)
     return baseSec * jitter * speed;
   }
 

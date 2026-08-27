@@ -3966,3 +3966,73 @@ body.lightbox-open { overflow: hidden; }
   .post-content h3 { font-size: 1.15rem; }
   .post-content h4 { font-size: 1.05rem; }
 }
+
+// ---------------------------------------------------------------------------
+// dash — 「몽구랑 산책가자」 HUD (console-screen 오버레이)
+// ---------------------------------------------------------------------------
+.dash-hud-root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  font-family: 'HBIOS-SYS', 'Courier New', monospace;
+  color: #f4eede;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.6), 1px 1px 0 #000;
+  letter-spacing: 0.06em;
+
+  &.is-night { color: #f4d97e; }
+
+  [hidden] { display: none !important; }
+}
+.dash-score {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 13px;
+}
+.dash-flash {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  opacity: 0.9;
+}
+.dash-msg {
+  position: absolute;
+  top: 54%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  text-align: center;
+  animation: dash-blink 1.1s steps(2) infinite;
+}
+.dash-bubble {
+  position: absolute;
+  left: 15%;
+  bottom: 46%;
+  font-size: 12px;
+  background: #fffdf4;
+  color: #22201a;
+  padding: 1px 6px 2px;
+  border-radius: 6px 6px 6px 1px;
+  text-shadow: none;
+}
+.dash-over {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  background: rgba(10, 8, 4, 0.38);
+
+  .dash-over-title { font-size: 17px; color: #f4d97e; }
+  .dash-over-score { font-size: 13px; }
+  .dash-over-restart { font-size: 11px; opacity: 0.85; animation: dash-blink 1.1s steps(2) infinite; }
+}
+@keyframes dash-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .dash-msg, .dash-over-restart { animation: none; }
+}
