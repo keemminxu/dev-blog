@@ -243,7 +243,10 @@ document.addEventListener('DOMContentLoaded', setupGamepadUI);
 })();
 </script>
 <script type="importmap">
-  {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"}}
+  {"imports":{
+    "three":"{{ '/assets/vendor/three-0.185.1/three.module.min.js' | relative_url }}",
+    "three/addons/":"{{ '/assets/vendor/three-0.185.1/jsm/' | relative_url }}"
+  }}
 </script>
-<script type="module" src="{{ '/assets/js/game.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/dash/main.js' | relative_url }}"></script>
 <script defer src="{{ '/assets/js/invader.js' | relative_url }}"></script>

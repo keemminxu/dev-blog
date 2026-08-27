@@ -1369,6 +1369,7 @@ body.is-home .main-content {
     height: 100%;
     display: block;
     border-radius: inherit !important;
+    image-rendering: pixelated;   // 저해상도 렌더 nearest 업스케일 (dash)
   }
 }
 
