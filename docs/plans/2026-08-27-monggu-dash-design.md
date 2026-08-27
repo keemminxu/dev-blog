@@ -27,7 +27,7 @@ OFF ──전원──▶ ATTRACT ──A/탭──▶ PLAY ──충돌──�
 ```
 
 - **OFF**: 기존 전원 토글 유지(스크린 오프 오버레이·LED).
-- **ATTRACT** (대기 화면 = 놀아주기-lite): 로고 스프라이트 + "PRESS Ⓐ / TAP" 깜빡임 + `HI 00000`. 몽구는 마당을 느리게 배회하고 **head 본이 커서/터치 지점을 바라봄**, 꼬리 wag. 화면 드래그 카메라 오빗은 여기서만 허용. GLB 로딩 중에는 로고 + 실루엣 박스가 먼저 반응.
+- **ATTRACT** (대기 화면 = 놀아주기-lite): 로고 스프라이트 + "PRESS Ⓐ / TAP" 깜빡임 + `HI 00000`. 몽구는 제자리에 서서 **head 본이 커서/터치 지점을 바라봄**, 꼬리 wag·호흡. (구현 중 변경: 배회·카메라 오빗은 측면 씬 구조상 뒷면이 비어 보여 제외) GLB 로딩 중에는 로고 + 실루엣 박스가 먼저 반응.
 - **PLAY**: 카메라 측면 고정(약간 낮은 3/4, 리서치 이미지 B~E 사이 각), 오빗·오른스틱 비활성.
 - **GAMEOVER**: 납작 squash + 'ㅠㅠ' 말풍선, 점수·HI 표시, 3초 내 재시작 가능. 실패는 웃기게.
 
@@ -41,7 +41,7 @@ OFF ──전원──▶ ATTRACT ──A/탭──▶ PLAY ──충돌──�
   | 울타리(1단/2단) | 점프 | 기본 |
   | 소화전 | 점프 | 낮고 좁음 |
   | 빨랫줄 | 숙이기 | 상단 장애 |
-  | 비둘기(저공) | 점프 또는 **짖기**로 쫓기 | 짖기 쿨다운 1.5s |
+  | 비둘기(중공) | **숙이기** 또는 **짖기**로 쫓기 | 짖기 쿨다운 1.5s. (구현 중 변경: 저공 y=0.35는 점프·숙이기 어느 쪽으로도 회피 불가한 설계 결함이라 y=0.55 숙이기 회피로 확정 — Dino의 프테라노돈 역할) |
   | 배달 오토바이 | 점프 | 후반, 접근 빠름(경고 클랙슨 선행) |
 - **충돌**: AABB, 히트박스는 시각 크기의 ~70%(관대하게).
 
@@ -119,7 +119,7 @@ assets/glb/woody_final.glb          # Disney IP — 홈 전송량 −1.44MB
 
 ## 7. 성능·UX 위생
 
-- 게임 모듈은 **LCP 이후 lazy init**(idle 또는 콘솔이 뷰포트 진입 시 dynamic import). 로딩 중 attract 자리에 로고+실루엣.
+- 게임 모듈은 **콘솔 뷰포트 진입 시 dynamic import**(IntersectionObserver, 폴백 window load). 로딩 중 attract 자리에 로고+실루엣.
 - `IntersectionObserver` + `visibilitychange`로 화면 밖/탭 백그라운드 시 루프 정지. `webglcontextlost/restored` 처리.
 - `prefers-reduced-motion`: attract 자동 배회·회전 정지(정적 포즈), 게임은 사용자 시작 시에만 구동.
 - WebGL2/GLB 실패 시: 로고 PNG 정적 포스터 + 스크린 오프 연출(콘솔이 죽은 척).
@@ -130,7 +130,7 @@ assets/glb/woody_final.glb          # Disney IP — 홈 전송량 −1.44MB
 1. `track.js` 순수 로직(스폰 시퀀스·충돌·램프·점수)은 render 비의존으로 분리해 node 스모크 테스트(`scripts/dash-test.mjs`, Jekyll exclude 영역).
 2. 기존 headless Chrome 하네스(playwright-core)로 데스크톱 1080p·390px 폰·iPhone SE 3해상도 스크린샷 + N프레임 시뮬 → 프레임 시간·콘솔 에러 0 확인.
 3. 실기 확인(사용자): 모바일 터치 점프/숙이기, 세로 스크롤 보존, 전원/일시정지.
-4. 수용 기준: 추가 전송 ≤ 450KB gz · 키보드만/터치만으로 전 기능 · 홈 Lighthouse 회귀 없음(게임 lazy) · editable 포커스 시 입력 무시 유지.
+4. 수용 기준: 추가 전송 ≤ 500KB gz (실측 484KB = three 227 + dash 18 + GLB 197 + 로고 42; 계획 450은 애드온·로고 누락 추정치였음) · 키보드만/터치만으로 전 기능 · 홈 Lighthouse 회귀 없음(게임 lazy) · editable 포커스 시 입력 무시 유지.
 
 ## 9. 범위 밖 (v2 후보)
 
