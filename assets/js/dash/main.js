@@ -11,6 +11,14 @@ import { createAttract } from './attract.js';
 
 const STEP = 1 / 12;                 // 12fps 스텝(시뮬·렌더 동기)
 const CAMERA = { pos: new THREE.Vector3(2.0, 1.1, 6.0), look: new THREE.Vector3(2.0, 0.5, 0) };
+// 대기화면 카메라 시퀀스 — 타이틀 샷(로고 ON) ↔ 3D 쇼케이스 샷(로고 OFF) 교대 (아케이드 어트랙트)
+const ATTRACT_SHOTS = [
+  { dur: 5.0, logo: true,  from: { pos: [2.2, 1.15, 6.4], look: [2.0, 0.5, 0] }, to: { pos: [2.0, 1.1, 6.0], look: [2.0, 0.5, 0] } },  // 타이틀(게임 카메라, 미세 푸시)
+  { dur: 4.0, logo: false, from: { pos: [1.2, 0.9, 2.0], look: [0.1, 0.45, 0] }, to: { pos: [2.0, 0.8, 1.1], look: [0.1, 0.45, 0] } },  // 3/4 오빗
+  { dur: 3.5, logo: false, from: { pos: [-1.7, 0.3, 2.4], look: [0, 0.5, 0] }, to: { pos: [-0.5, 0.35, 2.4], look: [0, 0.5, 0] } },     // 저각 측면 돌리
+  { dur: 3.5, logo: false, from: { pos: [1.6, 0.8, 1.25], look: [0.45, 0.6, 0] }, to: { pos: [1.15, 0.7, 0.85], look: [0.45, 0.6, 0] } }, // 얼굴 클로즈업
+];
+let shotIdx = 0, shotT = 0;
 const FOG = { near: 8, far: 18 };
 const HI_KEY = 'monggu.best.dash';
 const BARK_COOLDOWN = 1.5;
@@ -278,6 +286,7 @@ function speedNorm() {
 function startGame() {
   mode = 'play';
   paused = false;
+  resetCamera();
   track.reset();
   clearObstacles();
   dog.reset('run');
@@ -306,8 +315,36 @@ function gameOver() {
   hud.showOver(score, hi, isNew);
 }
 
+function updateAttractCamera(dt) {
+  shotT += dt;
+  if (shotT >= ATTRACT_SHOTS[shotIdx].dur) {
+    shotT = 0;
+    shotIdx = (shotIdx + 1) % ATTRACT_SHOTS.length;
+    if (ATTRACT_SHOTS[shotIdx].logo) attract.show(); else attract.hide();
+  }
+  const sh = ATTRACT_SHOTS[shotIdx];
+  const u0 = shotT / sh.dur;
+  const u = u0 * u0 * (3 - 2 * u0);   // smoothstep
+  camera.position.set(
+    sh.from.pos[0] + (sh.to.pos[0] - sh.from.pos[0]) * u,
+    sh.from.pos[1] + (sh.to.pos[1] - sh.from.pos[1]) * u,
+    sh.from.pos[2] + (sh.to.pos[2] - sh.from.pos[2]) * u
+  );
+  camera.lookAt(
+    sh.from.look[0] + (sh.to.look[0] - sh.from.look[0]) * u,
+    sh.from.look[1] + (sh.to.look[1] - sh.from.look[1]) * u,
+    sh.from.look[2] + (sh.to.look[2] - sh.from.look[2]) * u
+  );
+}
+
+function resetCamera() {
+  camera.position.copy(CAMERA.pos);
+  camera.lookAt(CAMERA.look);
+}
+
 function showAttract() {
   mode = 'attract';
+  shotIdx = 0; shotT = 0;
   dog.reset('attract');
   clearObstacles();
   track.reset();
@@ -316,7 +353,7 @@ function showAttract() {
   hud.hideOver();
   hud.hideBubble();
   hud.setScore(0, hi);
-  hud.showMsg('PRESS A / TAP');
+  hud.showMsg('PRESS X');
 }
 
 function tryStart() {
@@ -364,9 +401,11 @@ function simStep(dt) {
     if (hit && !dbgInvincible) gameOver();
   } else if (mode === 'attract') {
     dog.update(reducedMotion ? 0 : dt, {});
+    if (!reducedMotion) updateAttractCamera(dt);   // reduced-motion은 고정 게임 카메라
   } else if (mode === 'over') {
     overTimer += dt;
     dog.update(dt, { speedNorm: 0 });
+    if (overTimer >= 3) showAttract();             // 3초 방치 시 시작화면 복귀
   }
 }
 

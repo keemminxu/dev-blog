@@ -77,7 +77,7 @@ export async function loadDog(url) {
 
   function applyBoneOverrides(dt) {
     // 반드시 mixer.update() 직후 호출
-    const idle = st.mode === 'attract' ? 1 : Math.max(0, 0.35 - st.speedNorm);
+    const idle = st.mode === 'attract' ? 0 : Math.max(0, 0.35 - st.speedNorm);   // attract는 정지(귀·꼬리만)
     if (bones.chest) {
       bones.chest.quaternion.multiply(qTmp.setFromAxisAngle(AX, Math.sin(st.t * Math.PI * 0.7) * 0.035 * idle));
     }
@@ -91,10 +91,6 @@ export async function loadDog(url) {
     if (bones.head) {
       if (st.duck) bones.head.quaternion.multiply(qTmp.setFromAxisAngle(AX, 0.5));
       if (st.barkT > 0) bones.head.quaternion.multiply(qTmp.setFromAxisAngle(AX, -Math.sin(st.barkT * Math.PI / 0.25) * 0.35));
-    }
-    if (bones.Hips && st.mode === 'attract') {
-      // mixer가 매 프레임 Hips scale(상수 키 0.9248)을 다시 쓰므로 "곱"은 누적되지 않음
-      bones.Hips.scale.multiplyScalar(1 + Math.sin(st.t * Math.PI * 0.7) * 0.02);
     }
   }
 
@@ -156,7 +152,8 @@ export async function loadDog(url) {
         if (st.mode === 'run' && !st.airborne) action.paused = false;
       } else if (st.mode === 'attract') {
         action.paused = false;
-        action.timeScale = 1.7;                      // 제자리 총총 트롯 — "산책 가자!" 들뜬 느낌
+        action.timeScale = 0;                        // 정지 포즈 — 카메라 시퀀스가 모델을 비춤
+        action.time = 0.55;                          // 네 발 착지 프레임
       }
 
       // 점프 물리 (12fps 스텝 그대로 적분 — 계단식 궤적이 곧 레트로 감)
