@@ -4000,7 +4000,7 @@ body.lightbox-open { overflow: hidden; }
 }
 .dash-msg {
   position: absolute;
-  top: 54%;
+  top: 76%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 14px;
@@ -4035,4 +4035,15 @@ body.lightbox-open { overflow: hidden; }
 @keyframes dash-blink { 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   .dash-msg, .dash-over-restart { animation: none; }
+}
+.dash-logo {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36%;
+  z-index: 5;
+  pointer-events: none;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.45));
 }

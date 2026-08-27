@@ -6,6 +6,8 @@ import { createTrack, RAMP, TYPES, DIMS } from './track.js';
 import { loadDog } from './dog.js';
 import { createInput } from './input.js';
 import { createHud } from './hud.js';
+import { createAudio } from './audio.js';
+import { createAttract } from './attract.js';
 
 const STEP = 1 / 12;                 // 12fps 스텝(시뮬·렌더 동기)
 const CAMERA = { pos: new THREE.Vector3(2.0, 1.1, 6.0), look: new THREE.Vector3(2.0, 0.5, 0) };
@@ -14,7 +16,8 @@ const HI_KEY = 'monggu.best.dash';
 const BARK_COOLDOWN = 1.5;
 const BARK_RANGE = 3.2;
 
-let renderer, scene, camera, pixelPass, hud, dog, input;
+let renderer, scene, camera, pixelPass, hud, dog, input, attract, audio;
+const reducedMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let hemiLight, dirLight;
 let world = null;
 let track = null;
@@ -279,6 +282,7 @@ function startGame() {
   dog.setMode('run');
   barkCd = 0;
   setNight(false);
+  attract.hide();
   hud.hideOver();
   hud.hideMsg();
   hud.hideBubble();
@@ -306,6 +310,7 @@ function showAttract() {
   clearObstacles();
   track.reset();
   setNight(false);
+  attract.show();
   hud.hideOver();
   hud.hideBubble();
   hud.setScore(0, hi);
@@ -356,7 +361,7 @@ function simStep(dt) {
     const hit = track.collide(dog.box());
     if (hit && !dbgInvincible) gameOver();
   } else if (mode === 'attract') {
-    dog.update(dt, { lookAt: pointerLook });
+    dog.update(reducedMotion ? 0 : dt, { lookAt: reducedMotion ? null : pointerLook });
   } else if (mode === 'over') {
     overTimer += dt;
     dog.update(dt, { speedNorm: 0 });
@@ -428,6 +433,10 @@ export async function initGame() {
   createScene(canvas);
   setupScreenToggle();
   hud = createHud(canvas.parentElement);
+  attract = createAttract(canvas.parentElement);
+  audio = createAudio();
+  sfx = (name) => audio.play(name);
+  sfx.toggleMute = () => audio.toggleMute();
   track = createTrack();
   window.addEventListener('resize', () => sizeRenderer(canvas));
 
