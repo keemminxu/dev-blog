@@ -121,15 +121,22 @@ function setupGamepadUI() {
     });
   });
 
-  // Action buttons
+  // Action buttons — press + release (release는 hold 점프 높이 판정에 사용)
   document.querySelectorAll('.hit[data-btn]').forEach(btn => {
+    const release = () => {
+      document.dispatchEvent(new CustomEvent('game-button-release', {detail: {button: btn.dataset.btn}}));
+    };
     btn.addEventListener('mousedown', () => {
       document.dispatchEvent(new CustomEvent('game-button', {detail: {button: btn.dataset.btn}}));
     });
+    btn.addEventListener('mouseup', release);
+    btn.addEventListener('mouseleave', release);
     btn.addEventListener('touchstart', (e) => {
       e.preventDefault();
       document.dispatchEvent(new CustomEvent('game-button', {detail: {button: btn.dataset.btn}}));
     });
+    btn.addEventListener('touchend', (e) => { e.preventDefault(); release(); });
+    btn.addEventListener('touchcancel', release);
   });
 
   // Power button (yellow LED)
