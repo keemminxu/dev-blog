@@ -2,7 +2,7 @@
 // intents: jumpStart / jumpEnd / duck(bool) / bark / mute / pause / start
 // 규칙: attract·gameover에서는 jumpStart 계열 입력이 start로 쓰임 (main이 모드에 따라 해석)
 
-const JUMP_KEYS = new Set([' ', 'w', 'arrowup']);
+const JUMP_KEYS = new Set([' ', 'w', 'arrowup', 'x']);
 const DUCK_KEYS = new Set(['shift', 's', 'arrowdown']);
 const TAP_THRESHOLD_PX = 10;
 

@@ -10,7 +10,7 @@ export function createHud(container) {
     <div class="dash-over" hidden>
       <div class="dash-over-title">GAME OVER</div>
       <div class="dash-over-score"></div>
-      <div class="dash-over-restart">A / TAP 다시하기</div>
+      <div class="dash-over-restart">PRESS X 다시하기</div>
     </div>`;
   container.appendChild(root);
 
