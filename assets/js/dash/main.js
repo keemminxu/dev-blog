@@ -353,7 +353,7 @@ function showAttract() {
   hud.hideOver();
   hud.hideBubble();
   hud.setScore(0, hi);
-  hud.showMsg('PRESS X');
+  hud.showMsg('Press X / Click');
 }
 
 function tryStart() {
