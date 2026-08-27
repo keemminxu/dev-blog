@@ -68,7 +68,6 @@ export async function loadDog(url) {
     barkT: 0,
     t: 0,                   // 누적 시간(웨이브용)
     speedNorm: 0,
-    lookAt: null,           // {nx, ny} -1..1 (attract 시선)
   };
 
   const qTmp = new THREE.Quaternion();
@@ -90,12 +89,6 @@ export async function loadDog(url) {
       if (bones[n]) bones[n].quaternion.multiply(qTmp.setFromAxisAngle(AX, Math.sin(st.t * 7 + i * 1.3) * 0.05 * (0.3 + st.speedNorm + (st.airborne ? 0.6 : 0))));
     });
     if (bones.head) {
-      if (st.mode === 'attract' && st.lookAt) {
-        bones.head.quaternion.multiply(qTmp.setFromAxisAngle(AY, THREE.MathUtils.clamp(-st.lookAt.nx, -1, 1) * 0.45));
-        bones.head.quaternion.multiply(qTmp.setFromAxisAngle(AX, THREE.MathUtils.clamp(-st.lookAt.ny, -1, 1) * 0.3));
-      } else if (st.mode === 'attract') {
-        bones.head.quaternion.multiply(qTmp.setFromAxisAngle(AY, Math.sin(st.t * 0.9) * 0.25));
-      }
       if (st.duck) bones.head.quaternion.multiply(qTmp.setFromAxisAngle(AX, 0.5));
       if (st.barkT > 0) bones.head.quaternion.multiply(qTmp.setFromAxisAngle(AX, -Math.sin(st.barkT * Math.PI / 0.25) * 0.35));
     }
@@ -143,7 +136,6 @@ export async function loadDog(url) {
       root.scale.set(1, 1, 1);
     },
     setMode(mode) { st.mode = mode; if (mode === 'run') action.paused = false; },
-    setLookAt(nxny) { st.lookAt = nxny; },
     get airborne() { return st.airborne; },
     get ducking() { return st.duck; },
     get mode() { return st.mode; },
@@ -154,19 +146,17 @@ export async function loadDog(url) {
       return { x: 0, y: st.jumpY, w: length * 0.8, h };
     },
 
-    update(dt, { speedNorm = 0, lookAt = null } = {}) {
+    update(dt, { speedNorm = 0 } = {}) {
       st.t += dt;
       st.speedNorm = speedNorm;
-      if (lookAt !== undefined) st.lookAt = lookAt;
       if (st.barkT > 0) st.barkT -= dt;
 
       if (st.mode === 'run') {
         action.timeScale = 2.2 + speedNorm * 0.8;   // 트롯 → 질주
         if (st.mode === 'run' && !st.airborne) action.paused = false;
       } else if (st.mode === 'attract') {
-        action.timeScale = 0;                        // 정지 포즈 + 프로시저럴만
         action.paused = false;
-        action.time = 0.55;                          // 네 발 착지 프레임
+        action.timeScale = 1.7;                      // 제자리 총총 트롯 — "산책 가자!" 들뜬 느낌
       }
 
       // 점프 물리 (12fps 스텝 그대로 적분 — 계단식 궤적이 곧 레트로 감)

@@ -27,7 +27,6 @@ let paused = false;
 let screenOn = true;
 let overTimer = 0, barkCd = 0;
 let hi = 0;
-let pointerLook = null;              // attract 시선 {nx, ny}
 let acc = 0, lastT = 0, rafId = null;
 
 try { hi = parseInt(localStorage.getItem(HI_KEY) || '0', 10) || 0; } catch (e) { /* private mode */ }
@@ -364,7 +363,7 @@ function simStep(dt) {
     const hit = track.collide(dog.box());
     if (hit && !dbgInvincible) gameOver();
   } else if (mode === 'attract') {
-    dog.update(reducedMotion ? 0 : dt, { lookAt: reducedMotion ? null : pointerLook });
+    dog.update(reducedMotion ? 0 : dt, {});
   } else if (mode === 'over') {
     overTimer += dt;
     dog.update(dt, { speedNorm: 0 });
@@ -474,15 +473,6 @@ export async function initGame() {
     },
   });
   input.attach();
-
-  // attract 시선 — 화면 기준 -1..1
-  window.addEventListener('pointermove', (e) => {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    pointerLook = {
-      nx: ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      ny: ((e.clientY - rect.top) / rect.height) * 2 - 1,
-    };
-  });
 
   try {
     const glbUrl = new URL('../../glb/monggu.glb', import.meta.url).href;
