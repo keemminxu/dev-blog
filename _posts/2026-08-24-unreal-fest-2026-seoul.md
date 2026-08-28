@@ -9,7 +9,7 @@ tags: ["ue5", "unrealfest", "unrealfest2026", "seoul", "epicgames"]
 
 며칠 전 (8월 20일, 21일) 봉은사역 부근 파르나스 호텔에서 언리얼 페스트 서울 2026 행사가 진행됐습니다.
 
-세션에 대한 내용은 https://epiclounge.co.kr/unrealfest2026/index.php
+세션에 대한 내용은 [https://epiclounge.co.kr/unrealfest2026/index.php](https://epiclounge.co.kr/unrealfest2026/index.php){:target="_blank" rel="noopener"}
 해당 링크에 정리되어있습니다.
 ![언리얼 페스트 2026 Unreal Fest 26](/assets/images/unreal-fest-2026-seoul/ad42f44e-b508-4c19-b1bb-76109d6e09dc.png)
 

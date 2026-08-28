@@ -8,6 +8,7 @@ import { createInput } from './input.js';
 import { createHud } from './hud.js';
 import { createAudio } from './audio.js';
 import { createAttract } from './attract.js';
+import { createZoom } from './zoom.js';
 
 const STEP = 1 / 12;                 // 12fps 스텝(시뮬·렌더 동기)
 const CAMERA = { pos: new THREE.Vector3(2.0, 1.1, 6.0), look: new THREE.Vector3(2.0, 0.5, 0) };
@@ -512,6 +513,7 @@ export async function initGame() {
     },
   });
   input.attach();
+  createZoom({ screen: canvas.parentElement, onResize: () => sizeRenderer(canvas) });
 
   try {
     const glbUrl = new URL('../../glb/monggu.glb', import.meta.url).href;

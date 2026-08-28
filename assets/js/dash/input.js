@@ -73,6 +73,7 @@ export function createInput(handlers) {
   let ptr = null;   // { id, zone }
   function onPointerDown(e) {
     if (!screen || !e.isPrimary) return;
+    if (e.target && e.target.closest && e.target.closest('.dash-zoom-btn')) return;   // 확대 버튼
     const rect = screen.getBoundingClientRect();
     const zone = (e.clientY - rect.top) / rect.height > 2 / 3 ? 'duck' : 'jump';
     ptr = { id: e.pointerId, zone };
