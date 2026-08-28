@@ -1,70 +1,93 @@
 #!/usr/bin/env python3
-"""홈 페이지용 OG 이미지 생성 (keem's blog. / GO HAVE SOME FUN!)"""
+"""홈 페이지용 OG 이미지 생성 (1200×630)
+왼쪽: 콘솔 일러스트(GameMode.png)의 TV 부분 + 화면 안에 「몽구랑 산책가자」 대기화면 프레임 합성
+오른쪽: keem's blog. / 재밌는걸 멋지게 오래하기! / > UNREAL · GODOT · DAILY _
+
+입력: assets/images/crt/GameMode.png, scripts/og-assets/home-screen.png (게임 대기화면 캡처, 비율 1.386)
+출력: assets/og/home-og.png
+"""
 
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 BLOG_ROOT = Path(__file__).parent.parent
 FONT_PATH = BLOG_ROOT / "assets" / "fonts" / "HBIOS-SYS" / "HBIOS-SYS.ttf"
+CONSOLE = BLOG_ROOT / "assets" / "images" / "crt" / "GameMode.png"
+SCREEN_FRAME = BLOG_ROOT / "scripts" / "og-assets" / "home-screen.png"
 OUTPUT = BLOG_ROOT / "assets" / "og" / "home-og.png"
 
 WIDTH, HEIGHT = 1200, 630
 
 BG = (22, 19, 17)          # #161311
-SURFACE = (34, 31, 29)      # #221f1d
 PRIMARY = (255, 225, 167)   # #ffe1a7
-ACCENT = (251, 191, 36)     # #fbbf24
+ACCENT = (203, 160, 64)     # #cba040 (사이트 앰버)
 MUTED = (138, 129, 119)
+
+# GameMode.png(1856×2304) 기준 좌표 — .console-screen CSS 비율(left 23.98% / top 20.27% / w 52.26% / h 30.38%)
+SRC_W, SRC_H = 1856, 2304
+SCREEN = (int(SRC_W * 0.2398), int(SRC_H * 0.2027), int(SRC_W * 0.5226), int(SRC_H * 0.3038))  # x, y, w, h
+TV_CROP = (215, 30, 1640, 1320)   # TV 본체 + 여백
 
 img = Image.new("RGB", (WIDTH, HEIGHT), BG)
 draw = ImageDraw.Draw(img)
 
-font_title = ImageFont.truetype(str(FONT_PATH), 140)
-font_sub = ImageFont.truetype(str(FONT_PATH), 56)
-font_tag = ImageFont.truetype(str(FONT_PATH), 28)
+# 배경 스캔라인
+for y in range(0, HEIGHT, 4):
+    draw.line([(0, y), (WIDTH, y)], fill=(27, 24, 22), width=1)
 
-# Retro CRT frame border
-border_pad = 40
-draw.rectangle(
-    [border_pad, border_pad, WIDTH - border_pad, HEIGHT - border_pad],
-    outline=PRIMARY, width=4
-)
-# Inner screen
-inner_pad = 70
-draw.rectangle(
-    [inner_pad, inner_pad, WIDTH - inner_pad, HEIGHT - inner_pad],
-    fill=SURFACE
-)
+# --- 콘솔 TV + 화면 합성 (원본 해상도에서 합성 후 축소) ---
+console = Image.open(CONSOLE).convert("RGBA")
+frame = Image.open(SCREEN_FRAME).convert("RGB")
+sx, sy, sw, sh = SCREEN
+frame = frame.resize((sw, sh), Image.LANCZOS)
 
-# Scanlines
-for y in range(inner_pad, HEIGHT - inner_pad, 4):
-    draw.line([(inner_pad, y), (WIDTH - inner_pad, y)], fill=(28, 25, 23), width=1)
+# CRT 스캔라인 (CSS 오버레이 느낌)
+fd = ImageDraw.Draw(frame)
+for y in range(0, sh, 6):
+    fd.line([(0, y), (sw, y)], fill=(0, 0, 0), width=2)
+frame = Image.blend(frame, Image.open(SCREEN_FRAME).convert("RGB").resize((sw, sh), Image.LANCZOS), 0.55)
 
-# Title: keem's blog.
+# 둥근 모서리 마스크 (border-radius 7% / 11%)
+mask = Image.new("L", (sw, sh), 0)
+ImageDraw.Draw(mask).rounded_rectangle([0, 0, sw - 1, sh - 1], radius=int(sh * 0.11), fill=255)
+console.paste(frame, (sx, sy), mask)
+
+tv = console.crop(TV_CROP)
+tv_h = 540
+tv_w = int(tv.width * tv_h / tv.height)
+tv = tv.resize((tv_w, tv_h), Image.LANCZOS)
+tv_x, tv_y = 36, (HEIGHT - tv_h) // 2
+img.paste(tv, (tv_x, tv_y), tv)
+
+# --- 오른쪽 텍스트 ---
+font_title = ImageFont.truetype(str(FONT_PATH), 68)
+font_sub = ImageFont.truetype(str(FONT_PATH), 32)
+font_tag = ImageFont.truetype(str(FONT_PATH), 22)
+
+text_x = tv_x + tv_w + 24
+right_w = WIDTH - text_x - 36
+
 title = "keem's blog."
 tb = draw.textbbox((0, 0), title, font=font_title)
 tw, th = tb[2] - tb[0], tb[3] - tb[1]
-tx = (WIDTH - tw) // 2
-ty = (HEIGHT - th) // 2 - 70
-draw.text((tx + 5, ty + 5), title, font=font_title, fill=(10, 8, 6))  # shadow
+tx = text_x + (right_w - tw) // 2
+ty = 232
+draw.text((tx + 4, ty + 4), title, font=font_title, fill=(10, 8, 6))   # shadow
 draw.text((tx, ty), title, font=font_title, fill=PRIMARY)
 
-# Subtitle: GO HAVE SOME FUN!
-sub = "GO HAVE SOME FUN!"
+sub = "재밌는걸 멋지게 오래하기!"
 sb = draw.textbbox((0, 0), sub, font=font_sub)
-sw, sh = sb[2] - sb[0], sb[3] - sb[1]
-sx = (WIDTH - sw) // 2
-sy = ty + th + 30
-draw.text((sx, sy), sub, font=font_sub, fill=ACCENT)
+sw2 = sb[2] - sb[0]
+draw.text((text_x + (right_w - sw2) // 2, ty + th + 30), sub, font=font_sub, fill=ACCENT)
 
-# Bottom tag line
-tag = "> UNREAL  GODOT  DAILY  _"
+tag = "> UNREAL · GODOT · DAILY _"
 gb = draw.textbbox((0, 0), tag, font=font_tag)
 gw = gb[2] - gb[0]
-gx = (WIDTH - gw) // 2
-gy = HEIGHT - inner_pad - 60
-draw.text((gx, gy), tag, font=font_tag, fill=MUTED)
+draw.text((text_x + (right_w - gw) // 2, ty + th + 30 + 32 + 34), tag, font=font_tag, fill=MUTED)
+
+# 외곽 CRT 프레임 라인
+draw.rectangle([18, 18, WIDTH - 18, HEIGHT - 18], outline=PRIMARY, width=3)
 
 OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-img.save(str(OUTPUT), "PNG", optimize=True)
-print(f"[OK] {OUTPUT}")
+img.save(OUTPUT, optimize=True)
+print(f"saved {OUTPUT} ({OUTPUT.stat().st_size // 1024} KB)")
