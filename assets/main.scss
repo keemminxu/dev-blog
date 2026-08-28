@@ -3455,10 +3455,9 @@ body.admin-editor-open {
 
 .about-plugin-meta {
   margin: 0 0 6px;
-  font-family: $font-code;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: $amber;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
 }
 
 .about-plugin-title {
@@ -3477,10 +3476,8 @@ body.admin-editor-open {
 
 .about-plugin-stat {
   margin: 12px 0 0;
-  font-family: $font-code;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: $text;
-  letter-spacing: 0.04em;
 
   b { color: $amber; font-weight: 400; }
 }
