@@ -3249,7 +3249,7 @@ body.admin-editor-open {
   text-align: center;
 
   img {
-    width: 33%;
+    width: 40%;   // 33% → 40% (약 +20%)
     max-width: 100%;
     height: auto;
     display: block;
@@ -3426,6 +3426,67 @@ body.admin-editor-open {
   gap: 24px;
   // min(280px, 100%): 컨테이너가 280px보다 좁은 초소형 화면에서 트랙이 컨테이너 폭으로 축소
   grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+}
+
+// fab plugins — 배너(왼쪽 DOS 창 카드) + 줄글(오른쪽) 행 레이아웃
+.about-plugins {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.about-plugin {
+  display: grid;
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.about-plugin-banner {
+  min-width: 0;
+  transition: filter 0.15s ease;
+  &:hover { filter: brightness(1.15); }
+}
+
+.about-plugin-body {
+  min-width: 0;
+  padding-top: 4px;
+}
+
+.about-plugin-meta {
+  margin: 0 0 6px;
+  font-size: 0.85rem;
+  color: $amber;
+  letter-spacing: 0.04em;
+}
+
+.about-plugin-title {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: $primary;
+}
+
+.about-plugin-desc {
+  margin: 0 0 12px;
+  color: $text-muted;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.about-plugin-stat {
+  margin: 12px 0 0;
+  font-size: 0.9rem;
+  color: $text;
+
+  b { color: $amber; font-weight: 400; }
+}
+
+@media (max-width: 640px) {
+  .about-plugin {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
 }
 
 // MS-DOS 창 형태 — 양각 보더 + 검은 그림자, 타이틀바 + 본문 구조
