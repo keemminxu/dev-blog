@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Jekyll 포스트에서 태그를 추출하여 개별 태그 페이지를 자동 생성한다."""
 
+import sys
+
+# Windows 콘솔(cp949)에서 이모지·한글 출력이 UnicodeEncodeError로 죽지 않도록 stdout을 UTF-8로 강제
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 import os
 import re
 import yaml

@@ -7,6 +7,11 @@
     python scripts/ping_search_engines.py --all              # 모든 포스트 인덱싱
 """
 
+import sys
+
+# Windows 콘솔(cp949)에서 이모지·한글 출력이 UnicodeEncodeError로 죽지 않도록 stdout을 UTF-8로 강제
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 import argparse
 import json
 import re

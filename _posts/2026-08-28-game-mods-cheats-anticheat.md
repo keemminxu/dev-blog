@@ -6,7 +6,7 @@ excerpt_en: "A plain-language walkthrough of how mods get into a game process (p
 date: 2026-08-28 10:13:04 +0900
 categories: [study]
 tags: [game-modding, anti-cheat, dll-injection, ue4ss, pak-encryption, reverse-engineering, game-security]
-thumbnail: /assets/images/game-mods-cheats-anticheat/cheat-esp-wallhack-example.png
+thumbnail: /assets/images/game-mods-cheats-anticheat/cheat-esp-wallhack-example.webp
 excerpt: "모드가 게임에 들어가는 방법, pak 암호화가 뚫리는 이유, 핵이 커널·DMA·AI 비전까지 내려간 과정, 안티치트가 실제로 할 수 있는 것"
 ---
 
@@ -16,7 +16,7 @@ excerpt: "모드가 게임에 들어가는 방법, pak 암호화가 뚫리는 �
 
 리버풀 팬으로써 야무지게 구단을 맞추다 라커룸에서 선수 카드 페이스도 변경되길래, "오 이거 내가 갖고있는 사진으로 등록해야지" 하고 폴더를 까봤다.
 
-![FC 온라인 _cache 폴더에 캐시된 선수 얼굴 PNG 목록 캡처](/assets/images/game-mods-cheats-anticheat/fconline-cache-players.png)
+![FC 온라인 _cache 폴더에 캐시된 선수 얼굴 PNG 목록 캡처](/assets/images/game-mods-cheats-anticheat/fconline-cache-players.webp)
 
 그러다 문득 든 생각. GTA나 마크같은 게임들은 모드를 어떻게 만드는 것일까?
 
@@ -81,7 +81,7 @@ fczf.exe         4d5a 9000 0300 0000 ...  MZ..............
 
 전부 `MZ`로 시작한다. `NGMDll64.dll` 안엔 `AVCNGMInstaller`, `AVCHTTPDownloadStrategy` 같은 C++ 클래스 이름까지 그대로 남아 있음.
 
-![PE 파일 구조(MZ 헤더, PE 헤더, 섹션 테이블, .text/.rdata/.data 섹션) 다이어그램](/assets/images/game-mods-cheats-anticheat/pe-structure.png)
+![PE 파일 구조(MZ 헤더, PE 헤더, 섹션 테이블, .text/.rdata/.data 섹션) 다이어그램](/assets/images/game-mods-cheats-anticheat/pe-structure.webp)
 
 비유하자면 **소스코드 = 레시피, exe = 완성된 요리**다. 게임사는 요리만 파는거지 레시피는 안 줌. 하지만 요리는 먹을 수 있게 그대로 있어야 함(컴퓨터가 실행해야 하니까) 대신 레시피가 없으니 한 입씩 먹어보면서 "이건 마늘, 이건 간장…" 하고 거꾸로 추측해야 한다. 이게 역공학이고 IDA나 Ghidra 같은 디스어셈블러가 도구인 것. 되긴 되는데 느리고 어렵다고 함..
 
@@ -124,7 +124,7 @@ GTA5.exe (엔진)
 | 거미줄 이펙트 | `GRAPHICS::START_PARTICLE_FX_LOOPED_ON_ENTITY` (기존 파티클) |
 | 스파이더맨 모습 | `STREAMING::REQUEST_MODEL` + `PLAYER::SET_PLAYER_MODEL` |
 
-![GTA V NativeDB에서 ADD_ROPE 같은 네이티브 함수 목록을 보는 화면](/assets/images/game-mods-cheats-anticheat/gta-nativedb--01.png)
+![GTA V NativeDB에서 ADD_ROPE 같은 네이티브 함수 목록을 보는 화면](/assets/images/game-mods-cheats-anticheat/gta-nativedb--01.webp)
 ![GTA V 스파이더맨 모드 플레이 장면](/assets/images/game-mods-cheats-anticheat/9031ea-20190413181338_1.webp)
 
 ScriptHookV는 게임 메모리를 뒤져서 이 부품 함수들이 어디 있는지 전화번호부를 만든다(시그니처 스캔). 모더는 그 전화번호부를 보고 `invoke(ADD_ROPE, ...)` 하고 부르기만 함. 게임 코드는 그대로 두고 번호만 누르는 셈. 부품 이름 6,000개는 커뮤니티가 락스타 미션 스크립트(`.ysc`)를 디컴파일해서 정리한 NativeDB에 다 있다.
@@ -168,7 +168,7 @@ Game.exe  (엔진 + 게임 C++ 코드, 모노리식)
       └─ BazookaMod_P.pak               ← 모드 에셋. 엔진이 _P 접미사를 보고 우선순위 높게 마운트
 ```
 
-![UE4SS 라이브 오브젝트 뷰어/구조 캡처, 또는 FModel로 언리얼 pak을 열어 에셋 목록을 보는 화면](/assets/images/game-mods-cheats-anticheat/ue4ss-architecture.png)
+![UE4SS 라이브 오브젝트 뷰어/구조 캡처, 또는 FModel로 언리얼 pak을 열어 에셋 목록을 보는 화면](/assets/images/game-mods-cheats-anticheat/ue4ss-architecture.webp)
 
 GTA와 결정적으로 다른 점이 있음. GTA는 함수 6,000개 이름을 커뮤니티가 몇 년 걸려 붙였는데, 언리얼은 Shipping 빌드에도 `AWeaponBase::Fire` 같은 이름이 FName으로 그대로 남아 있다. UE4SS가 그걸 읽어서 에디터의 generated header와 거의 같은 SDK 헤더를 덤프해 준다. 그래서 언리얼 모딩은 GTA보다 훨씬 쉽다.
 
@@ -286,8 +286,8 @@ BP만 쓰는 경우엔 UE4SS의 `BPModLoader`가 `/Game/Mods/*/ModActor` BP를 �
 | **조준 핵** (에임봇) | 적 좌표 읽기 + 마우스 입력 흉내 | 읽기 + 입력 주입 | ✗ 못 막음 |
 | **조작 핵** (스피드핵, 무반동, 텔레포트) | 게임 변수를 직접 바꿈 | **쓰기** | ✓ 막힘 |
 
-![벽 너머의 적을 박스/스켈레톤으로 표시하는 ESP·월핵 예시 이미지](/assets/images/game-mods-cheats-anticheat/wallhack.jpg)
-![벽 너머의 적을 박스/스켈레톤으로 표시하는 ESP·월핵 예시 이미지](/assets/images/game-mods-cheats-anticheat/cheat-esp-wallhack-example.png)
+![벽 너머의 적을 박스/스켈레톤으로 표시하는 ESP·월핵 예시 이미지](/assets/images/game-mods-cheats-anticheat/wallhack.webp)
+![벽 너머의 적을 박스/스켈레톤으로 표시하는 ESP·월핵 예시 이미지](/assets/images/game-mods-cheats-anticheat/cheat-esp-wallhack-example.webp)
 
 월핵과 에임봇은 서버 auth로 못 막는다. 게임은 벽 뒤의 적을 렌더링해야 하니까 그 좌표를 클라에 보내야 하고 클라 메모리에 있는 걸 읽기만 하는 건 게임 결과를 변조하는 게 아니다. 서버 입장에선 정상 플레이어가 정확히 조준한 것과 구분이 안 됨
 
@@ -313,8 +313,8 @@ Ring -1  하이퍼바이저 ─ 3세대: OS 자체를 VM 안에 넣고 밖에서
 
 **5세대 외부 AI 비전** 메모리를 아예 안 읽음. 캡처카드로 화면을 뽑아 두 번째 PC에서 YOLO 같은 객체 탐지로 적을 찾고, 하드웨어 마우스 에뮬레이터로 조준함. 게임 PC 입장에선 진짜 마우스가 움직인 거다. 콘솔에서도 됨. 최근 2~3년 사이 가장 빠르게 늘고 있는 추세
 
-![캡처카드 → 객체 탐지(YOLO) PC → 하드웨어 마우스 에뮬레이터로 이어지는 외부 AI 에임봇 파이프라인 다이어그램](/assets/images/game-mods-cheats-anticheat/aimbot.png)
-![캡처카드 → 객체 탐지(YOLO) PC → 하드웨어 마우스 에뮬레이터로 이어지는 외부 AI 에임봇 파이프라인 다이어그램](/assets/images/game-mods-cheats-anticheat/aimbot2.png)
+![캡처카드 → 객체 탐지(YOLO) PC → 하드웨어 마우스 에뮬레이터로 이어지는 외부 AI 에임봇 파이프라인 다이어그램](/assets/images/game-mods-cheats-anticheat/aimbot.webp)
+![캡처카드 → 객체 탐지(YOLO) PC → 하드웨어 마우스 에뮬레이터로 이어지는 외부 AI 에임봇 파이프라인 다이어그램](/assets/images/game-mods-cheats-anticheat/aimbot2.webp)
 ![캡처카드 → 객체 탐지(YOLO) PC → 하드웨어 마우스 에뮬레이터로 이어지는 외부 AI 에임봇 파이프라인 다이어그램](/assets/images/game-mods-cheats-anticheat/aimbot3.png)
 ![캡처카드 → 객체 탐지(YOLO) PC → 하드웨어 마우스 에뮬레이터로 이어지는 외부 AI 에임봇 파이프라인 다이어그램](/assets/images/game-mods-cheats-anticheat/aimbot4.png)
 
@@ -336,7 +336,7 @@ Ring -1  하이퍼바이저 ─ 3세대: OS 자체를 VM 안에 넣고 밖에서
 | 리플레이 + 신고 검토 | 위와 같음, 사람이 판단 | 비용 |
 | HWID 밴, 폰 인증, 계정 신뢰도 | 재가입 비용 올리기 | 스푸퍼로 우회 |
 
-![커널 안티치트 드라이버(Ring 0)가 유저모드 게임 프로세스를 감시하고 주입·핸들 접근을 막는 구조 다이어그램](/assets/images/game-mods-cheats-anticheat/kernel-anticheat-architecture.png)
+![커널 안티치트 드라이버(Ring 0)가 유저모드 게임 프로세스를 감시하고 주입·핸들 접근을 막는 구조 다이어그램](/assets/images/game-mods-cheats-anticheat/kernel-anticheat-architecture.webp)
 
 ![발로란트 Fog of War — 서버가 시야 밖 적 좌표를 클라이언트에 보내지 않는 개념도](/assets/images/game-mods-cheats-anticheat/valanticheat-6.png)
 ![발로란트 Fog of War — 서버가 시야 밖 적 좌표를 클라이언트에 보내지 않는 개념도](/assets/images/game-mods-cheats-anticheat/valanticheat-7.png)
