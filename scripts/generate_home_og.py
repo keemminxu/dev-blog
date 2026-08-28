@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """홈 페이지용 OG 이미지 생성 (1200×630)
 왼쪽: 콘솔 일러스트(GameMode.png)의 TV 부분 + 화면 안에 「몽구랑 산책가자」 대기화면 프레임 합성
-오른쪽: keem's blog. / 재밌는걸 멋지게 오래하기! / > UNREAL · GODOT · DAILY _
+오른쪽: keem's blog.
 
 입력: assets/images/crt/GameMode.png, scripts/og-assets/home-screen.png (게임 대기화면 캡처, 비율 1.386)
 출력: assets/og/home-og.png
@@ -59,10 +59,8 @@ tv = tv.resize((tv_w, tv_h), Image.LANCZOS)
 tv_x, tv_y = 36, (HEIGHT - tv_h) // 2
 img.paste(tv, (tv_x, tv_y), tv)
 
-# --- 오른쪽 텍스트 ---
-font_title = ImageFont.truetype(str(FONT_PATH), 68)
-font_sub = ImageFont.truetype(str(FONT_PATH), 32)
-font_tag = ImageFont.truetype(str(FONT_PATH), 22)
+# --- 오른쪽 텍스트: keem's blog. 만 ---
+font_title = ImageFont.truetype(str(FONT_PATH), 72)
 
 text_x = tv_x + tv_w + 24
 right_w = WIDTH - text_x - 36
@@ -70,20 +68,10 @@ right_w = WIDTH - text_x - 36
 title = "keem's blog."
 tb = draw.textbbox((0, 0), title, font=font_title)
 tw, th = tb[2] - tb[0], tb[3] - tb[1]
-tx = text_x + (right_w - tw) // 2
-ty = 232
+tx = text_x + (right_w - tw) // 2 - tb[0]
+ty = (HEIGHT - th) // 2 - tb[1]
 draw.text((tx + 4, ty + 4), title, font=font_title, fill=(10, 8, 6))   # shadow
 draw.text((tx, ty), title, font=font_title, fill=PRIMARY)
-
-sub = "재밌는걸 멋지게 오래하기!"
-sb = draw.textbbox((0, 0), sub, font=font_sub)
-sw2 = sb[2] - sb[0]
-draw.text((text_x + (right_w - sw2) // 2, ty + th + 30), sub, font=font_sub, fill=ACCENT)
-
-tag = "> UNREAL · GODOT · DAILY _"
-gb = draw.textbbox((0, 0), tag, font=font_tag)
-gw = gb[2] - gb[0]
-draw.text((text_x + (right_w - gw) // 2, ty + th + 30 + 32 + 34), tag, font=font_tag, fill=MUTED)
 
 # 외곽 CRT 프레임 라인
 draw.rectangle([18, 18, WIDTH - 18, HEIGHT - 18], outline=PRIMARY, width=3)
