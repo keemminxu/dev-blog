@@ -4,3 +4,4 @@ _site/
 .sass-cache/
 .claude/
 .jekyll-metadata
+assets/images/**/_candidates/
