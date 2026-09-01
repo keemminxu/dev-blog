@@ -1,6 +1,6 @@
 // main.js — 「몽구랑 산책가자」 엔트리: 상태 머신·장애물 풀·12fps 루프
 import * as THREE from 'three';
-import { INTERNAL, PALETTE, makeToon, pixelTexture } from './materials.js';
+import { INTERNAL, PALETTE, makeToon, pixelTexture, setSnap } from './materials.js';
 import { createPixelPass } from './pixelpass.js';
 import { createTrack, RAMP, TYPES, DIMS } from './track.js';
 import { loadDog } from './dog.js';
@@ -230,13 +230,92 @@ function syncObstacles(t) {
 }
 
 // ---------------------------------------------------------------------------
+// 간식(treat) — 뼈다귀, 회전하며 떠 있음
+// ---------------------------------------------------------------------------
+
+let treatGeo = null, treatMat = null;
+function treatAssets() {
+  if (!treatGeo) {
+    treatGeo = new THREE.BoxGeometry(0.14, 0.07, 0.07);
+    treatMat = makeToon(0xf4ead0);
+  }
+  return { treatGeo, treatMat };
+}
+function buildTreatMesh() {
+  const { treatGeo, treatMat } = treatAssets();
+  const g = new THREE.Group();
+  const bar = new THREE.Mesh(treatGeo, treatMat);
+  g.add(bar);
+  const knob = new THREE.BoxGeometry(0.06, 0.06, 0.06);
+  for (const [ex, ez] of [[-0.09, 0.03], [-0.09, -0.03], [0.09, 0.03], [0.09, -0.03]]) {
+    const k = new THREE.Mesh(knob, treatMat);
+    k.position.set(ex, 0, ez);
+    g.add(k);
+  }
+  return g;
+}
+
+const treatMeshes = new Map();
+function addTreat(t) {
+  const m = buildTreatMesh();
+  m.position.set(t.x, t.y, 0);
+  treatMeshes.set(t.id, m);
+  scene.add(m);
+}
+function removeTreat(id) {
+  const m = treatMeshes.get(id);
+  if (m) { scene.remove(m); treatMeshes.delete(id); }
+}
+function clearTreats() {
+  for (const m of treatMeshes.values()) scene.remove(m);
+  treatMeshes.clear();
+}
+function syncTreats(t) {
+  for (const tr of track.treats) {
+    const m = treatMeshes.get(tr.id);
+    if (!m) continue;
+    m.position.x = tr.x;
+    m.position.y = tr.y;
+    m.rotation.y = t * 3;
+    m.rotation.z = Math.sin(t * 4 + tr.id) * 0.3;
+  }
+}
+
+// 먹은 간식 팝 이펙트 (짧은 확대 후 사라짐)
+function popTreat(id) {
+  const m = treatMeshes.get(id);
+  if (!m) return;
+  m.scale.setScalar(1.6);
+}
+
+// ---------------------------------------------------------------------------
 // 씬·렌더러
 // ---------------------------------------------------------------------------
+
+let hdMode = false;                   // 전체화면(확대) 시 고화질 렌더
+let dogRef = null;
 
 function sizeRenderer(canvas) {
   const box = canvas.parentElement;
   const w = box.clientWidth || 320, h = box.clientHeight || 230;
-  renderer.setSize(w, h, false);    // updateStyle=false — CSS 크기는 scss가 관리
+  if (hdMode) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(w, h, false);
+    if (pixelPass) pixelPass.setQuality('hd', w * dpr, h * dpr);
+  } else {
+    renderer.setPixelRatio(1);
+    renderer.setSize(w, h, false);    // updateStyle=false — CSS 크기는 scss가 관리
+    if (pixelPass) pixelPass.setQuality('retro');
+  }
+}
+
+// 전체화면 확대 시 고화질(정점 스냅·디더 off, 텍스처 부드럽게) / 닫으면 레트로 복귀
+function setHd(on, canvas) {
+  hdMode = on;
+  setSnap(!on);
+  if (dogRef) dogRef.setSmooth(on);
+  sizeRenderer(canvas);
 }
 
 function createScene(canvas) {
@@ -290,6 +369,7 @@ function startGame() {
   resetCamera();
   track.reset();
   clearObstacles();
+  clearTreats();
   dog.reset('run');
   dog.setMode('run');
   barkCd = 0;
@@ -348,6 +428,7 @@ function showAttract() {
   shotIdx = 0; shotT = 0;
   dog.reset('attract');
   clearObstacles();
+  clearTreats();
   track.reset();
   setNight(false);
   attract.show();
@@ -392,11 +473,16 @@ function simStep(dt) {
       else if (e.type === 'despawn') removeObstacle(e.id);
       else if (e.type === 'night') setNight(e.on);
       else if (e.type === 'score100') sfx('score');
+      else if (e.type === 'treat-spawn') addTreat(e.treat);
+      else if (e.type === 'treat-despawn') removeTreat(e.id);
     }
     for (const o of track.obstacles) if (o.flee) o.y = Math.min(2.6, o.y + 3.5 * dt);
     world.update(dt, track.speed);
     dog.update(dt, { speedNorm: speedNorm() });
     syncObstacles(simT);
+    syncTreats(simT);
+    const eaten = track.collect(dog.box());
+    if (eaten.length) { for (const t of eaten) popTreat(t.id); sfx('nom'); }
     hud.setScore(track.score, hi);
     const hit = track.collide(dog.box());
     if (hit && !dbgInvincible) gameOver();
@@ -443,6 +529,8 @@ if (typeof window !== 'undefined') {
         speed: track ? track.speed : 0,
         night: track ? track.night : false,
         obstacles: track ? track.obstacles.map((o) => ({ type: o.type, x: +o.x.toFixed(2), y: +o.y.toFixed(2) })) : [],
+        treats: track ? track.treats.length : 0,
+        hd: hdMode,
         dog: dog ? { airborne: dog.airborne, ducking: dog.ducking, mode: dog.mode } : null,
       };
     },
@@ -513,11 +601,17 @@ export async function initGame() {
     },
   });
   input.attach();
-  createZoom({ screen: canvas.parentElement, onResize: () => sizeRenderer(canvas) });
+  createZoom({
+    screen: canvas.parentElement,
+    onResize: () => sizeRenderer(canvas),
+    onOpen: () => setHd(true, canvas),
+    onClose: () => setHd(false, canvas),
+  });
 
   try {
     const glbUrl = new URL('../../glb/monggu.glb', import.meta.url).href;
     dog = await loadDog(glbUrl);
+    dogRef = dog;
     scene.add(dog.object3d);
     showAttract();
   } catch (err) {

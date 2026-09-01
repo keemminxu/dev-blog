@@ -17,9 +17,10 @@ export async function loadDog(url) {
 
   const model = gltf.scene;
   const bones = {};
+  const maps = [];
   model.traverse((o) => {
     if (o.isBone) bones[o.name] = o;
-    if (o.isMesh) { o.frustumCulled = false; o.material = toRetroMaterial(o.material); }
+    if (o.isMesh) { o.frustumCulled = false; o.material = toRetroMaterial(o.material); if (o.material.map) maps.push(o.material.map); }
   });
 
   // 믹서·클립 (단일 걷기 클립, in-place)
@@ -116,6 +117,10 @@ export async function loadDog(url) {
       st.duck = !!on;
     },
     bark() { st.barkT = 0.25; },
+    setSmooth(on) {                    // 전체화면 고화질: 텍스처 nearest↔linear
+      const f = on ? THREE.LinearFilter : THREE.NearestFilter;
+      for (const m of maps) { m.magFilter = f; m.minFilter = f; m.needsUpdate = true; }
+    },
     die() {
       st.mode = 'dead';
       action.paused = true;

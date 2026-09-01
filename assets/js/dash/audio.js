@@ -37,6 +37,7 @@ export function createAudio() {
     bark: () => { blip({ type: 'sawtooth', f0: 150, f1: 95, dur: 0.07, gain: 0.06 }); blip({ type: 'sawtooth', f0: 165, f1: 100, dur: 0.07, gain: 0.055, delay: 0.09 }); },
     hit: () => blip({ type: 'sawtooth', f0: 210, f1: 55, dur: 0.24, gain: 0.07 }),
     score: () => { blip({ type: 'triangle', f0: 880, dur: 0.06, gain: 0.035 }); blip({ type: 'triangle', f0: 1318, dur: 0.07, gain: 0.03, delay: 0.06 }); },
+    nom: () => blip({ type: 'square', f0: 660, f1: 990, dur: 0.05, gain: 0.03 }),
     horn: () => { blip({ type: 'square', f0: 620, dur: 0.09, gain: 0.04 }); blip({ type: 'square', f0: 620, dur: 0.12, gain: 0.04, delay: 0.13 }); },
   };
 

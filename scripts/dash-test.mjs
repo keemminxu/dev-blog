@@ -1,6 +1,6 @@
 // node scripts/dash-test.mjs — track.js 순수 로직 스모크 테스트 (의존성 없음)
 import assert from 'node:assert/strict';
-import { createTrack, RAMP, TYPES } from '../assets/js/dash/track.js';
+import { createTrack, RAMP, TYPES, COLLECT } from '../assets/js/dash/track.js';
 
 let passed = 0;
 function test(name, fn) {
@@ -31,7 +31,7 @@ test('GRACE 이후에는 스폰이 시작된다', () => {
 test('속도는 단조 증가하고 MAX_SPEED에서 캡', () => {
   const tr = createTrack(fixedRng);
   let prev = tr.speed;
-  for (let i = 0; i < 60 * 200; i++) {
+  for (let i = 0; i < 60 * 340; i++) {
     tr.tick(1 / 60);
     assert.ok(tr.speed >= prev - 1e-9, 'speed decreased');
     prev = tr.speed;
@@ -120,6 +120,46 @@ test('reset 후 초기 상태로 복귀', () => {
   assert.equal(tr.obstacles.length, 0);
   assert.equal(tr.speed, RAMP.START_SPEED);
   assert.equal(tr.night, false);
+});
+
+test('간식은 GRACE 이후 줄 단위로 스폰된다', () => {
+  const tr = createTrack(fixedRng);
+  const ev = run(tr, RAMP.GRACE_SEC + 6).filter(e => e.type === 'treat-spawn');
+  assert.ok(ev.length >= 3, '너무 적음: ' + ev.length);
+  assert.ok(tr.treats.length > 0);
+});
+
+test('collect: 겹친 간식은 먹히고 POINTS만큼 점수 가산', () => {
+  const tr = createTrack(fixedRng);
+  run(tr, RAMP.GRACE_SEC + 5);
+  const before = tr.score;
+  // 간식 하나를 몽구 위치로 끌어와 먹이기
+  const t = tr.treats.find(x => !x.taken);
+  assert.ok(t, '간식 없음');
+  t.x = 0; t.y = 0.42;
+  const eaten = tr.collect({ x: 0, y: 0, w: 0.8, h: 0.9 });
+  assert.equal(eaten.length >= 1, true);
+  assert.ok(tr.score >= before + COLLECT.POINTS);
+  assert.equal(t.taken, true);
+});
+
+test('먹은 간식은 다음 tick에 despawn 이벤트로 제거', () => {
+  const tr = createTrack(fixedRng);
+  run(tr, RAMP.GRACE_SEC + 5);
+  const t = tr.treats.find(x => !x.taken); t.x = 0; t.y = 0.42;
+  tr.collect({ x: 0, y: 0, w: 0.8, h: 0.9 });
+  const ev = tr.tick(1/60).filter(e => e.type === 'treat-despawn' && e.id === t.id);
+  assert.equal(ev.length, 1);
+  assert.ok(tr.treats.every(x => x.id !== t.id));
+});
+
+test('난이도: 시작 속도가 완만하고(≤5) reset이 간식도 비운다', () => {
+  const tr = createTrack(fixedRng);
+  assert.ok(RAMP.START_SPEED <= 5, 'START_SPEED 너무 빠름');
+  run(tr, 10);
+  tr.reset();
+  assert.equal(tr.treats.length, 0);
+  assert.equal(tr.score, 0);
 });
 
 console.log(process.exitCode ? 'SOME TESTS FAILED' : `all ${passed} tests passed`);

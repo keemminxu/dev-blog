@@ -22,12 +22,16 @@ export function toonRamp() {
   return _ramp;
 }
 
-// PS1 정점 스냅 — #include <project_vertex> 뒤(= skinning_vertex 이후)에 주입, w>0 가드
+// 정점 스냅 강도 — 모든 레트로 머티리얼이 공유(런타임에 0으로 두면 확대 시 깔끔)
+export const SNAP = { value: 1.0 };
+export function setSnap(on) { SNAP.value = on ? 1.0 : 0.0; }
+
+// PS1 정점 스냅 — #include <project_vertex> 뒤(= skinning_vertex 이후)에 주입, w>0 가드, uSnap으로 on/off
 const SNAP_CHUNK = `
 #include <project_vertex>
 {
   vec2 snapGrid = vec2(${INTERNAL.W}.0, ${INTERNAL.H}.0) * 0.5;
-  if (gl_Position.w > 0.0) {
+  if (uSnap > 0.5 && gl_Position.w > 0.0) {
     vec3 ndc = gl_Position.xyz / gl_Position.w;
     ndc.xy = floor(ndc.xy * snapGrid + 0.5) / snapGrid;
     gl_Position = vec4(ndc * gl_Position.w, gl_Position.w);
@@ -36,9 +40,11 @@ const SNAP_CHUNK = `
 
 export function applySnap(material) {
   material.onBeforeCompile = (shader) => {
-    shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', SNAP_CHUNK);
+    shader.uniforms.uSnap = SNAP;                                   // 공유 참조
+    shader.vertexShader = 'uniform float uSnap;\n' + shader.vertexShader
+      .replace('#include <project_vertex>', SNAP_CHUNK);
   };
-  material.customProgramCacheKey = () => 'dash-snap-v1';
+  material.customProgramCacheKey = () => 'dash-snap-v2';
   return material;
 }
 
