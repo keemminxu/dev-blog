@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { INTERNAL, PALETTE, makeToon, pixelTexture, setSnap } from './materials.js';
 import { createPixelPass } from './pixelpass.js';
-import { createTrack, RAMP, TYPES, DIMS } from './track.js';
+import { createTrack, RAMP, TYPES, DIMS, TREAT } from './track.js';
 import { loadDog } from './dog.js';
 import { createInput } from './input.js';
 import { createHud } from './hud.js';
@@ -233,31 +233,36 @@ function syncObstacles(t) {
 // 간식(treat) — 뼈다귀, 회전하며 떠 있음
 // ---------------------------------------------------------------------------
 
-let treatGeo = null, treatMat = null;
+let kibbleGeo = null, kibbleMat = null;                    // 동그란 먹이
+let canGeo = null, canBodyMat = null, canLidMat = null;    // 참치캔
 function treatAssets() {
-  if (!treatGeo) {
-    treatGeo = new THREE.BoxGeometry(0.14, 0.07, 0.07);
-    treatMat = makeToon(0xf4ead0);
+  if (!kibbleGeo) {
+    kibbleGeo = new THREE.SphereGeometry(0.11, 10, 8);
+    kibbleMat = makeToon(0xd9a441);                        // 갈색빛 사료
+    canGeo = new THREE.CylinderGeometry(0.17, 0.17, 0.14, 14);
+    canBodyMat = makeToon(0x9fb8c4);                       // 은색 캔
+    canLidMat = makeToon(0xe8563a);                        // 빨간 라벨 뚜껑
   }
-  return { treatGeo, treatMat };
 }
-function buildTreatMesh() {
-  const { treatGeo, treatMat } = treatAssets();
+function buildTreatMesh(kind) {
+  treatAssets();
   const g = new THREE.Group();
-  const bar = new THREE.Mesh(treatGeo, treatMat);
-  g.add(bar);
-  const knob = new THREE.BoxGeometry(0.06, 0.06, 0.06);
-  for (const [ex, ez] of [[-0.09, 0.03], [-0.09, -0.03], [0.09, 0.03], [0.09, -0.03]]) {
-    const k = new THREE.Mesh(knob, treatMat);
-    k.position.set(ex, 0, ez);
-    g.add(k);
+  if (kind === TREAT.TUNA) {
+    const body = new THREE.Mesh(canGeo, canBodyMat);
+    g.add(body);
+    const lid = new THREE.Mesh(new THREE.CylinderGeometry(0.175, 0.175, 0.04, 14), canLidMat);
+    lid.position.y = 0.08;
+    g.add(lid);
+    g.userData.tuna = true;
+  } else {
+    g.add(new THREE.Mesh(kibbleGeo, kibbleMat));
   }
   return g;
 }
 
 const treatMeshes = new Map();
 function addTreat(t) {
-  const m = buildTreatMesh();
+  const m = buildTreatMesh(t.kind);
   m.position.set(t.x, t.y, 0);
   treatMeshes.set(t.id, m);
   scene.add(m);
@@ -275,9 +280,8 @@ function syncTreats(t) {
     const m = treatMeshes.get(tr.id);
     if (!m) continue;
     m.position.x = tr.x;
-    m.position.y = tr.y;
-    m.rotation.y = t * 3;
-    m.rotation.z = Math.sin(t * 4 + tr.id) * 0.3;
+    m.position.y = tr.y + (m.userData.tuna ? 0 : Math.sin(t * 5 + tr.id) * 0.04);
+    m.rotation.y = t * (m.userData.tuna ? 1.6 : 3.2);
   }
 }
 
@@ -482,7 +486,11 @@ function simStep(dt) {
     syncObstacles(simT);
     syncTreats(simT);
     const eaten = track.collect(dog.box());
-    if (eaten.length) { for (const t of eaten) popTreat(t.id); sfx('nom'); }
+    if (eaten.length) {
+      let tuna = false;
+      for (const t of eaten) { popTreat(t.id); if (t.kind === TREAT.TUNA) tuna = true; }
+      if (tuna) { sfx('score'); hud.bubble('참치캔! +50', 0.9); } else { sfx('nom'); }
+    }
     hud.setScore(track.score, hi);
     const hit = track.collide(dog.box());
     if (hit && !dbgInvincible) gameOver();

@@ -19,8 +19,12 @@ export const COLLECT = {
   RUN_Y: 0.42,           // 땅 줄 높이(몽구가 달리며 먹는 높이)
   ARC_PEAK: 0.95,        // 점프 아치 최고 높이
   RADIUS: 0.3,           // 수집 반경(넉넉하게)
-  POINTS: 5,             // 개당 보너스 점수
+  POINTS: 5,             // 동그란 먹이(kibble) 점수
+  TUNA_POINTS: 50,       // 참치캔 점수(크게!)
+  TUNA_CHANCE: 0.12,     // 간식 줄 하나가 참치캔일 확률
 };
+
+export const TREAT = { KIBBLE: 'kibble', TUNA: 'tuna' };
 
 export const TYPES = {
   FENCE: 'fence', FENCE2: 'fence2', HYDRANT: 'hydrant',
@@ -64,12 +68,19 @@ export function createTrack(rng = Math.random) {
     track.treats = treats;
   }
 
-  // 간식 한 줄 생성: 땅 줄(RUN_Y 근처) 또는 점프 아치(포물선). count개.
+  // 간식 한 줄 생성. 대부분 동그란 먹이(kibble) 여러 개, 가끔 참치캔 하나(큰 점수).
   function spawnTreatRow() {
-    const count = 3 + Math.floor(rng() * 4);            // 3~6개
-    const arc = rng() < 0.4;                            // 40%는 점프 아치
     const startX = SPAWN_X;
     const row = [];
+    // 참치캔: 줄 전체를 대신하는 단발 보너스(땅 또는 낮은 아치)
+    if (rng() < COLLECT.TUNA_CHANCE) {
+      const y = rng() < 0.5 ? COLLECT.RUN_Y : COLLECT.RUN_Y + 0.35;
+      const t = { id: nextId++, kind: TREAT.TUNA, x: startX, y, taken: false };
+      treats.push(t); row.push(t);
+      return row;
+    }
+    const count = 3 + Math.floor(rng() * 4);            // 3~6개
+    const arc = rng() < 0.4;                            // 40%는 점프 아치
     for (let i = 0; i < count; i++) {
       const x = startX + i * COLLECT.SPACING;
       let y;
@@ -79,7 +90,7 @@ export function createTrack(rng = Math.random) {
       } else {
         y = COLLECT.RUN_Y + (rng() - 0.5) * 0.1;
       }
-      const t = { id: nextId++, x, y, taken: false };
+      const t = { id: nextId++, kind: TREAT.KIBBLE, x, y, taken: false };
       treats.push(t);
       row.push(t);
     }
@@ -197,7 +208,7 @@ export function createTrack(rng = Math.random) {
         if (t.taken) continue;
         if (Math.abs(t.x - cx) < rx && Math.abs(t.y - cy) < ry) {
           t.taken = true;
-          score += COLLECT.POINTS;
+          score += t.kind === TREAT.TUNA ? COLLECT.TUNA_POINTS : COLLECT.POINTS;
           eaten.push(t);
         }
       }

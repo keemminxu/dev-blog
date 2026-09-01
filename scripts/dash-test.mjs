@@ -1,6 +1,6 @@
 // node scripts/dash-test.mjs — track.js 순수 로직 스모크 테스트 (의존성 없음)
 import assert from 'node:assert/strict';
-import { createTrack, RAMP, TYPES, COLLECT } from '../assets/js/dash/track.js';
+import { createTrack, RAMP, TYPES, COLLECT, TREAT } from '../assets/js/dash/track.js';
 
 let passed = 0;
 function test(name, fn) {
@@ -160,6 +160,29 @@ test('난이도: 시작 속도가 완만하고(≤5) reset이 간식도 비운�
   tr.reset();
   assert.equal(tr.treats.length, 0);
   assert.equal(tr.score, 0);
+});
+
+test('간식은 kibble/tuna 종류를 가지며 tuna는 큰 점수', () => {
+  const tr = createTrack(() => 0.05);   // 낮은 rng → tuna 확률 통과
+  run(tr, RAMP.GRACE_SEC + 3);
+  const tuna = tr.treats.find(t => t.kind === TREAT.TUNA);
+  assert.ok(tuna, 'tuna 스폰 안 됨');
+  tuna.x = 0; tuna.y = 0.42;
+  const before = tr.score;
+  tr.collect({ x: 0, y: 0, w: 0.8, h: 0.9 });
+  assert.ok(tr.score >= before + COLLECT.TUNA_POINTS);
+});
+
+test('일반 간식은 kibble이고 POINTS만큼만', () => {
+  const tr = createTrack(() => 0.5);    // 높은 rng → tuna 회피, kibble 줄
+  run(tr, RAMP.GRACE_SEC + 3);
+  const k = tr.treats.find(t => t.kind === TREAT.KIBBLE);
+  assert.ok(k, 'kibble 없음');
+  tr.treats.forEach(t => { if (t !== k) t.taken = true; });   // 하나만 남기고 격리
+  k.x = 0; k.y = 0.42;
+  const before = tr.score;
+  tr.collect({ x: 0, y: 0, w: 0.8, h: 0.9 });
+  assert.equal(tr.score, before + COLLECT.POINTS);
 });
 
 console.log(process.exitCode ? 'SOME TESTS FAILED' : `all ${passed} tests passed`);
