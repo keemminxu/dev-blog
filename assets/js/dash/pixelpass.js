@@ -8,6 +8,7 @@ export function createPixelPass(renderer, w = INTERNAL.W, h = INTERNAL.H) {
     magFilter: THREE.NearestFilter,
     depthBuffer: true,
     stencilBuffer: false,
+    samples: 0,
   });
 
   const material = new THREE.ShaderMaterial({
@@ -41,9 +42,28 @@ export function createPixelPass(renderer, w = INTERNAL.W, h = INTERNAL.H) {
   quadScene.add(quad);
   const quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
+  // 화질 모드: 'retro'(저해상도+nearest+디더) | 'hd'(고해상도+linear+디더 off) — 전체화면용
+  function setQuality(mode, width, height) {
+    if (mode === 'hd') {
+      rt.setSize(Math.max(1, Math.round(width)), Math.max(1, Math.round(height)));
+      rt.texture.minFilter = rt.texture.magFilter = THREE.LinearFilter;
+      material.uniforms.uRes.value.set(rt.width, rt.height);
+      material.uniforms.uDither.value = 0.0;
+      material.uniforms.uLevels.value = 255.0;
+    } else {
+      rt.setSize(w, h);
+      rt.texture.minFilter = rt.texture.magFilter = THREE.NearestFilter;
+      material.uniforms.uRes.value.set(w, h);
+      material.uniforms.uDither.value = 0.6;
+      material.uniforms.uLevels.value = 32.0;
+    }
+    rt.texture.needsUpdate = true;
+  }
+
   return {
     rt,
     uniforms: material.uniforms,
+    setQuality,
     render(scene, camera) {
       renderer.setRenderTarget(rt);
       renderer.render(scene, camera);

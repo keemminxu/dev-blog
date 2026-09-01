@@ -3,13 +3,28 @@
 // 박스 규약: { x: 중심, y: 바닥, w: 전체 폭, h: 전체 높이 }
 
 export const RAMP = {
-  START_SPEED: 6,        // unit/s
-  MAX_SPEED: 13,
-  ACCEL: 0.06,           // unit/s²
-  GRACE_SEC: 3,          // 시작 무장애 구간
+  START_SPEED: 4.2,      // unit/s — 초반은 여유롭게(피드백: 시작이 너무 빨랐음)
+  MAX_SPEED: 12.5,
+  ACCEL: 0.03,           // unit/s² — 더 완만한 가속(점점 빨라지게)
+  GRACE_SEC: 3.5,        // 시작 무장애 구간
   NIGHT_EVERY: 700,      // 이 점수마다 야간 반전 토글
   SCORE_PER_SEC: 10,
 };
+
+// 간식(collectible) — 달리는 길과 점프 궤적 위에 뿌려짐, 먹으면 보너스 점수
+export const COLLECT = {
+  GAP_MIN: 2.6,          // 간식 줄 사이 최소 거리(unit)
+  GAP_MAX: 4.6,
+  SPACING: 0.62,         // 한 줄 안 간식 간격
+  RUN_Y: 0.42,           // 땅 줄 높이(몽구가 달리며 먹는 높이)
+  ARC_PEAK: 0.95,        // 점프 아치 최고 높이
+  RADIUS: 0.3,           // 수집 반경(넉넉하게)
+  POINTS: 5,             // 동그란 먹이(kibble) 점수
+  TUNA_POINTS: 50,       // 참치캔 점수(크게!)
+  TUNA_CHANCE: 0.12,     // 간식 줄 하나가 참치캔일 확률
+};
+
+export const TREAT = { KIBBLE: 'kibble', TUNA: 'tuna' };
 
 export const TYPES = {
   FENCE: 'fence', FENCE2: 'fence2', HYDRANT: 'hydrant',
@@ -41,13 +56,45 @@ function overlap(a, b) {
 
 export function createTrack(rng = Math.random) {
   let speed, score, night, elapsed, distSinceSpawn, nextGap, nextId, lastHundred, nightsSeen;
+  let distSinceCollect, nextCollectGap, treats;
   let obstacles;
 
   function reset() {
     speed = RAMP.START_SPEED; score = 0; night = false; elapsed = 0;
     distSinceSpawn = 0; nextGap = 0; nextId = 1; lastHundred = 0; nightsSeen = 0;
+    distSinceCollect = 0; nextCollectGap = 0; treats = [];
     obstacles = [];
     track.obstacles = obstacles;
+    track.treats = treats;
+  }
+
+  // 간식 한 줄 생성. 대부분 동그란 먹이(kibble) 여러 개, 가끔 참치캔 하나(큰 점수).
+  function spawnTreatRow() {
+    const startX = SPAWN_X;
+    const row = [];
+    // 참치캔: 줄 전체를 대신하는 단발 보너스(땅 또는 낮은 아치)
+    if (rng() < COLLECT.TUNA_CHANCE) {
+      const y = rng() < 0.5 ? COLLECT.RUN_Y : COLLECT.RUN_Y + 0.35;
+      const t = { id: nextId++, kind: TREAT.TUNA, x: startX, y, taken: false };
+      treats.push(t); row.push(t);
+      return row;
+    }
+    const count = 3 + Math.floor(rng() * 4);            // 3~6개
+    const arc = rng() < 0.4;                            // 40%는 점프 아치
+    for (let i = 0; i < count; i++) {
+      const x = startX + i * COLLECT.SPACING;
+      let y;
+      if (arc) {
+        const u = count > 1 ? i / (count - 1) : 0.5;    // 0..1
+        y = COLLECT.RUN_Y + (COLLECT.ARC_PEAK - COLLECT.RUN_Y) * 4 * u * (1 - u);  // 포물선
+      } else {
+        y = COLLECT.RUN_Y + (rng() - 0.5) * 0.1;
+      }
+      const t = { id: nextId++, kind: TREAT.KIBBLE, x, y, taken: false };
+      treats.push(t);
+      row.push(t);
+    }
+    return row;
   }
 
   function speedNorm() {
@@ -114,6 +161,23 @@ export function createTrack(rng = Math.random) {
         if (o.x < DESPAWN_X) { obstacles.splice(i, 1); events.push({ type: 'despawn', id: o.id }); }
       }
 
+      // 간식 이동·제거
+      for (let i = treats.length - 1; i >= 0; i--) {
+        const t = treats[i];
+        t.x -= speed * dt;
+        if (t.x < DESPAWN_X || t.taken) { treats.splice(i, 1); events.push({ type: 'treat-despawn', id: t.id }); }
+      }
+      // 간식 줄 스폰 (GRACE 이후)
+      if (elapsed >= RAMP.GRACE_SEC) {
+        distSinceCollect += speed * dt;
+        if (nextCollectGap === 0) nextCollectGap = COLLECT.GAP_MIN + rng() * (COLLECT.GAP_MAX - COLLECT.GAP_MIN);
+        if (distSinceCollect >= nextCollectGap) {
+          distSinceCollect = 0;
+          nextCollectGap = COLLECT.GAP_MIN + rng() * (COLLECT.GAP_MAX - COLLECT.GAP_MIN);
+          for (const t of spawnTreatRow()) events.push({ type: 'treat-spawn', treat: t });
+        }
+      }
+
       // 스폰 (GRACE 이후, 거리 누적 기반)
       if (elapsed >= RAMP.GRACE_SEC) {
         distSinceSpawn += speed * dt;
@@ -133,6 +197,22 @@ export function createTrack(rng = Math.random) {
     collide(dogBox) {
       for (const o of obstacles) if (overlap(o, dogBox)) return o;
       return null;
+    },
+
+    // 몽구가 먹은 간식들: taken 처리 후 반환(점수는 여기서 가산). 개수를 반환값으로도 알 수 있음.
+    collect(dogBox) {
+      const eaten = [];
+      const cx = dogBox.x, cy = dogBox.y + dogBox.h / 2;
+      const rx = dogBox.w / 2 + COLLECT.RADIUS, ry = dogBox.h / 2 + COLLECT.RADIUS;
+      for (const t of treats) {
+        if (t.taken) continue;
+        if (Math.abs(t.x - cx) < rx && Math.abs(t.y - cy) < ry) {
+          t.taken = true;
+          score += t.kind === TREAT.TUNA ? COLLECT.TUNA_POINTS : COLLECT.POINTS;
+          eaten.push(t);
+        }
+      }
+      return eaten;
     },
 
     // 테스트/디버그용 강제 스폰

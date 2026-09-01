@@ -6,7 +6,7 @@ import { INTERNAL } from './materials.js';
 
 const SCREEN_RATIO = 970 / 700;   // .console-screen 비율(1.386)
 
-export function createZoom({ screen, onResize }) {
+export function createZoom({ screen, onResize, onOpen, onClose }) {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'dash-zoom-btn';
@@ -73,6 +73,7 @@ export function createZoom({ screen, onResize }) {
     stage.insertBefore(screen, zones);
     modal.hidden = false;
     document.body.classList.add('dash-zoom-open');
+    if (onOpen) onOpen();
     layout();
     zones.classList.remove('is-faded');
     clearTimeout(fadeTimer);
@@ -91,6 +92,7 @@ export function createZoom({ screen, onResize }) {
     document.body.classList.remove('dash-zoom-open');
     window.removeEventListener('resize', layout);
     clearTimeout(fadeTimer);
+    if (onClose) onClose();
     onResize();
   }
 
